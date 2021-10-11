@@ -1,4 +1,4 @@
-import { ApiResponse, LoginBody, SignupBody } from './types';
+import { ApiResponse, ListCategory, LoginBody, OptionalSignal, SignupBody } from './types';
 
 const addBase = (path: string) => `api/${path}`;
 
@@ -48,6 +48,14 @@ export async function signup({ body }: { body: SignupBody }): Promise<ApiRespons
   return makeRequest('signup', 'post', body);
 }
 
-export async function getUserDetails({ signal }: { signal: AbortSignal }): Promise<ApiResponse> {
+export async function getUserDetails({ signal }: OptionalSignal): Promise<ApiResponse> {
   return makeRequest('getuserdetails', 'get', undefined, signal);
+}
+
+export async function getLists({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}`, 'get', undefined, signal);
+}
+
+export async function getUserMedia({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
+  return makeRequest(listCategory === 'towatch' ? 'usermovies' : 'usertvshows', 'get', undefined, signal);
 }

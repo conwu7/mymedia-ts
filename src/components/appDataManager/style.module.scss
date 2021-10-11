@@ -1,0 +1,31 @@
+.appHeaderContainer {
+  overflow: hidden;
+}
+.homePageLink {
+  text-decoration: none;
+  color: inherit;
+}
+.appBar {
+  background: darkslategray !important;
+}
+.raiseOnFullscreen {
+  height: 60px;
+  transition: all 200ms linear;
+}
+.raise {
+  display: block;
+  height: 70px;
+  background-color: whitesmoke;
+}
+//@media only screen and (min-device-width: 680px) {
+//  .raise {
+//    height: 70px;
+//  }
+//}
+@media (display-mode: standalone) {
+  .raiseOnFullscreen {
+    display: block;
+    height: 80px;
+    background-color: whitesmoke;
+  }
+}

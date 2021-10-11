@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ApiResponse } from '../services/types';
 
-type AsyncValues = {
-  isLoading: boolean;
-  error: string | null;
-  data: unknown;
-};
-
-export default function useFetchApi(
-  asyncFunc: ({ signal }: { signal: AbortSignal }) => Promise<ApiResponse>,
-): AsyncValues {
-  const [isLoading, setIsLoading] = useState(false);
+export default function useFetchApi<DataType, FuncArguments = unknown>(
+  asyncFunc: ({ signal }: { signal?: AbortSignal }, asyncFuncArgs: FuncArguments) => Promise<ApiResponse>,
+  funcArguments: FuncArguments,
+): { isLoading: boolean; error: string | null; data: DataType } {
+  const [isLoading, setIsLoading] = useState(true);
   const [isFunctionPending, setIsFunctionPending] = useState(false);
   const [data, setData] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +16,7 @@ export default function useFetchApi(
     const controller = new AbortController();
     setIsLoading(true);
     setTimeout(() => {
-      asyncFunc({ signal: controller.signal })
+      asyncFunc({ signal: controller.signal }, funcArguments)
         .then((response) => {
           if (response.status !== 200) {
             console.log('HERE');
@@ -34,7 +29,7 @@ export default function useFetchApi(
         .finally(() => {
           setIsLoading(false);
         });
-    }, 1000);
+    }, 500);
     // return () => clearTimeout(fetchTimeout);
     // return () => {
     //   controller.abort();
@@ -43,7 +38,7 @@ export default function useFetchApi(
 
   return {
     isLoading,
-    data,
+    data: data as DataType,
     error,
   };
 }

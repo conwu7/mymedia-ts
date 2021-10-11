@@ -15,3 +15,9 @@ export type ApiResponse = {
   status: number;
   success: boolean;
 };
+
+export type OptionalSignal = {
+  signal?: AbortSignal;
+};
+
+export type ListCategory = 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
