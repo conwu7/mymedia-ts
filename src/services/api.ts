@@ -1,4 +1,4 @@
-import { ApiResponse, ListCategory, LoginBody, OptionalSignal, SignupBody } from './types';
+import { ApiResponse, ListCategory, LoginBody, MakeRequest, OptionalSignal, SignupBody } from './types';
 
 const addBase = (path: string) => `api/${path}`;
 
@@ -13,12 +13,7 @@ const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): Requ
   signal,
 });
 
-const makeRequest = async (
-  path: string,
-  method: string,
-  body?: unknown,
-  signal?: AbortSignal,
-): Promise<ApiResponse> => {
+const makeRequest: MakeRequest = async (path, method, body, signal) => {
   try {
     return window.fetch(addBase(path), buildOptions(body, method, signal)).then(async (response) => {
       return {

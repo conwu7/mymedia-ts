@@ -2,19 +2,17 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { SyntheticEvent, useState } from 'react';
-import LoginPage from '../loginPage/LoginPage';
-import SignupPage from '../signupPage/SignupPage';
-import SitePreviewPage from '../sitePreviewPage/SitePreviewPage';
+import { useState } from 'react';
+import LoginPage from './loginPage/LoginPage';
+import SignupPage from './signupPage/SignupPage';
+import SitePreviewPage from './sitePreviewPage/SitePreviewPage';
 import style from './style.module.scss';
-import { OnboardingPages, OnboardingPagesDisplayText } from './types';
+import { HandlePageChange, OnboardingPages, OnboardingPagesDisplayText } from './types';
 
 export default function OnboardingPage(): JSX.Element {
   const [page, setPage] = useState<OnboardingPages>('home');
 
-  const handlePageChange = (event: SyntheticEvent, newPage: OnboardingPages): void => {
-    setPage(newPage);
-  };
+  const handlePageChange: HandlePageChange = (event, newPage) => setPage(newPage);
 
   return (
     <>

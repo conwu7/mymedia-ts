@@ -1,6 +1,7 @@
+import MenuIcon from '@mui/icons-material/Menu';
+import { IconButton, Link } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import style from './style.module.scss';
@@ -11,11 +12,13 @@ export default function AppHeader(): JSX.Element {
       <AppBar position="fixed" className={style.appBar}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <a href="/" className={style.homePageLink}>
+            <Link href="/" className={style.homePageLink}>
               My Media Lists
-            </a>
+            </Link>
           </Typography>
-          <Button color="inherit">Login</Button>
+          <IconButton color="inherit">
+            <MenuIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </Box>

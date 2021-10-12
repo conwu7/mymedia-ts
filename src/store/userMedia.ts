@@ -5,6 +5,7 @@ export type Movie = {
   plot?: string;
   releaseDate?: string;
   releaseYear?: number;
+  runYears: string;
   runtime?: number; //in minutes
   genre?: string[];
   posterUrl?: string;
@@ -82,7 +83,8 @@ const initialState: UserMediaState = {
   completedtv: {} as UserTvShowMap,
 };
 
-const userMediaReducer = (state: UserMediaState = initialState, action: UserMediaComboAction): UserMediaState => {
+type UserMediaReducer = (state: UserMediaState, action: UserMediaComboAction) => UserMediaState;
+const userMediaReducer: UserMediaReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'storeUserMedia':
       return {

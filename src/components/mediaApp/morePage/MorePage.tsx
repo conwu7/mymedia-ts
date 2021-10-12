@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { logout } from '../../services/api';
+import { logout } from '../../../services/api';
 import style from './style.module.scss';
 
 export default function MorePage({ hidden }: { hidden: boolean }): JSX.Element {

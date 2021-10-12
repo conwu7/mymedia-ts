@@ -14,31 +14,31 @@ import { ListCategory } from '../../services/types';
 import { List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
-import ListsPage from '../listsPage/ListsPage';
-import Loading from '../loading/Loading';
-import MorePage from '../morePage/MorePage';
+import Loading from '../utils/loading/Loading';
 import AppHeader from './AppHeader';
+import ListsPage from './listsPage/ListsPage';
+import MorePage from './morePage/MorePage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
 
-export default function AppDataManager({ user }: { user: User }): JSX.Element {
+export default function MediaApp({ user }: { user: User }): JSX.Element {
   const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>('towatch');
-  const { isLoading, error, data } = useFetchApi<List, ListCategory>(getLists, 'towatch');
+  const { isLoading, error, data } = useFetchApi<List, ListCategory>(true, getLists, 'towatch');
   const {
     isLoading: isLoadingTv,
     error: errorTv,
     data: dataTv,
-  } = useFetchApi<List, ListCategory>(getLists, 'towatchtv');
+  } = useFetchApi<List, ListCategory>(true, getLists, 'towatchtv');
   const {
     isLoading: isLoadingUserMedia,
     error: errorUserMedia,
     data: dataUserMedia,
-  } = useFetchApi<UserMovie[], ListCategory>(getUserMedia, 'towatch');
+  } = useFetchApi<UserMovie[], ListCategory>(true, getUserMedia, 'towatch');
   const {
     isLoading: isLoadingUserMediaTv,
     error: errorUserMediaTv,
     data: dataUserMediaTv,
-  } = useFetchApi<UserTvShow[], ListCategory>(getUserMedia, 'towatchtv');
+  } = useFetchApi<UserTvShow[], ListCategory>(true, getUserMedia, 'towatchtv');
 
   const dispatch: Dispatch = useDispatch();
 

@@ -1,6 +1,6 @@
 import { FormikHandlers, FormikValues } from 'formik';
-import { LoginBody, SignupBody } from '../../services/types';
-import { LoginSchema, SignUpSchema } from '../../services/validation';
+import { LoginBody, SignupBody } from '../../../services/types';
+import { LoginSchema, SignUpSchema } from '../../../services/validation';
 
 export type UserFormProps = {
   action: 'login' | 'signup';

@@ -8,9 +8,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { login, signup } from '../../services/api';
-import { LoginBody, SignupBody } from '../../services/types';
-import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
+import { login, signup } from '../../../services/api';
+import { LoginBody, SignupBody } from '../../../services/types';
+import ErrorFieldContainer from '../../utils/errorFieldContainer/ErrorFieldContainer';
 import style from './style.module.scss';
 import { FormTextFieldProps, UserFormBody, UserFormProps, UserFormSchema, UserFormTypeDisplay } from './types';
 
@@ -28,7 +28,7 @@ export default function UserForm({ action }: UserFormProps): JSX.Element {
     onSubmit: async (values: UserFormBody) => {
       let err: string;
       let status: number;
-      if (action === 'login' && 'email' in values) {
+      if (action === 'login') {
         ({ err, status } = await login({ body: values } as { body: LoginBody }));
       } else {
         ({ err, status } = await signup({ body: values } as { body: SignupBody }));

@@ -1,9 +1,14 @@
-import { ListCategory } from '../../services/types';
-import { List } from '../../store/lists';
+import { ListCategory } from '../../../services/types';
+import { List } from '../../../store/lists';
 
 export type ListsPageProps = {
   listCategory: ListCategory;
   hidden: boolean;
+};
+
+export type UserMediaCardProps = {
+  userMediaId: string;
+  listCategory: ListCategory;
 };
 
 export type ListContainerProps = {

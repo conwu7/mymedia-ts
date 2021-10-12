@@ -7,7 +7,7 @@ $poster-height-desktop: 270px;
   display: none;
 }
 .accordionDetails {
-  padding: 5px 8px;
+  padding: 0 8px;
 }
 .emptyLists {
   width: 100%;
@@ -18,12 +18,20 @@ $poster-height-desktop: 270px;
 
 .listsPage {
   padding-top: 60px !important;
-  margin-bottom: 70px;
+  margin-bottom: 90px;
 }
 
 .listContainer {
-  border: 2px solid #f2f2f2;
+  //border: 2px solid #f2f2f2;
   margin: 15px 10px;
+  padding: 8px 3px;
+}
+
+.listContainer>div.Mui-expanded {
+  min-height: 50px !important; // space above action menu button
+}
+.listInformationContainerParent>div {
+  margin: 0 !important;
 }
 
 .listInformationContainer {
@@ -46,8 +54,45 @@ $poster-height-desktop: 270px;
 .listUserMediaContainer {
   display: flex;
   flex-wrap: nowrap;
-  overflow: auto;
   min-height: 230px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.actionButtonContainer {
+  display: flex;
+  margin: auto;
+  width: 170px;
+  justify-content: center;
+  align-items: center;
+}
+.actionButtonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+}
+.actionMenu ul {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.actionMenuItem {
+  justify-content: center !important;
+  min-width: 170px;
+  font-size: 1.2em !important;
+  color: darkslategray;
+}
+.reviewActionMenuItem {
+  color: darkgreen !important;
+}
+.moveActionMenuItem {
+  color: darkcyan !important;
+}
+.copyActionMenuItem {
+  color: darkblue !important;
+}
+.removeActionMenuItem {
+  color: firebrick !important;
 }
 
 .userMediaCard {
@@ -61,45 +106,55 @@ $poster-height-desktop: 270px;
   background: rgba(245, 245, 245, 0.6) !important;
 
   .mediaInfo {
-    width: 140px;
-    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    width: 150px;
+    padding: 7px 5px 7px 10px;
   }
   .poster,
   .posterContainer {
     height: 220px;
     width: 133px;
-    border-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
     text-align: center;
   }
-
   .mediaTitle {
-    min-height: 25px;
-    max-height: 60px;
+    min-height: 40px;
+    line-height: 1;
     overflow: auto;
     margin: 0 0 0 8px;
     font-size: 18px;
     font-weight: 600;
     color: darkslategray;
   }
+  .releaseYear {
+    font-style: normal;
+    font-weight: 500;
+  }
   .imdbRating {
     font-size: 16px;
     color: rgb(73, 99, 90);
   }
-  .releaseDate {
-    font-size: 16px;
-    color: rgb(73, 99, 90);
-  }
-  .imdbRatingSpan,
+  .imdbRatingValue,
   .userRating {
     font-style: normal;
-    font-size: 22px;
+    font-size: 17px;
   }
-  .imdbRating a {
+  .imdbRatingValue {
+    margin-left: 8px;
+  }
+  .imdbLink  {
     color: dodgerblue;
-    margin-right: 5px;
+    font-weight: 500;
+    line-height: 1.75;
+    letter-spacing: 0.02857em;
   }
-  svg {
-    color: lightgray;
+  .moreInfoButton {
+    color: dodgerblue !important;
+    border: #4e8383 1px solid !important;
   }
   .plot,
   .toWatchNotes,
@@ -115,20 +170,15 @@ $poster-height-desktop: 270px;
     font-weight: 600;
     font-size: 14px;
   }
-  .moreInfoButton {
-    border: none;
-    background-color: inherit;
-    font-size: 17px;
-    padding: 0;
-    text-decoration: underline;
-    color: dimgrey;
+  .genre {
+    font-size: 15px;
   }
+  .releaseYear,
   .runtime,
   .streamingSource,
   .genre,
-  .releaseDate,
   .imdbRating {
-    margin: 8px auto 8px 8px;
+    margin: 0 auto 0 8px;
   }
 }
 

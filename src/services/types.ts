@@ -9,6 +9,8 @@ export type SignupBody = {
   password: string;
 };
 
+export type MakeRequest = (path: string, method: string, body?: unknown, signal?: AbortSignal) => Promise<ApiResponse>;
+
 export type ApiResponse = {
   err: string;
   result: unknown;

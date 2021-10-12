@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ApiResponse } from '../services/types';
 
 export default function useFetchApi<DataType, FuncArguments = unknown>(
+  useTimeout: boolean,
   asyncFunc: ({ signal }: { signal?: AbortSignal }, asyncFuncArgs: FuncArguments) => Promise<ApiResponse>,
   funcArguments: FuncArguments,
 ): { isLoading: boolean; error: string | null; data: DataType } {
@@ -15,25 +16,26 @@ export default function useFetchApi<DataType, FuncArguments = unknown>(
     setIsFunctionPending(true);
     const controller = new AbortController();
     setIsLoading(true);
-    setTimeout(() => {
-      asyncFunc({ signal: controller.signal }, funcArguments)
-        .then((response) => {
-          if (response.status !== 200) {
-            console.log('HERE');
-            setError(response.err);
-            return;
-          }
-          setData(response.result);
-        })
-        .catch(() => undefined)
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }, 500);
+    setTimeout(
+      () => {
+        asyncFunc({ signal: controller.signal }, funcArguments)
+          .then((response) => {
+            if (response.status !== 200) {
+              console.log('HERE');
+              setError(response.err);
+              return;
+            }
+            setData(response.result);
+          })
+          .catch(() => undefined)
+          .finally(() => {
+            setIsLoading(false);
+          });
+      },
+      useTimeout ? 300 : 0,
+    );
     // return () => clearTimeout(fetchTimeout);
-    // return () => {
-    //   controller.abort();
-    // };
+    // return () => controller.abort();
   }, [isFunctionPending, data]);
 
   return {
