@@ -1,13 +1,8 @@
-$poster-width: 130px;
-$poster-height: 195px;
-$poster-width-desktop: 180px;
-$poster-height-desktop: 270px;
-
 .hidden {
   display: none;
 }
 .accordionDetails {
-  padding: 0 8px;
+  padding: 5px !important;
 }
 .emptyLists {
   width: 100%;
@@ -19,6 +14,8 @@ $poster-height-desktop: 270px;
 .listsPage {
   padding-top: 60px !important;
   margin-bottom: 90px;
+  max-height: 100vh;
+  overflow: auto;
 }
 
 .listContainer {
@@ -58,137 +55,5 @@ $poster-height-desktop: 270px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-.actionButtonContainer {
-  display: flex;
-  margin: auto;
-  width: 170px;
-  justify-content: center;
-  align-items: center;
-}
-.actionButtonWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-}
-.actionMenu ul {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.actionMenuItem {
-  justify-content: center !important;
-  min-width: 170px;
-  font-size: 1.2em !important;
-  color: darkslategray;
-}
-.reviewActionMenuItem {
-  color: darkgreen !important;
-}
-.moveActionMenuItem {
-  color: darkcyan !important;
-}
-.copyActionMenuItem {
-  color: darkblue !important;
-}
-.removeActionMenuItem {
-  color: firebrick !important;
-}
 
-.userMediaCard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 220px;
-  flex-wrap: nowrap;
-  margin: 0 10px;
-  position: relative;
-  background: rgba(245, 245, 245, 0.6) !important;
 
-  .mediaInfo {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
-    width: 150px;
-    padding: 7px 5px 7px 10px;
-  }
-  .poster,
-  .posterContainer {
-    height: 220px;
-    width: 133px;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-    text-align: center;
-  }
-  .mediaTitle {
-    min-height: 40px;
-    line-height: 1;
-    overflow: auto;
-    margin: 0 0 0 8px;
-    font-size: 18px;
-    font-weight: 600;
-    color: darkslategray;
-  }
-  .releaseYear {
-    font-style: normal;
-    font-weight: 500;
-  }
-  .imdbRating {
-    font-size: 16px;
-    color: rgb(73, 99, 90);
-  }
-  .imdbRatingValue,
-  .userRating {
-    font-style: normal;
-    font-size: 17px;
-  }
-  .imdbRatingValue {
-    margin-left: 8px;
-  }
-  .imdbLink  {
-    color: dodgerblue;
-    font-weight: 500;
-    line-height: 1.75;
-    letter-spacing: 0.02857em;
-  }
-  .moreInfoButton {
-    color: dodgerblue !important;
-    border: #4e8383 1px solid !important;
-  }
-  .plot,
-  .toWatchNotes,
-  .reviewNotes,
-  .actors {
-    color: dimgrey;
-    font-size: 18px;
-  }
-  .streamingSource {
-    max-width: 100%;
-    word-break: break-all;
-    color: gray;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .genre {
-    font-size: 15px;
-  }
-  .releaseYear,
-  .runtime,
-  .streamingSource,
-  .genre,
-  .imdbRating {
-    margin: 0 auto 0 8px;
-  }
-}
-
-@media only screen and (min-width: 680px) {
-  .mediaInfo {
-    width: 450px;
-  }
-  .poster,
-  .posterContainer {
-    height: $poster-height-desktop;
-    width: $poster-width-desktop;
-  }
-}

@@ -1,0 +1,39 @@
+.modalContainer {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  width: 96vw;
+  padding: 10px 10px 20px;
+  border: 2px solid darkgray;
+  background: white;
+  outline: none;
+  overflow-y: scroll;
+}
+
+.modalHeader {
+  position: sticky;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.closeModalButtonWrapper {
+  padding: 0 !important;
+
+  svg, path {
+    width: 60px;
+    height: 50px;
+    color: indianred;
+  }
+}
+
+.modalContentContainer {
+  overflow: auto;
+  max-height: 80vh;
+}

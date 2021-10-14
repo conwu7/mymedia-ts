@@ -18,9 +18,9 @@ export default function OnboardingPage(): JSX.Element {
     <>
       <AppBar color="default" className={style.tabSwitcherContainer}>
         <Tabs value={page} onChange={handlePageChange} centered>
-          <Tab label={OnboardingPagesDisplayText.home} value="home" />
-          <Tab label={OnboardingPagesDisplayText.signup} value="signup" />
-          <Tab label={OnboardingPagesDisplayText.login} value="login" />
+          <Tab label={OnboardingPagesDisplayText.home} value="home" className={style.tab} />
+          <Tab label={OnboardingPagesDisplayText.signup} value="signup" className={style.tab} />
+          <Tab label={OnboardingPagesDisplayText.login} value="login" className={style.tab} />
         </Tabs>
       </AppBar>
       <Box>
