@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import { SyntheticEvent, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import defaultPoster from '../../../../images/default-poster.png';
+import { LIstCategoryDisplay } from '../../../../services/types';
 import { UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
 import UniversalModal from '../../../utils/universalModal/UniversalModal';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
@@ -72,6 +73,13 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
           >
             <MenuItem
               divider={true}
+              className={`${style.actionMenuItem} ${style.addNotesActionMenuItem}`}
+              onClick={handleCloseActionMenu}
+            >
+              Add notes
+            </MenuItem>
+            <MenuItem
+              divider={true}
               className={`${style.actionMenuItem} ${style.reviewActionMenuItem}`}
               onClick={handleCloseActionMenu}
             >
@@ -100,8 +108,8 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
           </Menu>
         </div>
       </div>
-      <UniversalModal isOpen={isViewingMore} onClose={handleCloseMore}>
-        <MoreInfoCard media={userMedia.media} />
+      <UniversalModal isOpen={isViewingMore} onClose={handleCloseMore} title={LIstCategoryDisplay[listCategory]}>
+        <MoreInfoCard media={userMedia.media} userMedia={userMedia} />
       </UniversalModal>
     </Paper>
   );

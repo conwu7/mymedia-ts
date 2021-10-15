@@ -1,4 +1,4 @@
-import { ApiResponse, ListCategory, LoginBody, MakeRequest, OptionalSignal, SignupBody } from './types';
+import { ApiResponse, ListCategory, LoginBody, MakeRequest, OptionalSignal, SignupBody, UpdateListBody } from './types';
 
 const addBase = (path: string) => `api/${path}`;
 
@@ -53,4 +53,16 @@ export async function getLists({ signal }: OptionalSignal, listCategory: ListCat
 
 export async function getUserMedia({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
   return makeRequest(listCategory === 'towatch' ? 'usermovies' : 'usertvshows', 'get', undefined, signal);
+}
+
+export async function updateList(
+  body: UpdateListBody,
+  listCategory: ListCategory,
+  listId: string,
+): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${listId}`, 'put', body);
+}
+
+export async function deleteList(listCategory: ListCategory, listId: string): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${listId}`, 'delete');
 }

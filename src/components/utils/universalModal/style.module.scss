@@ -7,7 +7,6 @@
   border: 2px solid darkgray;
   background: white;
   outline: none;
-  overflow-y: scroll;
 }
 
 .modalHeader {
@@ -16,11 +15,14 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  background-color: whitesmoke;
 }
 
 .modalTitle {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 20px;
+  color: lightslategray;
+  padding: 0 10px;
 }
 
 .closeModalButtonWrapper {
@@ -35,5 +37,10 @@
 
 .modalContentContainer {
   overflow: auto;
-  max-height: 80vh;
+  max-height: 72vh;
+}
+@media (display-mode: standalone) {
+  .modalContentContainer {
+    max-height: 80vh;
+  }
 }

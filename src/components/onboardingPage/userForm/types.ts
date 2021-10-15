@@ -10,6 +10,9 @@ export type FormTextFieldProps = {
   label: string;
   name: string;
   formik: FormikHandlers & FormikValues;
+  required?: boolean;
+  showErrorImmediately?: boolean;
+  isMultiLine?: boolean;
 };
 
 export type UserFormBody = LoginBody | SignupBody;

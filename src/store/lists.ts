@@ -19,20 +19,26 @@ export type ListsAction = {
   type: string;
   listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
   data: List[];
+  updatedList: List;
+  listToDelete: string;
 };
 
 export type ListsState = {
-  towatch: List[];
-  towatchtv: List[];
-  completed: List[];
-  completedtv: List[];
+  towatch: ListReference;
+  towatchtv: ListReference;
+  completed: ListReference;
+  completedtv: ListReference;
+};
+
+export type ListReference = {
+  [key: string]: List;
 };
 
 const initialState: ListsState = {
-  towatch: [],
-  towatchtv: [],
-  completed: [],
-  completedtv: [],
+  towatch: {},
+  towatchtv: {},
+  completed: {},
+  completedtv: {},
 };
 
 const listsReducer = (state: ListsState = initialState, action: ListsAction): ListsState => {
@@ -40,8 +46,30 @@ const listsReducer = (state: ListsState = initialState, action: ListsAction): Li
     case 'storeList':
       return {
         ...state,
-        [action.listType]: action.data,
+        [action.listType]: action.data?.reduce((acc, list) => {
+          acc[list._id] = list;
+          return acc;
+        }, {} as ListReference),
       };
+    case 'updateList': {
+      const updatedCategory = {
+        ...state[action.listType],
+        [action.updatedList._id]: action.updatedList,
+      };
+      return {
+        ...state,
+        [action.listType]: updatedCategory,
+      };
+    }
+    case 'deleteList': {
+      const { [action.listToDelete]: idToDelete, ...otherProps } = state[action.listType];
+      if (!idToDelete) return state;
+      return {
+        ...state,
+        [action.listType]: otherProps,
+      };
+    }
+
     default:
       return state;
   }

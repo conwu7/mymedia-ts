@@ -23,3 +23,14 @@ export type OptionalSignal = {
 };
 
 export type ListCategory = 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
+export enum LIstCategoryDisplay {
+  towatch = 'Movie',
+  towatchtv = 'Tv Show',
+  completed = 'Movie',
+  completedtv = 'Tv Show',
+}
+
+export type UpdateListBody = {
+  listName: string;
+  description?: string;
+};

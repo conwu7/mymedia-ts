@@ -1,14 +1,22 @@
 import { Link } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import defaultPoster from '../../../../images/default-poster.png';
 import style from './style.module.scss';
-import { HandleTabChange, MoreInfoCardProps, MoreInfoMedia, MoreInfoTabs, MoreInfoTabsDisplay } from './types';
+import {
+  HandleTabChange,
+  MediaReviewCardProps,
+  MoreInfoCardProps,
+  MoreInfoMedia,
+  MoreInfoTabs,
+  MoreInfoTabsDisplay,
+} from './types';
 
-export default function MoreInfoCard({ hideReviewTab, media }: MoreInfoCardProps): JSX.Element {
+export default function MoreInfoCard({ hideReviewTab, media, userMedia }: MoreInfoCardProps): JSX.Element {
   const [currentTab, setCurrentTab] = useState<MoreInfoTabs>('info');
   const handleTabChange: HandleTabChange = (event, newTab) => setCurrentTab(newTab);
   return (
@@ -21,7 +29,7 @@ export default function MoreInfoCard({ hideReviewTab, media }: MoreInfoCardProps
       </AppBar>
       <Box>
         {currentTab === 'info' && <MediaInfoCard media={media} />}
-        {currentTab === 'review' && <MediaReviewCard />}
+        {currentTab === 'review' && <MediaReviewCard userMedia={userMedia} />}
       </Box>
     </div>
   );
@@ -51,11 +59,16 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
         </div>
         <div className={style.mainInfoContainer}>
           <h1 className={style.mediaTitle}>{title}</h1>
-          <div>
-            <span className={style.mediaInfoLabel}>Runtime:</span>
-            <p className={style.runtime}>{runtime ? runtime : '-'} min</p>
-          </div>
+          <p className={style.runtime}>
+            <span className={style.mediaInfoLabel}>Runtime: </span>
+            {runtime ? runtime : '-'} min
+          </p>
           <p className={style.languages}>{language && language.join(', ')}</p>
+          <p className={style.releaseDate}>
+            {runYears && totalSeasons
+              ? `${runYears} (${totalSeasons} season${totalSeasons > 1 ? 's' : ''})`
+              : releaseDate}
+          </p>
           <p className={style.imdbRating}>
             <Link
               href={`https://imdb.com/title/${imdbID}`}
@@ -72,12 +85,8 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
         </div>
       </section>
       <section className={style.otherInfoContainer}>
-        <span className={style.mediaInfoLabel}>Release Date:</span>
-        <p className={style.releaseDate}>
-          {runYears && totalSeasons
-            ? `${runYears} (${totalSeasons} season${totalSeasons > 1 ? 's' : ''})`
-            : releaseDate}
-        </p>
+        {/*<span className={style.mediaInfoLabel}>Release Date:</span>*/}
+
         <span className={style.mediaInfoLabel}>Genre:</span>
         <p className={style.genre}>{genre && genre.join(', ')}</p>
         <span className={style.mediaInfoLabel}>Plot:</span>
@@ -89,6 +98,18 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
   );
 }
 
-function MediaReviewCard(): JSX.Element {
-  return <div>b</div>;
+function MediaReviewCard({ userMedia }: MediaReviewCardProps): JSX.Element {
+  const { userRating, toWatchNotes, reviewNotes } = userMedia || {};
+  return (
+    <div className={style.reviewCardContainer}>
+      <span className={style.mediaInfoLabel}>Watch notes:</span>
+      <p className={style.toWatchNotes}>{toWatchNotes || '-'}</p>
+      <span className={style.mediaInfoLabel}>Your review:</span>
+      <div className={style.userRatingContainer}>
+        <Rating name="read-only" value={userRating} readOnly max={10} className={style.userRating} />
+        <span className={style.userRatingValue}>{userRating || '-'}/10</span>
+      </div>
+      <p className={style.reviewNotes}>{reviewNotes || '-'}</p>
+    </div>
+  );
 }

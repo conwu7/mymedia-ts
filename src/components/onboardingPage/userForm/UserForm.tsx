@@ -71,7 +71,14 @@ export default function UserForm({ action }: UserFormProps): JSX.Element {
   );
 }
 
-function FormTextField({ label, name, formik }: FormTextFieldProps): JSX.Element {
+export function FormTextField({
+  label,
+  name,
+  formik,
+  required,
+  showErrorImmediately,
+  isMultiLine,
+}: FormTextFieldProps): JSX.Element {
   return (
     <Grid container spacing={2} className={style.formTextField}>
       <TextField
@@ -83,11 +90,15 @@ function FormTextField({ label, name, formik }: FormTextFieldProps): JSX.Element
         label={label}
         margin="normal"
         name={name}
-        required
+        required={required}
         type={name === 'password' ? 'password' : undefined}
         value={formik.values[name]}
+        multiline={isMultiLine}
       />
-      <ErrorFieldContainer showError={!!formik.touched[name]} errorMessage={formik.errors[name]} />
+      <ErrorFieldContainer
+        showError={!!formik.touched[name] || !!showErrorImmediately}
+        errorMessage={formik.errors[name]}
+      />
     </Grid>
   );
 }
