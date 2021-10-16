@@ -19,7 +19,7 @@ export type ListsAction = {
   type: string;
   listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
   data: List[];
-  updatedList: List;
+  list: List;
   listToDelete: string;
 };
 
@@ -51,10 +51,12 @@ const listsReducer = (state: ListsState = initialState, action: ListsAction): Li
           return acc;
         }, {} as ListReference),
       };
+
+    case 'createList':
     case 'updateList': {
       const updatedCategory = {
         ...state[action.listType],
-        [action.updatedList._id]: action.updatedList,
+        [action.list._id]: action.list,
       };
       return {
         ...state,

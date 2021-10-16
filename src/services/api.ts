@@ -55,6 +55,10 @@ export async function getUserMedia({ signal }: OptionalSignal, listCategory: Lis
   return makeRequest(listCategory === 'towatch' ? 'usermovies' : 'usertvshows', 'get', undefined, signal);
 }
 
+export async function createList(body: UpdateListBody, listCategory: ListCategory): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}`, 'post', body);
+}
+
 export async function updateList(
   body: UpdateListBody,
   listCategory: ListCategory,

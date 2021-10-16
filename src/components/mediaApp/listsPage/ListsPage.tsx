@@ -6,7 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
 import { ListCategory } from '../../../services/types';
@@ -19,7 +19,7 @@ import { ListContainerProps, ListDescription, ListsPageProps } from './types';
 import UserMediaCard from './userMediaCard/UserMediaCard';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
-  const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory]);
+  const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory], shallowEqual);
 
   const listIds = Object.keys(lists);
   const mappedLists = listIds.map((listId) => lists[listId]);
@@ -90,6 +90,11 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
     }, 400);
   }, [isDeleted]);
 
+  let listActionContainerStyle = '';
+  if (isListExpanded) {
+    listActionContainerStyle = list.mediaInstants.length < 1 ? style.emptyListExpanded : style.listExpanded;
+  }
+
   return (
     <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
       <Accordion
@@ -104,7 +109,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
           <ListUserMediaContainer listCategory={listCategory} list={list} />
         </AccordionDetails>
       </Accordion>
-      <div className={`${style.listActionContainer} ${isListExpanded ? style.listExpanded : ''}`}>
+      <div className={`${style.listActionContainer} ${listActionContainerStyle}`}>
         <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
           <MoreVert fontSize="large" />
         </IconButton>

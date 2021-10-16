@@ -54,6 +54,9 @@
 .listActionContainer.listExpanded {
   height: calc(100% - 257px);
 }
+.listActionContainer.emptyListExpanded {
+  height: calc(100% - 54px);
+}
 .listActionButton {
   height: 20px;
   padding: 0 !important;

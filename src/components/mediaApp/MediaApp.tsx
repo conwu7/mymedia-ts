@@ -19,6 +19,8 @@ import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
 import AppHeader from '../utils/appHeader/AppHeader';
 import Loading from '../utils/loading/Loading';
+import UniversalModal from '../utils/universalModal/UniversalModal';
+import { NewListForm } from './listsPage/forms/forms';
 import ListsPage from './listsPage/ListsPage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
@@ -104,17 +106,23 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
       <AppHeader />
       <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'towatch'} />
       <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'towatchtv'} />
-      <MediaAppActions />
+      <MediaAppActions listCategory={currentNavTab} />
       <BottomNavigationTabs handleChange={handleNavTabChange} currentTab={currentNavTab} />
     </div>
   );
 }
 
-function MediaAppActions(): JSX.Element {
+function MediaAppActions({ listCategory }: { listCategory: ListCategory | NavigationTab }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [isCreatingList, setIsCreatingList] = useState(false);
 
   const handleOpenMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseMenu = (): void => setAnchorEl(null);
+  const handleOpenCreateList = (): void => {
+    handleCloseMenu();
+    setIsCreatingList(true);
+  };
+  const handleCloseCreateList = (): void => setIsCreatingList(false);
   return (
     <>
       <Fab aria-label="edit" size="large" className={style.mediaAppFloatingButton} onClick={handleOpenMenu}>
@@ -130,7 +138,7 @@ function MediaAppActions(): JSX.Element {
         }}
         className={style.mediaAppActionMenu}
       >
-        <MenuItem onClick={undefined} divider>
+        <MenuItem onClick={handleOpenCreateList} divider>
           <ListItemIcon>
             <IoMdCreate />
           </ListItemIcon>
@@ -149,6 +157,9 @@ function MediaAppActions(): JSX.Element {
           <ListItemText>Preferences</ListItemText>
         </MenuItem>
       </Menu>
+      <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
+        <NewListForm onClose={handleCloseCreateList} listCategory={listCategory as ListCategory} />
+      </UniversalModal>
     </>
   );
 }

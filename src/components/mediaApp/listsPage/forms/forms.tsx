@@ -4,14 +4,14 @@ import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { updateList } from '../../../../services/api';
+import { createList, updateList } from '../../../../services/api';
 import { UpdateListBody } from '../../../../services/types';
 import { UpdateListSchema } from '../../../../services/validation';
 import { FormTextField } from '../../../onboardingPage/userForm/UserForm';
 import ErrorFieldContainer from '../../../utils/errorFieldContainer/ErrorFieldContainer';
 import Loading from '../../../utils/loading/Loading';
 import style from './style.module.scss';
-import { EditListFormProps } from './types';
+import { EditListFormProps, ListFormProps, NewListFormProps } from './types';
 
 export function EditListForm(props: EditListFormProps): JSX.Element {
   const [error, setError] = useState('');
@@ -33,11 +33,44 @@ export function EditListForm(props: EditListFormProps): JSX.Element {
       dispatch({
         type: 'updateList',
         listType: props.listCategory,
-        updatedList: result,
+        list: result,
       });
       props.onClose();
     },
   });
+  return <ListForm formik={formik} isLoading={isLoading} error={error} />;
+}
+
+export function NewListForm(props: NewListFormProps): JSX.Element {
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const initialValues: UpdateListBody = {
+    listName: '',
+    description: '',
+  };
+  const dispatch: Dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: UpdateListSchema,
+    onSubmit: async (values: UpdateListBody) => {
+      setIsLoading(true);
+      const { err, result } = await createList(values, props.listCategory);
+      setIsLoading(false);
+      if (err) return setError(err);
+      dispatch({
+        type: 'createList',
+        listType: props.listCategory,
+        list: result,
+      });
+      props.onClose();
+    },
+  });
+
+  return <ListForm formik={formik} isLoading={isLoading} error={error} />;
+}
+
+function ListForm({ formik, isLoading, error }: ListFormProps): JSX.Element {
   return (
     <Box
       component="form"
