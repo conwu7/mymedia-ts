@@ -20,7 +20,7 @@ import { User } from '../app/types';
 import AppHeader from '../utils/appHeader/AppHeader';
 import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
-import { NewListForm } from './listsPage/forms/forms';
+import { NewListForm, PreferencesForm } from './listsPage/forms/forms';
 import ListsPage from './listsPage/ListsPage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
@@ -115,14 +115,23 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
 function MediaAppActions({ listCategory }: { listCategory: ListCategory | NavigationTab }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isCreatingList, setIsCreatingList] = useState(false);
+  const [isModifyingPreferences, setIsModifyingPreferences] = useState(false);
 
   const handleOpenMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseMenu = (): void => setAnchorEl(null);
+
   const handleOpenCreateList = (): void => {
     handleCloseMenu();
     setIsCreatingList(true);
   };
   const handleCloseCreateList = (): void => setIsCreatingList(false);
+
+  const handleOpenModifyPreferences = (): void => {
+    handleCloseMenu();
+    setIsModifyingPreferences(true);
+  };
+  const handleCloseModifyPreferences = (): void => setIsModifyingPreferences(false);
+
   return (
     <>
       <Fab aria-label="edit" size="large" className={style.mediaAppFloatingButton} onClick={handleOpenMenu}>
@@ -150,7 +159,7 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
           </ListItemIcon>
           <ListItemText>Filters</ListItemText>
         </MenuItem>
-        <MenuItem onClick={undefined}>
+        <MenuItem onClick={handleOpenModifyPreferences}>
           <ListItemIcon>
             <MdRoomPreferences />
           </ListItemIcon>
@@ -159,6 +168,9 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
       </Menu>
       <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
         <NewListForm onClose={handleCloseCreateList} listCategory={listCategory as ListCategory} />
+      </UniversalModal>
+      <UniversalModal isOpen={isModifyingPreferences} onClose={handleCloseModifyPreferences} title="Modify Preferences">
+        <PreferencesForm onClose={handleCloseModifyPreferences} />
       </UniversalModal>
     </>
   );

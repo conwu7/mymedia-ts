@@ -17,3 +17,7 @@ export type ListFormProps = {
   isLoading: boolean;
   error: string | undefined;
 };
+
+export interface PreferencesFormProps {
+  onClose: () => void;
+}

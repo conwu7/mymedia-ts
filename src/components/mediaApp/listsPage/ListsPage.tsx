@@ -9,8 +9,10 @@ import { RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
+import { sortLists } from '../../../services/sorting';
 import { ListCategory } from '../../../services/types';
 import { List, ListReference, ListsState } from '../../../store/lists';
+import { ListSortPreference, UserPreferences } from '../../../store/userPreferences';
 import Loading from '../../utils/loading/Loading';
 import UniversalModal from '../../utils/universalModal/UniversalModal';
 import { EditListForm } from './forms/forms';
@@ -20,9 +22,16 @@ import UserMediaCard from './userMediaCard/UserMediaCard';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory], shallowEqual);
+  const listSortPreference: ListSortPreference = useSelector(
+    (state: { userPreferences: UserPreferences }) => state.userPreferences.listSortPreference,
+    shallowEqual,
+  );
 
   const listIds = Object.keys(lists);
-  const mappedLists = listIds.map((listId) => lists[listId]);
+  const mappedLists = sortLists(
+    listIds.map((listId) => lists[listId]),
+    listSortPreference,
+  );
 
   if (mappedLists.length < 1)
     return (
@@ -69,7 +78,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   const handleDeleteList = async () => {
     handleCloseActionMenu();
 
-    if (!window.confirm(`Are you sure you want to delete '${list.name}' list?`)) return;
+    if (!window.confirm(`Are you sure you want to delete '${list.name}'?`)) return;
     setIsLoading(true);
 
     const { err } = await deleteList(listCategory, list._id);

@@ -1,3 +1,4 @@
+import { UserPreferences } from '../store/userPreferences';
 import { ApiResponse, ListCategory, LoginBody, MakeRequest, OptionalSignal, SignupBody, UpdateListBody } from './types';
 
 const addBase = (path: string) => `api/${path}`;
@@ -69,4 +70,8 @@ export async function updateList(
 
 export async function deleteList(listCategory: ListCategory, listId: string): Promise<ApiResponse> {
   return makeRequest(`lists/${listCategory}/${listId}`, 'delete');
+}
+
+export async function updatePreferences(preferences: UserPreferences): Promise<ApiResponse> {
+  return makeRequest('user/preferences', 'put', preferences);
 }
