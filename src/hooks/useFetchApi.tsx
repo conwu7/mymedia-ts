@@ -21,7 +21,6 @@ export default function useFetchApi<DataType, FuncArguments = unknown>(
         asyncFunc({ signal: controller.signal }, funcArguments)
           .then((response) => {
             if (response.status !== 200) {
-              console.log('HERE');
               setError(response.err);
               return;
             }

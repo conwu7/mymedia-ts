@@ -1,11 +1,12 @@
 import { MoreVert } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { SyntheticEvent, useState } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import { RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
 import { ListCategory } from '../../../services/types';
@@ -18,7 +19,7 @@ import { ListContainerProps, ListDescription, ListsPageProps } from './types';
 import UserMediaCard from './userMediaCard/UserMediaCard';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
-  const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory], shallowEqual);
+  const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory]);
 
   const listIds = Object.keys(lists);
   const mappedLists = listIds.map((listId) => lists[listId]);
@@ -34,8 +35,8 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
 
   return (
     <div className={`${style.listsPage} ${hidden ? style.hidden : ''}`}>
-      {mappedLists.map((list, index) => (
-        <ListContainer list={list} key={index} listCategory={listCategory} />
+      {mappedLists.map((list) => (
+        <ListContainer list={list} key={list._id} listCategory={listCategory} />
       ))}
     </div>
   );
@@ -45,6 +46,9 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isEditingList, setIsEditingList] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [isListExpanded, setListContainerExpanded] = useState<string | boolean>(false);
+
   const dispatch: Dispatch = useDispatch();
 
   const handleOpenActionMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
@@ -58,22 +62,41 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
     setIsEditingList(false);
   };
 
+  const handleExpandListContainer = (container: string) => (event: SyntheticEvent, isExpanded: string | boolean) => {
+    setListContainerExpanded(isExpanded ? container : false);
+  };
+
   const handleDeleteList = async () => {
     handleCloseActionMenu();
+
     if (!window.confirm(`Are you sure you want to delete '${list.name}' list?`)) return;
     setIsLoading(true);
+
     const { err } = await deleteList(listCategory, list._id);
     setIsLoading(false);
     if (err) return window.alert('Failed to delete list');
-    dispatch({
-      type: 'deleteList',
-      listType: listCategory,
-      listToDelete: list._id,
-    });
+    setIsDeleted(true);
   };
+
+  // complete delete
+  useEffect(() => {
+    if (!isDeleted) return;
+    setTimeout(() => {
+      dispatch({
+        type: 'deleteList',
+        listType: listCategory,
+        listToDelete: list._id,
+      });
+    }, 400);
+  }, [isDeleted]);
+
   return (
-    <div className={style.listContainerParent}>
-      <Accordion className={style.listContainer}>
+    <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
+      <Accordion
+        className={style.listContainer}
+        expanded={isListExpanded === 'list'}
+        onChange={handleExpandListContainer('list')}
+      >
         <AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>
           <ListInformation name={list.name} description={list.description} />
         </AccordionSummary>
@@ -81,23 +104,31 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
           <ListUserMediaContainer listCategory={listCategory} list={list} />
         </AccordionDetails>
       </Accordion>
-      <div className={style.listActionContainer}>
+      <div className={`${style.listActionContainer} ${isListExpanded ? style.listExpanded : ''}`}>
         <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
           <MoreVert fontSize="large" />
         </IconButton>
         <Menu
-          id="actionMenu"
+          id="listPageActionMenu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleCloseActionMenu}
           MenuListProps={{
-            'aria-labelledby': 'actionMenu',
+            'aria-labelledby': 'listPageActionMenu',
           }}
         >
           <MenuItem onClick={handleOpenEditList} divider>
-            Edit List
+            <ListItemIcon>
+              <RiEdit2Fill />
+            </ListItemIcon>
+            <ListItemText>Edit List</ListItemText>
           </MenuItem>
-          <MenuItem onClick={handleDeleteList}>Delete List</MenuItem>
+          <MenuItem onClick={handleDeleteList}>
+            <ListItemIcon>
+              <RiDeleteBin2Fill />
+            </ListItemIcon>
+            <ListItemText>Delete List</ListItemText>
+          </MenuItem>
         </Menu>
       </div>
       <UniversalModal isOpen={isEditingList} onClose={handleCloseEditList} title={'Edit List'}>

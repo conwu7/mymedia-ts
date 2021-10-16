@@ -3,7 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
@@ -80,10 +79,11 @@ export function FormTextField({
   isMultiLine,
 }: FormTextFieldProps): JSX.Element {
   return (
-    <Grid container spacing={2} className={style.formTextField}>
+    <Box className={style.textFieldContainer}>
       <TextField
         autoComplete={name}
-        fullWidth={true}
+        fullWidth
+        sx={{ m: 1 }}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         id={name}
@@ -94,11 +94,12 @@ export function FormTextField({
         type={name === 'password' ? 'password' : undefined}
         value={formik.values[name]}
         multiline={isMultiLine}
+        className={style.formTextField}
       />
       <ErrorFieldContainer
         showError={!!formik.touched[name] || !!showErrorImmediately}
         errorMessage={formik.errors[name]}
       />
-    </Grid>
+    </Box>
   );
 }

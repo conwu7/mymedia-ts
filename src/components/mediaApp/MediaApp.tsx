@@ -1,11 +1,14 @@
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import RestoreIcon from '@mui/icons-material/Restore';
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
 import Paper from '@mui/material/Paper';
 import { SyntheticEvent, useEffect, useState } from 'react';
+import { BiCameraMovie } from 'react-icons/bi';
+import { IoMdCreate } from 'react-icons/io';
+import { MdFilterList, MdReadMore, MdRoomPreferences } from 'react-icons/md';
+import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import useFetchApi from '../../hooks/useFetchApi';
@@ -14,10 +17,9 @@ import { ListCategory } from '../../services/types';
 import { List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
+import AppHeader from '../utils/appHeader/AppHeader';
 import Loading from '../utils/loading/Loading';
-import AppHeader from './AppHeader';
 import ListsPage from './listsPage/ListsPage';
-import MorePage from './morePage/MorePage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
 
@@ -98,13 +100,56 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
   }
 
   return (
-    <div>
+    <div className={style.mediaApp}>
       <AppHeader />
       <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'towatch'} />
       <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'towatchtv'} />
-      <MorePage hidden={currentNavTab !== 'more'} />
+      <MediaAppActions />
       <BottomNavigationTabs handleChange={handleNavTabChange} currentTab={currentNavTab} />
     </div>
+  );
+}
+
+function MediaAppActions(): JSX.Element {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+
+  const handleOpenMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
+  const handleCloseMenu = (): void => setAnchorEl(null);
+  return (
+    <>
+      <Fab aria-label="edit" size="large" className={style.mediaAppFloatingButton} onClick={handleOpenMenu}>
+        <MdReadMore />
+      </Fab>
+      <Menu
+        id="mediaAppActionMenu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          'aria-labelledby': 'mediaAppActionMenu',
+        }}
+        className={style.mediaAppActionMenu}
+      >
+        <MenuItem onClick={undefined} divider>
+          <ListItemIcon>
+            <IoMdCreate />
+          </ListItemIcon>
+          <ListItemText>Create List</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={undefined} divider>
+          <ListItemIcon>
+            <MdFilterList />
+          </ListItemIcon>
+          <ListItemText>Filters</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={undefined}>
+          <ListItemIcon>
+            <MdRoomPreferences />
+          </ListItemIcon>
+          <ListItemText>Preferences</ListItemText>
+        </MenuItem>
+      </Menu>
+    </>
   );
 }
 
@@ -125,12 +170,11 @@ function BottomNavigationTabs({ handleChange, currentTab }: BottomNavigationProp
       elevation={3}
       className={`${style.raiseOnFullscreen} ${raiseComponent ? style.raise : ''}`}
     >
-      <Box>
+      <Box className={style.bottomNavContainer}>
         <BottomNavigation showLabels value={currentTab} onChange={handleChange}>
-          <BottomNavigationAction label="Movies" value="towatch" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Tv Shows" value="towatchtv" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Search" value="search" icon={<LocationOnIcon />} />
-          <BottomNavigationAction label="More" value="more" icon={<LocationOnIcon />} />
+          <BottomNavigationAction label="Movies" value="towatch" icon={<BiCameraMovie />} />
+          <BottomNavigationAction label="Tv Shows" value="towatchtv" icon={<RiMovie2Line />} />
+          <BottomNavigationAction label="Search" value="search" icon={<RiSearchLine />} />
         </BottomNavigation>
       </Box>
     </Paper>

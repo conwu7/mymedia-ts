@@ -1,6 +1,9 @@
 button.submitBtn {
+  display: block;
   background: rgba(47, 79, 79, 0.95);
   transition: all 300ms linear;
+  margin: 15px !important;
+  font-size: 18px;
 
   &:hover {
     background: rgba(47, 79, 79, 0.8);

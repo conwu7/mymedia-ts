@@ -14,9 +14,14 @@ button.submitBtn {
   }
 }
 
-div.formTextField {
-  display: flex;
-  justify-content: center;
-  max-width: 100%;
-  margin: 0;
+.textFieldContainer {
+  width: 90% !important;
+  max-width: 400px;
 }
+
+//div.formTextField {
+//  display: flex;
+//  justify-content: center;
+//  width: 80%;
+//  margin: 20px;
+//}

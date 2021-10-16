@@ -8,18 +8,26 @@
   width: 100%;
   text-align: center;
   color: grey;
-  padding: 1px 15px;
+  padding: 1px 15px 150px;
+
 }
 
 .listsPage {
   padding-top: 60px !important;
-  padding-bottom: 90px;
+  padding-bottom: 150px;
   max-height: 100vh;
   overflow: auto;
 }
 
 .listContainerParent {
   position: relative;
+  transition: transform 300ms linear !important;
+  overflow: hidden;
+  transform: scaleY(1);
+}
+
+.listContainerParent.deleted {
+  transform: scaleY(0);
 }
 
 .listContainer {
@@ -34,13 +42,17 @@
 
 .listActionContainer {
   position: absolute;
-  left: 13px;
-  top: 25px;
+  left: 15px;
+  top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
   width: 20px;
   z-index: 3;
+}
+.listActionContainer.listExpanded {
+  height: calc(100% - 257px);
 }
 .listActionButton {
   height: 20px;
@@ -58,7 +70,7 @@
 
 .listInformationContainer {
   width: 100%;
-  padding: 0 20px;
+  padding: 5px 20px;
   cursor: pointer;
 }
 

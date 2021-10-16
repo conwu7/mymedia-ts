@@ -1,8 +1,12 @@
 import { MoreVert } from '@mui/icons-material';
-import { IconButton, Link, Menu, MenuItem } from '@mui/material';
+import { IconButton, Link, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { SyntheticEvent, useState } from 'react';
+import { AiTwotoneCopy } from 'react-icons/ai';
+import { CgMoveRight, CgNotes } from 'react-icons/cg';
+import { MdRateReview } from 'react-icons/md';
+import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { shallowEqual, useSelector } from 'react-redux';
 import defaultPoster from '../../../../images/default-poster.png';
 import { LIstCategoryDisplay } from '../../../../services/types';
@@ -72,38 +76,53 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
             className={style.actionMenu}
           >
             <MenuItem
-              divider={true}
+              onClick={handleCloseActionMenu}
               className={`${style.actionMenuItem} ${style.addNotesActionMenuItem}`}
-              onClick={handleCloseActionMenu}
+              divider
             >
-              Add notes
+              <ListItemIcon>
+                <CgNotes />
+              </ListItemIcon>
+              <ListItemText>Add notes</ListItemText>
             </MenuItem>
             <MenuItem
-              divider={true}
+              onClick={handleCloseActionMenu}
               className={`${style.actionMenuItem} ${style.reviewActionMenuItem}`}
-              onClick={handleCloseActionMenu}
+              divider
             >
-              Review
+              <ListItemIcon>
+                <MdRateReview />
+              </ListItemIcon>
+              <ListItemText>Review</ListItemText>
             </MenuItem>
             <MenuItem
-              divider={true}
+              onClick={handleCloseActionMenu}
               className={`${style.actionMenuItem} ${style.moveActionMenuItem}`}
-              onClick={handleCloseActionMenu}
+              divider
             >
-              Move
+              <ListItemIcon>
+                <CgMoveRight />
+              </ListItemIcon>
+              <ListItemText>Move</ListItemText>
             </MenuItem>
             <MenuItem
-              divider={true}
+              onClick={handleCloseActionMenu}
               className={`${style.actionMenuItem} ${style.copyActionMenuItem}`}
-              onClick={handleCloseActionMenu}
+              divider
             >
-              Copy
+              <ListItemIcon>
+                <AiTwotoneCopy />
+              </ListItemIcon>
+              <ListItemText>Copy</ListItemText>
             </MenuItem>
             <MenuItem
-              className={`${style.actionMenuItem} ${style.removeActionMenuItem}`}
               onClick={handleCloseActionMenu}
+              className={`${style.actionMenuItem} ${style.removeActionMenuItem}`}
             >
-              Remove
+              <ListItemIcon>
+                <RiDeleteBin2Fill />
+              </ListItemIcon>
+              <ListItemText>Remove</ListItemText>
             </MenuItem>
           </Menu>
         </div>
