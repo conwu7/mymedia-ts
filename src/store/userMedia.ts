@@ -60,6 +60,7 @@ export type UserMediaComboAction = {
   type: string;
   listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
   data: UserMediaCombo[];
+  dataSingle: UserMediaCombo;
 };
 
 export type UserMovieMap = {
@@ -97,6 +98,16 @@ const userMediaReducer: UserMediaReducer = (state = initialState, action) => {
           {},
         ),
       };
+    case 'updateUserMedia': {
+      const updatedCategoryUserMedia = {
+        ...state[action.listType],
+        [action.dataSingle._id]: action.dataSingle,
+      };
+      return {
+        ...state,
+        [action.listType]: updatedCategoryUserMedia,
+      };
+    }
     default:
       return state;
   }

@@ -169,7 +169,7 @@ function ListInformation({ name, description }: ListDescription): JSX.Element {
 }
 
 function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCategory; list: List }): JSX.Element {
-  if (list && list.mediaInstants.length < 1) return <div>Empty List</div>;
+  if (list && list.mediaInstants.length < 1) return <div className={style.emptyList}>Empty List</div>;
   return (
     <div className={style.listUserMediaContainer}>
       {list.mediaInstants.map((mediaInstant, index) => (

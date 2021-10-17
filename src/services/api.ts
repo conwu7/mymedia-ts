@@ -1,5 +1,14 @@
 import { UserPreferences } from '../store/userPreferences';
-import { ApiResponse, ListCategory, LoginBody, MakeRequest, OptionalSignal, SignupBody, UpdateListBody } from './types';
+import {
+  ApiResponse,
+  ListCategory,
+  LoginBody,
+  MakeRequest,
+  OptionalSignal,
+  ReviewUserMediaBody,
+  SignupBody,
+  UpdateListBody,
+} from './types';
 
 const addBase = (path: string) => `api/${path}`;
 
@@ -74,4 +83,22 @@ export async function deleteList(listCategory: ListCategory, listId: string): Pr
 
 export async function updatePreferences(preferences: UserPreferences): Promise<ApiResponse> {
   return makeRequest('user/preferences', 'put', preferences);
+}
+
+export async function addUserMediaNotes(
+  imdbId: string,
+  toWatchNotes: string,
+  listCategory: ListCategory,
+): Promise<ApiResponse> {
+  return makeRequest(`${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'put', {
+    toWatchNotes,
+  });
+}
+
+export async function reviewUserMedia(
+  imdbId: string,
+  body: ReviewUserMediaBody,
+  listCategory: ListCategory,
+): Promise<ApiResponse> {
+  return makeRequest(`${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'put', body);
 }

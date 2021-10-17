@@ -77,6 +77,7 @@ export function FormTextField({
   required,
   showErrorImmediately,
   isMultiLine,
+  minRows,
 }: FormTextFieldProps): JSX.Element {
   return (
     <Box className={style.textFieldContainer}>
@@ -95,6 +96,7 @@ export function FormTextField({
         value={formik.values[name]}
         multiline={isMultiLine}
         className={style.formTextField}
+        minRows={minRows}
       />
       <ErrorFieldContainer
         showError={!!formik.touched[name] || !!showErrorImmediately}

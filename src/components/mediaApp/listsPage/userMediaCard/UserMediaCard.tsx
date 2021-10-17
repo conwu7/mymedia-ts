@@ -12,6 +12,7 @@ import defaultPoster from '../../../../images/default-poster.png';
 import { LIstCategoryDisplay } from '../../../../services/types';
 import { UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
 import UniversalModal from '../../../utils/universalModal/UniversalModal';
+import { AddMediaNotesForm, ReviewUserMediaForm } from '../forms/forms';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
 import { UserMediaCardProps } from '../types';
 import style from './style.module.scss';
@@ -22,12 +23,24 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
     shallowEqual,
   );
   const [isViewingMore, setIsViewingMore] = useState(false);
+  const [isAddingNotes, setIsAddingNotes] = useState(false);
+  const [isReviewingMedia, setIsReviewingMedia] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const handleOpenMore = (): void => setIsViewingMore(true);
   const handleCloseMore = (): void => setIsViewingMore(false);
   const handleOpenActionMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseActionMenu = (): void => setAnchorEl(null);
+  const handleOpenAddNotes = (): void => {
+    handleCloseActionMenu();
+    setIsAddingNotes(true);
+  };
+  const handleCloseAddNotes = (): void => setIsAddingNotes(false);
+  const handleOpenReview = (): void => {
+    handleCloseActionMenu();
+    setIsReviewingMedia(true);
+  };
+  const handleCloseReview = (): void => setIsReviewingMedia(false);
 
   if (!userMedia) return <span>working on it</span>;
 
@@ -76,7 +89,7 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
             className={style.actionMenu}
           >
             <MenuItem
-              onClick={handleCloseActionMenu}
+              onClick={handleOpenAddNotes}
               className={`${style.actionMenuItem} ${style.addNotesActionMenuItem}`}
               divider
             >
@@ -86,7 +99,7 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
               <ListItemText>Add notes</ListItemText>
             </MenuItem>
             <MenuItem
-              onClick={handleCloseActionMenu}
+              onClick={handleOpenReview}
               className={`${style.actionMenuItem} ${style.reviewActionMenuItem}`}
               divider
             >
@@ -129,6 +142,23 @@ export default function UserMediaCard({ userMediaId, listCategory }: UserMediaCa
       </div>
       <UniversalModal isOpen={isViewingMore} onClose={handleCloseMore} title={LIstCategoryDisplay[listCategory]}>
         <MoreInfoCard media={userMedia.media} userMedia={userMedia} />
+      </UniversalModal>
+      <UniversalModal isOpen={isAddingNotes} onClose={handleCloseAddNotes} title={media.title}>
+        <AddMediaNotesForm
+          toWatchNotes={userMedia.toWatchNotes}
+          onClose={handleCloseAddNotes}
+          listCategory={listCategory}
+          imdbId={userMedia.imdbID}
+        />
+      </UniversalModal>
+      <UniversalModal isOpen={isReviewingMedia} onClose={handleCloseReview} title={media.title}>
+        <ReviewUserMediaForm
+          onClose={handleCloseReview}
+          listCategory={listCategory}
+          imdbId={userMedia.imdbID}
+          userRating={userMedia.userRating}
+          reviewNotes={userMedia.reviewNotes}
+        />
       </UniversalModal>
     </Paper>
   );

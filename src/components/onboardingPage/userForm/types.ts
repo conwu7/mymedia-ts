@@ -13,6 +13,7 @@ export type FormTextFieldProps = {
   required?: boolean;
   showErrorImmediately?: boolean;
   isMultiLine?: boolean;
+  minRows?: number;
 };
 
 export type UserFormBody = LoginBody | SignupBody;

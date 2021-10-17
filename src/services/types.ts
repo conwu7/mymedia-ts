@@ -34,3 +34,8 @@ export type UpdateListBody = {
   listName: string;
   description?: string;
 };
+
+export type ReviewUserMediaBody = {
+  userRating?: number;
+  reviewNotes?: string;
+};

@@ -44,9 +44,14 @@ export const UpdateListSchema = Yup.object().shape({
 });
 
 export const UserMediaSchema = Yup.object().shape({
-  toWatchNotes: Yup.string().max(200, 'Too Long - Max 200 characters'),
-  reviewNotes: Yup.string().max(200, 'Too Long - Max 200 characters'),
-  streamingSource: Yup.string().required().max(20, 'Too Long - Max 20 characters'),
+  toWatchNotes: Yup.string().max(500, 'Too Long - Max 500 characters'),
+  userRating: Yup.number().min(0).max(10),
+  reviewNotes: Yup.string().max(500, 'Too Long - Max 500 characters'),
+  streamingSource: Yup.string().max(20, 'Too Long - Max 20 characters'),
+});
+
+export const UserMediaNotesSchema = Yup.object().shape({
+  toWatchNotes: Yup.string().max(500, 'Too Long - Max 500 characters'),
 });
 
 export const SearchSchema = Yup.object().shape({

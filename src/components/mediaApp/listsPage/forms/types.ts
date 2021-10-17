@@ -21,3 +21,18 @@ export type ListFormProps = {
 export interface PreferencesFormProps {
   onClose: () => void;
 }
+
+export type AddMediaNotesFormProps = {
+  onClose: () => void;
+  listCategory: ListCategory;
+  imdbId: string;
+  toWatchNotes?: string;
+};
+
+export type ReviewUserMediaFormProps = {
+  onClose: () => void;
+  listCategory: ListCategory;
+  imdbId: string;
+  reviewNotes?: string;
+  userRating?: number;
+};

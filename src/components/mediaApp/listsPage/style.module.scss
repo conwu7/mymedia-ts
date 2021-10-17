@@ -2,14 +2,17 @@
   display: none;
 }
 .accordionDetails {
-  padding: 5px !important;
+  padding: 15px 5px 0 !important;
 }
 .emptyLists {
   width: 100%;
   text-align: center;
   color: grey;
   padding: 1px 15px 150px;
+}
 
+.emptyList {
+  padding: 0 40px;
 }
 
 .listsPage {

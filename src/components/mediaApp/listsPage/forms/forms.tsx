@@ -1,19 +1,32 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Rating, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
 import { SyntheticEvent, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createList, updateList, updatePreferences } from '../../../../services/api';
-import { UpdateListBody } from '../../../../services/types';
-import { UpdateListSchema } from '../../../../services/validation';
+import {
+  addUserMediaNotes,
+  createList,
+  reviewUserMedia,
+  updateList,
+  updatePreferences,
+} from '../../../../services/api';
+import { ReviewUserMediaBody, UpdateListBody } from '../../../../services/types';
+import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../../services/validation';
 import { UserPreferences } from '../../../../store/userPreferences';
 import { FormTextField } from '../../../onboardingPage/userForm/UserForm';
 import ErrorFieldContainer from '../../../utils/errorFieldContainer/ErrorFieldContainer';
 import Loading from '../../../utils/loading/Loading';
 import style from './style.module.scss';
-import { EditListFormProps, ListFormProps, NewListFormProps, PreferencesFormProps } from './types';
+import {
+  AddMediaNotesFormProps,
+  EditListFormProps,
+  ListFormProps,
+  NewListFormProps,
+  PreferencesFormProps,
+  ReviewUserMediaFormProps,
+} from './types';
 
 export function EditListForm(props: EditListFormProps): JSX.Element {
   const [error, setError] = useState('');
@@ -209,5 +222,137 @@ export function PreferencesForm(props: PreferencesFormProps): JSX.Element {
         </Button>
       </form>
     </div>
+  );
+}
+
+export function AddMediaNotesForm({
+  listCategory,
+  imdbId,
+  toWatchNotes,
+  onClose,
+}: AddMediaNotesFormProps): JSX.Element {
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch: Dispatch = useDispatch();
+
+  const initialValues: { toWatchNotes: string } = { toWatchNotes: toWatchNotes || '' };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: UserMediaNotesSchema,
+    onSubmit: async (values: { toWatchNotes: string }) => {
+      setIsLoading(true);
+      const { err, result } = await addUserMediaNotes(imdbId, values.toWatchNotes, listCategory);
+      setIsLoading(false);
+      if (err) return setError(err);
+      dispatch({
+        type: 'updateUserMedia',
+        listType: listCategory,
+        dataSingle: result,
+      });
+      onClose();
+    },
+  });
+
+  return (
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <FormTextField
+        label="Watch Notes"
+        showErrorImmediately={true}
+        name={'toWatchNotes'}
+        formik={formik}
+        required={true}
+        isMultiLine={true}
+        minRows={7}
+      />
+      <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
+      <Button
+        onClick={formik.submitForm}
+        className={style.submitBtn}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Save
+      </Button>
+      <Loading isLoading={isLoading} />
+    </Box>
+  );
+}
+
+export function ReviewUserMediaForm({
+  listCategory,
+  imdbId,
+  reviewNotes,
+  userRating: oldUserRating,
+  onClose,
+}: ReviewUserMediaFormProps): JSX.Element {
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(oldUserRating || 0);
+
+  const dispatch: Dispatch = useDispatch();
+
+  const initialValues: ReviewUserMediaBody = { reviewNotes: reviewNotes || '' };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: UserMediaSchema,
+    onSubmit: async (values: ReviewUserMediaBody) => {
+      console.log('hit submit');
+      setIsLoading(true);
+      const { err, result } = await reviewUserMedia(imdbId, { ...values, userRating }, listCategory);
+      setIsLoading(false);
+      if (err) return setError(err);
+      dispatch({
+        type: 'updateUserMedia',
+        listType: listCategory,
+        dataSingle: result,
+      });
+      onClose();
+    },
+  });
+
+  const handleUserRating = (event: SyntheticEvent, newValue: number | null): void => {
+    setUserRating(newValue || 0);
+  };
+  return (
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <Rating className={style.userRating} name="userRating" value={userRating} onChange={handleUserRating} max={10} />
+      <FormTextField
+        label="Review Notes"
+        showErrorImmediately={true}
+        name={'reviewNotes'}
+        formik={formik}
+        required={false}
+        isMultiLine={true}
+        minRows={5}
+      />
+      <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
+      <Button
+        onClick={formik.submitForm}
+        className={style.submitBtn}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Save
+      </Button>
+      <Loading isLoading={isLoading} />
+    </Box>
   );
 }
