@@ -1,12 +1,15 @@
 .modalContainer {
   position: absolute;
-  top: 5%;
-  left: 2%;
-  width: 96vw;
+  //top: 5%;
+  //left: 2%;
+  //width: 96vw;
   padding: 10px 10px 20px;
-  border: 2px solid darkgray;
   background: white;
+  border-radius: 3px;
   outline: none;
+  //position: absolute;
+  //bottom: 0;
+  width: 100vw;
 }
 
 .modalHeader {
@@ -26,21 +29,20 @@
 }
 
 .closeModalButtonWrapper {
-  padding: 0 !important;
+  padding: 10px !important;
+  color: firebrick !important;
+  font-size: 20px !important;
 
-  svg, path {
-    width: 60px;
-    height: 50px;
-    color: indianred;
+  svg, path, span {
+    width: 35px;
+    height: 35px;
+    color: darkgray !important;
   }
 }
 
 .modalContentContainer {
   overflow: auto;
-  max-height: 72vh;
+  max-height: 90vh;
+  padding-bottom: 35px;
 }
-@media (display-mode: standalone) {
-  .modalContentContainer {
-    max-height: 80vh;
-  }
-}
+

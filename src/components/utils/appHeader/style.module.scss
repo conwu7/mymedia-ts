@@ -1,7 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@800&display=swap");
+
 .appHeaderContainer {
   overflow: hidden;
 }
 .homePageLink {
+  font-family: "Dosis", sans-serif !important;
+  font-size: 22px !important;
   text-decoration: none !important;
   color: inherit !important;
 }
@@ -11,4 +15,8 @@
 .logoutMenuItem {
   color: firebrick !important;
   font-weight: 500;
+}
+svg.menuIcon {
+  width: 25px;
+  height: 25px
 }

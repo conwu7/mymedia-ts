@@ -27,22 +27,22 @@ import { BottomNavigationProps, NavigationTab } from './types';
 
 export default function MediaApp({ user }: { user: User }): JSX.Element {
   const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>('towatch');
-  const { isLoading, error, data } = useFetchApi<List, ListCategory>(true, getLists, 'towatch');
+  const { isLoading, error, data } = useFetchApi<List, ListCategory>(false, getLists, 'towatch');
   const {
     isLoading: isLoadingTv,
     error: errorTv,
     data: dataTv,
-  } = useFetchApi<List, ListCategory>(true, getLists, 'towatchtv');
+  } = useFetchApi<List, ListCategory>(false, getLists, 'towatchtv');
   const {
     isLoading: isLoadingUserMedia,
     error: errorUserMedia,
     data: dataUserMedia,
-  } = useFetchApi<UserMovie[], ListCategory>(true, getUserMedia, 'towatch');
+  } = useFetchApi<UserMovie[], ListCategory>(false, getUserMedia, 'towatch');
   const {
     isLoading: isLoadingUserMediaTv,
     error: errorUserMediaTv,
     data: dataUserMediaTv,
-  } = useFetchApi<UserTvShow[], ListCategory>(true, getUserMedia, 'towatchtv');
+  } = useFetchApi<UserTvShow[], ListCategory>(false, getUserMedia, 'towatchtv');
 
   const dispatch: Dispatch = useDispatch();
 

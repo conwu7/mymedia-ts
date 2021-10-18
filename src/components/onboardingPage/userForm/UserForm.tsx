@@ -84,7 +84,7 @@ export function FormTextField({
       <TextField
         autoComplete={name}
         fullWidth
-        sx={{ m: 1 }}
+        sx={{ m: '1' }}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         id={name}

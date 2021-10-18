@@ -1,11 +1,11 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Link, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
-import { BiMoviePlay, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
+import { AiOutlineMenu, BiMoviePlay, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
 import { logout } from '../../../services/api';
 import style from './style.module.scss';
 
@@ -25,12 +25,12 @@ export default function AppHeader(): JSX.Element {
       <AppBar position="fixed" className={style.appBar}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/" className={style.homePageLink}>
-              My Media Lists
-            </Link>
+            <Button href="/" className={style.homePageLink}>
+              MY LISTS
+            </Button>
           </Typography>
           <IconButton color="inherit" onClick={handleOpenDrawer}>
-            <MenuIcon />
+            <AiOutlineMenu className={style.menuIcon} />
           </IconButton>
         </Toolbar>
       </AppBar>
