@@ -8,7 +8,8 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { BiCameraMovie } from 'react-icons/bi';
 import { GrLinkTop } from 'react-icons/gr';
 import { IoMdCreate } from 'react-icons/io';
-import { MdFilterList, MdReadMore, MdRoomPreferences } from 'react-icons/md';
+// import { MdFilterList, MdReadMore, MdRoomPreferences } from 'react-icons/md';
+import { MdReadMore, MdRoomPreferences } from 'react-icons/md';
 import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -193,12 +194,12 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
           </ListItemIcon>
           <ListItemText>Create List</ListItemText>
         </MenuItem>
-        <MenuItem onClick={undefined} divider>
-          <ListItemIcon>
-            <MdFilterList />
-          </ListItemIcon>
-          <ListItemText>Filters</ListItemText>
-        </MenuItem>
+        {/*<MenuItem onClick={undefined} divider>*/}
+        {/*  <ListItemIcon>*/}
+        {/*    <MdFilterList />*/}
+        {/*  </ListItemIcon>*/}
+        {/*  <ListItemText>Filters</ListItemText>*/}
+        {/*</MenuItem>*/}
         <MenuItem onClick={handleOpenModifyPreferences} divider>
           <ListItemIcon>
             <MdRoomPreferences />
