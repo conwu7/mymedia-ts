@@ -58,16 +58,27 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
           <img src={posterUrl || defaultPoster} alt={`${title} poster`} className={style.posterInMore} />
         </div>
         <div className={style.mainInfoContainer}>
-          <h1 className={style.mediaTitle}>{title}</h1>
+          {/*<h1 className={style.mediaTitle}>{title}</h1>*/}
+          {/*<p className={style.runtime}>*/}
+          {/*  <span className={style.mediaInfoLabel}>Streaming: </span>*/}
+          {/*  {'-'}*/}
+          {/*</p>*/}
+          <p className={style.releaseDate}>
+            <span className={style.mediaInfoLabel}>Release: </span>
+            {runYears && totalSeasons ? runYears : releaseDate}
+            {totalSeasons && (
+              <span className={style.totalSeasons}>
+                ({totalSeasons} season{totalSeasons > 1 ? 's' : ''})
+              </span>
+            )}
+          </p>
           <p className={style.runtime}>
             <span className={style.mediaInfoLabel}>Runtime: </span>
             {runtime ? runtime : '-'} min
           </p>
-          <p className={style.languages}>{language && language.join(', ')}</p>
-          <p className={style.releaseDate}>
-            {runYears && totalSeasons
-              ? `${runYears} (${totalSeasons} season${totalSeasons > 1 ? 's' : ''})`
-              : releaseDate}
+          <p className={style.languages}>
+            <span className={style.mediaInfoLabel}>Languages: </span>
+            {language && language.join(', ')}
           </p>
           <p className={style.imdbRating}>
             <Link
@@ -77,18 +88,20 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
               underline="none"
               className={style.imdbLink}
             >
-              IMDB
+              IMDB:
             </Link>
             <span className={style.imdbRatingValue}> {imdbRating || '-'}</span>
             /10
+          </p>
+          <p className={style.genre}>
+            <span className={style.mediaInfoLabel}>Genre:{'  '}</span>
+            {genre && genre.join(', ')}
           </p>
         </div>
       </section>
       <section className={style.otherInfoContainer}>
         {/*<span className={style.mediaInfoLabel}>Release Date:</span>*/}
 
-        <span className={style.mediaInfoLabel}>Genre:</span>
-        <p className={style.genre}>{genre && genre.join(', ')}</p>
         <span className={style.mediaInfoLabel}>Plot:</span>
         <p className={style.plot}>{plot || '-'}</p>
         <span className={style.mediaInfoLabel}>Cast:</span>

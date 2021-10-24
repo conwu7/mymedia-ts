@@ -6,6 +6,7 @@ import Fab from '@mui/material/Fab';
 import Paper from '@mui/material/Paper';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { BiCameraMovie } from 'react-icons/bi';
+import { GrLinkTop } from 'react-icons/gr';
 import { IoMdCreate } from 'react-icons/io';
 import { MdFilterList, MdReadMore, MdRoomPreferences } from 'react-icons/md';
 import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
@@ -22,6 +23,7 @@ import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
 import { NewListForm, PreferencesForm } from './listsPage/forms/forms';
 import ListsPage from './listsPage/ListsPage';
+import SearchPage from './searchPage/SearchPage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
 
@@ -94,6 +96,9 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
   }, [isLoadingUserMediaTv, errorUserMediaTv, dataUserMediaTv]);
 
   const handleNavTabChange = (event: SyntheticEvent, newTab: NavigationTab): void => {
+    if (currentNavTab === 'search' && newTab === 'search') {
+      document.getElementById('searchString')?.focus();
+    }
     setCurrentNavTab(newTab);
   };
 
@@ -102,11 +107,12 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
   }
 
   return (
-    <div className={style.mediaApp}>
+    <div className={`mediaApp ${style.mediaApp}`}>
       <AppHeader />
       <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'towatch'} />
       <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'towatchtv'} />
-      <MediaAppActions listCategory={currentNavTab} />
+      <SearchPage hidden={currentNavTab !== 'search'} />
+      {currentNavTab !== 'search' && <MediaAppActions listCategory={currentNavTab} />}
       <BottomNavigationTabs handleChange={handleNavTabChange} currentTab={currentNavTab} />
     </div>
   );
@@ -132,9 +138,22 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
   };
   const handleCloseModifyPreferences = (): void => setIsModifyingPreferences(false);
 
+  const handleScrollToTop = (): void => {
+    handleCloseMenu();
+    document.querySelectorAll(`.listsPage`)[listCategory === 'towatch' ? 0 : 1]?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <>
-      <Fab aria-label="edit" size="large" className={style.mediaAppFloatingButton} onClick={handleOpenMenu}>
+      <Fab
+        aria-label="edit"
+        size="large"
+        className={`mediaAppFloatingButton ${style.mediaAppFloatingButton}`}
+        onClick={handleOpenMenu}
+      >
         <MdReadMore />
       </Fab>
       <Menu
@@ -159,11 +178,17 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
           </ListItemIcon>
           <ListItemText>Filters</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleOpenModifyPreferences}>
+        <MenuItem onClick={handleOpenModifyPreferences} divider>
           <ListItemIcon>
             <MdRoomPreferences />
           </ListItemIcon>
           <ListItemText>Preferences</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleScrollToTop}>
+          <ListItemIcon>
+            <GrLinkTop />
+          </ListItemIcon>
+          <ListItemText>Scroll to top</ListItemText>
         </MenuItem>
       </Menu>
       <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
@@ -191,7 +216,8 @@ function BottomNavigationTabs({ handleChange, currentTab }: BottomNavigationProp
     <Paper
       sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
       elevation={3}
-      className={`${style.raiseOnFullscreen} ${raiseComponent ? style.raise : ''}`}
+      id="bottomNavContainer"
+      className={`bottomNavContainer raiseOnFullscreen ${style.raiseOnFullscreen} ${raiseComponent ? style.raise : ''}`}
     >
       <Box className={style.bottomNavContainer}>
         <BottomNavigation showLabels value={currentTab} onChange={handleChange}>

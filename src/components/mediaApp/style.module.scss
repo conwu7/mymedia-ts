@@ -1,11 +1,15 @@
 .mediaApp {
-  //padding-bottom: 100px;
+  :global(.listsPage) {
+    padding-top: 60px !important;
+    padding-bottom: 200px;
+  }
 }
 .mediaAppFloatingButton {
   position: absolute !important;
-  bottom: 100px;
+  bottom: 180px;
   right: 20px;
   background-color: #85c6c6 !important;
+  z-index: 100;
 
   svg {
     width: 30px;
@@ -30,25 +34,26 @@
     height: 25px;
   }
 }
-.raiseOnFullscreen {
-  height: 60px;
-  transition: all 200ms linear;
-  z-index: 3;
-}
-.raise {
-  display: block;
-  height: 70px;
-  background-color: whitesmoke;
-}
-//@media only screen and (min-device-width: 680px) {
-//  .raise {
-//    height: 70px;
+
+//.raiseOnFullscreen {
+//  height: 60px;
+//  transition: all 200ms linear;
+//  z-index: 3;
+//}
+//.raise {
+//  display: block;
+//  height: 70px;
+//  background-color: whitesmoke;
+//}
+////@media only screen and (min-device-width: 680px) {
+////  .raise {
+////    height: 70px;
+////  }
+////}
+//@media (display-mode: standalone) {
+//  .raiseOnFullscreen {
+//    display: block;
+//    height: 80px;
+//    background-color: whitesmoke;
 //  }
 //}
-@media (display-mode: standalone) {
-  .raiseOnFullscreen {
-    display: block;
-    height: 80px;
-    background-color: whitesmoke;
-  }
-}

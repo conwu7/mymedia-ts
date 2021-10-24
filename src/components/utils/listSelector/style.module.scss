@@ -1,0 +1,32 @@
+.listSelectorContainer {
+  //display: flex;
+  width: 100%;
+  margin: auto;
+}
+
+.listSelectorButtonGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+  margin: 10px 0;
+}
+
+.listSelectorButton {
+  width: 80%;
+  background-color: #4b9595 !important;
+  font-size: 15px !important;
+  margin: 3px !important;
+  padding: 10px 2px !important;
+  border-radius: 12px !important;
+  border-color: transparent !important;
+}
+.listSelectorButton:disabled {
+  background-color: #cdcccc !important;
+  color: #575c5c !important;
+}
+.createListButton {
+  margin-top: 20px !important;
+  background-color: #3f943f !important;
+}

@@ -5,23 +5,26 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
-import { AiOutlineMenu, BiMoviePlay, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
+import { BiMoviePlay, CgDetailsMore, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
 import { logout } from '../../../services/api';
+import Loading from '../loading/Loading';
 import style from './style.module.scss';
 
 export default function AppHeader(): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOpenDrawer = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseDrawer = (): void => setAnchorEl(null);
   const handleLogout = async () => {
-    if (!window.confirm('Are you sure?')) return;
+    setIsLoading(true);
     const { status } = await logout();
     if (status === 200) return window.location.reload();
-    alert('There was issue with that request');
+    alert('There was issue with that request. Try refreshing the page.');
+    setIsLoading(false);
   };
   return (
-    <Box sx={{ flexGrow: 1 }} className={style.appHeaderContainer}>
+    <Box id="appHeaderContainer" sx={{ flexGrow: 1 }} className={`appHeaderContainer ${style.appHeaderContainer}`}>
       <AppBar position="fixed" className={style.appBar}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -30,7 +33,7 @@ export default function AppHeader(): JSX.Element {
             </Button>
           </Typography>
           <IconButton color="inherit" onClick={handleOpenDrawer}>
-            <AiOutlineMenu className={style.menuIcon} />
+            <CgDetailsMore className={style.menuIcon} />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -82,6 +85,7 @@ export default function AppHeader(): JSX.Element {
           <ListItemText>Logout</ListItemText>
         </MenuItem>
       </Menu>
+      <Loading isLoading={isLoading} />
     </Box>
   );
 }

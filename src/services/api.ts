@@ -102,3 +102,19 @@ export async function reviewUserMedia(
 ): Promise<ApiResponse> {
   return makeRequest(`${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'put', body);
 }
+
+export async function addItemToList(imdbId: string, listId: string, listCategory: ListCategory): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${listId}/${imdbId}`, 'post');
+}
+
+export async function removeItemFromList(
+  imdbId: string,
+  listId: string,
+  listCategory: ListCategory,
+): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${listId}/${imdbId}`, 'delete');
+}
+
+export async function searchForMedia(searchString: string): Promise<ApiResponse> {
+  return makeRequest(`search?searchString=${searchString}`, 'get');
+}

@@ -26,15 +26,6 @@ export const LoginSchema = Yup.object().shape({
   password: Yup.string().min(3, 'Invalid Password'),
 });
 
-// export const ListSchema = Yup.object().shape({
-//   listName: Yup.string()
-//     .min(2, 'Too Short - Min 2 characters')
-//     .max(40, 'Too Long - Max 40 characters')
-//     .required('Required'),
-//   description: Yup.string().max(140, 'Too Long - Max 140 characters'),
-//   typeOfList: Yup.string().required('Required'),
-// });
-
 export const UpdateListSchema = Yup.object().shape({
   listName: Yup.string()
     .min(2, 'Too Short - Min 2 characters')
@@ -56,6 +47,7 @@ export const UserMediaNotesSchema = Yup.object().shape({
 
 export const SearchSchema = Yup.object().shape({
   searchString: Yup.string()
+    .trim()
     .min(4, 'Search with at least 4 characters')
     .required('Required')
     .test('firstCharacter', 'First character must be alphanumeric', (value) => {

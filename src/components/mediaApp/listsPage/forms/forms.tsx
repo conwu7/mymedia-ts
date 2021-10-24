@@ -71,13 +71,13 @@ export function NewListForm(props: NewListFormProps): JSX.Element {
     onSubmit: async (values: UpdateListBody) => {
       setIsLoading(true);
       const { err, result } = await createList(values, props.listCategory);
-      setIsLoading(false);
       if (err) return setError(err);
       dispatch({
         type: 'createList',
         listType: props.listCategory,
         list: result,
       });
+      setIsLoading(false);
       props.onClose();
     },
   });
@@ -243,13 +243,13 @@ export function AddMediaNotesForm({
     onSubmit: async (values: { toWatchNotes: string }) => {
       setIsLoading(true);
       const { err, result } = await addUserMediaNotes(imdbId, values.toWatchNotes, listCategory);
-      setIsLoading(false);
       if (err) return setError(err);
       dispatch({
         type: 'updateUserMedia',
         listType: listCategory,
         dataSingle: result,
       });
+      setIsLoading(false);
       onClose();
     },
   });
@@ -306,16 +306,15 @@ export function ReviewUserMediaForm({
     initialValues,
     validationSchema: UserMediaSchema,
     onSubmit: async (values: ReviewUserMediaBody) => {
-      console.log('hit submit');
       setIsLoading(true);
       const { err, result } = await reviewUserMedia(imdbId, { ...values, userRating }, listCategory);
-      setIsLoading(false);
       if (err) return setError(err);
       dispatch({
         type: 'updateUserMedia',
         listType: listCategory,
         dataSingle: result,
       });
+      setIsLoading(false);
       onClose();
     },
   });

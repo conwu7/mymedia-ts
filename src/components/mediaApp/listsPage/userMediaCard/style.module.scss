@@ -12,6 +12,13 @@ $poster-height-desktop: 270px;
   margin: 0 10px;
   position: relative;
   background: rgba(245, 245, 245, 0.6) !important;
+  border-radius: 8px !important;
+  transition: transform 300ms linear !important;
+  transform: scaleX(1);
+
+  &.deleted {
+    transform: scaleX(0);
+  }
 
   .mediaInfo {
     display: flex;
@@ -25,8 +32,8 @@ $poster-height-desktop: 270px;
   .posterContainer {
     height: 220px;
     width: 133px;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
     text-align: center;
   }
   .mediaTitle {
@@ -42,9 +49,6 @@ $poster-height-desktop: 270px;
     font-style: normal;
     font-weight: 500;
   }
-  //.imdbRating {
-  //  color: rgb(73, 99, 90);
-  //}
   .imdbRatingValue {
     margin-left: 8px;
   }

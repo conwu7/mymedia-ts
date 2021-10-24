@@ -1,15 +1,22 @@
+.drawer div:nth-child(3) {
+  background-color: transparent !important;
+}
 .modalContainer {
-  position: absolute;
-  //top: 5%;
-  //left: 2%;
-  //width: 96vw;
-  padding: 10px 10px 20px;
-  background: white;
-  border-radius: 3px;
-  outline: none;
   //position: absolute;
-  //bottom: 0;
-  width: 100vw;
+  ////top: 5%;
+  ////left: 2%;
+  ////width: 96vw;
+  //padding: 10px 10px 20px;
+  //background: white;
+  //border-radius: 3px;
+  //outline: none;
+  ////position: absolute;
+  ////bottom: 0;
+  //width: 100vw;
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;
+  overflow: hidden !important;
+  background-color: white;
 }
 
 .modalHeader {
@@ -19,6 +26,9 @@
   justify-content: space-between;
   align-items: center;
   background-color: whitesmoke;
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;
+  padding: 5px 10px;
 }
 
 .modalTitle {
@@ -43,6 +53,14 @@
 .modalContentContainer {
   overflow: auto;
   max-height: 90vh;
-  padding-bottom: 35px;
+  padding: 0 0 35px;
 }
 
+@media only screen and (min-width: 800px) {
+  .modalContainer {
+    width: fit-content;
+    min-width: 500px;
+    max-width: 800px;
+    margin: auto;
+  }
+}

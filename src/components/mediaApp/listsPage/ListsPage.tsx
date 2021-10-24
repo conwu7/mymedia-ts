@@ -1,11 +1,10 @@
-import { MoreVert } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
+import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
@@ -33,17 +32,13 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
     listSortPreference,
   );
 
-  if (mappedLists.length < 1)
-    return (
-      <div className={style.emptyLists}>
-        <p>Your {listCategory === 'towatch' ? 'movies' : 'tv shows'} list is empty</p>
-        <p>To create new lists, click on &quot;More&quot; on the bottom tab</p>
-        <p>then click &quot;Create New List&quot;</p>
-      </div>
-    );
-
   return (
-    <div className={`${style.listsPage} ${hidden ? style.hidden : ''}`}>
+    <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''}`}>
+      {mappedLists.length < 1 && (
+        <div className={style.emptyLists}>
+          <p>Your {listCategory === 'towatch' ? 'movies' : 'tv shows'} list is empty</p>
+        </div>
+      )}
       {mappedLists.map((list) => (
         <ListContainer list={list} key={list._id} listCategory={listCategory} />
       ))}
@@ -80,10 +75,9 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
 
     if (!window.confirm(`Are you sure you want to delete '${list.name}'?`)) return;
     setIsLoading(true);
-
     const { err } = await deleteList(listCategory, list._id);
-    setIsLoading(false);
     if (err) return window.alert('Failed to delete list');
+    setIsLoading(false);
     setIsDeleted(true);
   };
 
@@ -120,7 +114,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
       </Accordion>
       <div className={`${style.listActionContainer} ${listActionContainerStyle}`}>
         <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
-          <MoreVert fontSize="large" />
+          <MdOutlineArrowDropDownCircle />
         </IconButton>
         <Menu
           id="listPageActionMenu"
@@ -172,8 +166,13 @@ function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCate
   if (list && list.mediaInstants.length < 1) return <div className={style.emptyList}>Empty List</div>;
   return (
     <div className={style.listUserMediaContainer}>
-      {list.mediaInstants.map((mediaInstant, index) => (
-        <UserMediaCard key={index} userMediaId={mediaInstant.userMedia} listCategory={listCategory} />
+      {list.mediaInstants.map((mediaInstant) => (
+        <UserMediaCard
+          key={mediaInstant._id}
+          userMediaId={mediaInstant.userMedia}
+          listCategory={listCategory}
+          currentListId={list._id}
+        />
       ))}
     </div>
   );
