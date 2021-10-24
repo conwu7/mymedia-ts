@@ -19,16 +19,17 @@ import { List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
 import AppHeader from '../utils/appHeader/AppHeader';
+import { NewListForm, PreferencesForm } from '../utils/forms/forms';
 import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
-import { NewListForm, PreferencesForm } from './listsPage/forms/forms';
 import ListsPage from './listsPage/ListsPage';
 import SearchPage from './searchPage/SearchPage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
 
 export default function MediaApp({ user }: { user: User }): JSX.Element {
-  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>('towatch');
+  const defaultPage = user.defaultMediaPage === 'tvShows' ? 'towatchtv' : 'towatch';
+  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>(defaultPage);
   const { isLoading, error, data } = useFetchApi<List, ListCategory>(false, getLists, 'towatch');
   const {
     isLoading: isLoadingTv,
@@ -202,22 +203,12 @@ function MediaAppActions({ listCategory }: { listCategory: ListCategory | Naviga
 }
 
 function BottomNavigationTabs({ handleChange, currentTab }: BottomNavigationProps): JSX.Element {
-  const [defaultHeight, setDefaultHeight] = useState<number | null>(null);
-  const [raiseComponent, setRaiseComponent] = useState(false);
-  // function to raise component if safari/chrome mobile toolbars are hidden.
-  useEffect(() => {
-    if (defaultHeight === null) setDefaultHeight(window.innerHeight);
-    const checkRaise = () => setRaiseComponent(window.innerHeight > Number(defaultHeight));
-    window.addEventListener('resize', checkRaise);
-    return () => window.removeEventListener('resize', checkRaise);
-  }, [defaultHeight]);
-
   return (
     <Paper
       sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
       elevation={3}
       id="bottomNavContainer"
-      className={`bottomNavContainer raiseOnFullscreen ${style.raiseOnFullscreen} ${raiseComponent ? style.raise : ''}`}
+      className={`bottomNavContainer raiseOnFullscreen ${style.raiseOnFullscreen}`}
     >
       <Box className={style.bottomNavContainer}>
         <BottomNavigation showLabels value={currentTab} onChange={handleChange}>

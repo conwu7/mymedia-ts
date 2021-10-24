@@ -5,7 +5,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { sortLists } from '../../../services/sorting';
 import { ListReference, ListsState } from '../../../store/lists';
 import { UserPreferences } from '../../../store/userPreferences';
-import { NewListForm } from '../../mediaApp/listsPage/forms/forms';
+import { NewListForm } from '../forms/forms';
 import Loading from '../loading/Loading';
 import UniversalModal from '../universalModal/UniversalModal';
 import style from './style.module.scss';
@@ -58,8 +58,12 @@ export function ListSelector(props: ListSelectorProps): JSX.Element {
               {list.name}
             </Button>
           ))}
-        <Button className={`${style.listSelectorButton} ${style.createListButton}`} onClick={handleOpenCreateList}>
-          Create List
+        <Button
+          variant="outlined"
+          className={`${style.listSelectorButton} ${style.createListButton}`}
+          onClick={handleOpenCreateList}
+        >
+          Create New List
         </Button>
       </ButtonGroup>
       <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList}>

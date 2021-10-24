@@ -39,3 +39,10 @@ export type ReviewUserMediaBody = {
   userRating?: number;
   reviewNotes?: string;
 };
+
+export type SortingOptions = {
+  isDescending?: boolean;
+  useDateParse?: boolean;
+  useUserMedia?: boolean;
+  isNumber?: boolean;
+};

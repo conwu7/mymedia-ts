@@ -5,19 +5,13 @@ import { useFormik } from 'formik';
 import { SyntheticEvent, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import {
-  addUserMediaNotes,
-  createList,
-  reviewUserMedia,
-  updateList,
-  updatePreferences,
-} from '../../../../services/api';
-import { ReviewUserMediaBody, UpdateListBody } from '../../../../services/types';
-import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../../services/validation';
-import { UserPreferences } from '../../../../store/userPreferences';
-import { FormTextField } from '../../../onboardingPage/userForm/UserForm';
-import ErrorFieldContainer from '../../../utils/errorFieldContainer/ErrorFieldContainer';
-import Loading from '../../../utils/loading/Loading';
+import { addUserMediaNotes, createList, reviewUserMedia, updateList, updatePreferences } from '../../../services/api';
+import { ReviewUserMediaBody, UpdateListBody } from '../../../services/types';
+import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
+import { UserPreferences } from '../../../store/userPreferences';
+import { FormTextField } from '../../onboardingPage/userForm/UserForm';
+import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
+import Loading from '../loading/Loading';
 import style from './style.module.scss';
 import {
   AddMediaNotesFormProps,

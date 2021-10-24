@@ -39,9 +39,13 @@
 }
 
 .closeModalButtonWrapper {
-  padding: 10px !important;
+  padding: 3px !important;
   color: firebrick !important;
   font-size: 20px !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background-color: lightgray !important;
 
   svg, path, span {
     width: 35px;

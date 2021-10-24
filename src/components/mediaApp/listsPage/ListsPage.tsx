@@ -8,33 +8,58 @@ import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'rea
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
-import { sortLists } from '../../../services/sorting';
+import { sortLists, sortMediaInstantLists } from '../../../services/sorting';
 import { ListCategory } from '../../../services/types';
 import { List, ListReference, ListsState } from '../../../store/lists';
-import { ListSortPreference, UserPreferences } from '../../../store/userPreferences';
+import { UserMediaState } from '../../../store/userMedia';
+import { UserPreferences } from '../../../store/userPreferences';
+import { EditListForm } from '../../utils/forms/forms';
 import Loading from '../../utils/loading/Loading';
 import UniversalModal from '../../utils/universalModal/UniversalModal';
-import { EditListForm } from './forms/forms';
 import style from './style.module.scss';
 import { ListContainerProps, ListDescription, ListsPageProps } from './types';
 import UserMediaCard from './userMediaCard/UserMediaCard';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
+  const [listIds, setListIds] = useState<string[]>([]);
+  const [mappedLists, setMappedLists] = useState<List[]>([]);
   const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory], shallowEqual);
-  const listSortPreference: ListSortPreference = useSelector(
-    (state: { userPreferences: UserPreferences }) => state.userPreferences.listSortPreference,
+  const { listSortPreference, mediaSortPreference } = useSelector(
+    (state: { userPreferences: UserPreferences }) => state.userPreferences,
+    shallowEqual,
+  );
+  const [hasFullyLoadedLists, setHasFullyLoadedLists] = useState(false);
+  const [hasFullyLoadedListIds, setHasFullyLoadedListIds] = useState(false);
+  const userMedia = useSelector(
+    (state: { userMedia: UserMediaState }) => state.userMedia?.[listCategory],
     shallowEqual,
   );
 
-  const listIds = Object.keys(lists);
-  const mappedLists = sortLists(
-    listIds.map((listId) => lists[listId]),
-    listSortPreference,
-  );
+  useEffect(() => {
+    setListIds(Object.keys(lists));
+    setHasFullyLoadedListIds(true);
+  }, [lists]);
+
+  useEffect(() => {
+    if (!hasFullyLoadedListIds) return;
+    setMappedLists(
+      sortLists(
+        Object.keys(lists).map((listId) => lists[listId]),
+        listSortPreference,
+      ).map((list) => {
+        return {
+          ...list,
+          mediaInstants: sortMediaInstantLists(list.mediaInstants, userMedia, mediaSortPreference),
+        };
+      }),
+    );
+    setHasFullyLoadedLists(true);
+  }, [mediaSortPreference, listIds]);
 
   return (
     <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''}`}>
-      {mappedLists.length < 1 && (
+      <Loading isLoading={!hasFullyLoadedLists} />
+      {mappedLists.length < 1 && hasFullyLoadedLists && (
         <div className={style.emptyLists}>
           <p>Your {listCategory === 'towatch' ? 'movies' : 'tv shows'} list is empty</p>
         </div>

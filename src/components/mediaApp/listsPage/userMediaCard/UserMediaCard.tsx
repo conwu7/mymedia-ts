@@ -13,10 +13,10 @@ import defaultPoster from '../../../../images/default-poster.png';
 import { addItemToList, removeItemFromList } from '../../../../services/api';
 import { List } from '../../../../store/lists';
 import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
+import { AddMediaNotesForm, ReviewUserMediaForm } from '../../../utils/forms/forms';
 import { ListSelectorModal } from '../../../utils/listSelector/ListSelector';
 import Loading from '../../../utils/loading/Loading';
 import UniversalModal from '../../../utils/universalModal/UniversalModal';
-import { AddMediaNotesForm, ReviewUserMediaForm } from '../forms/forms';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
 import { UserMediaCardProps } from '../types';
 import style from './style.module.scss';
@@ -214,7 +214,7 @@ export default function UserMediaCard({ userMediaId, listCategory, currentListId
         listCategory={listCategory}
         imdbId={userMedia.imdbID}
         onSelect={moveMediaToList}
-        modalTitle={`Move ${media.title} to`}
+        modalTitle={`Move '${media.title}' to`}
       />
       <ListSelectorModal
         isOpen={isCopying}
@@ -222,7 +222,7 @@ export default function UserMediaCard({ userMediaId, listCategory, currentListId
         listCategory={listCategory}
         imdbId={userMedia.imdbID}
         onSelect={copyMediaToList}
-        modalTitle={`Copy ${media.title} to`}
+        modalTitle={`Copy '${media.title}' to`}
       />
       <Loading isLoading={isLoading} />
     </Paper>

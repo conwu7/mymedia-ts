@@ -1,17 +1,19 @@
 .siteSample {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  overflow: auto;
+  width: 100vw;
 }
 
 .previewItem {
   display: flex;
+  flex-shrink: 0;
+  flex-basis: 300px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 300px;
-  max-width: 500px;
-  margin: 15px auto;
+  margin: 15px;
   padding: 15px;
 }
 .previewImageContainer {

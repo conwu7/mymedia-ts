@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
+import AppHeader from '../utils/appHeader/AppHeader';
 import LoginPage from './loginPage/LoginPage';
 import SignupPage from './signupPage/SignupPage';
 import SitePreviewPage from './sitePreviewPage/SitePreviewPage';
@@ -16,6 +17,7 @@ export default function OnboardingPage(): JSX.Element {
 
   return (
     <>
+      <AppHeader useSticky={true} unAuthenticated={true} />
       <AppBar color="default" className={style.tabSwitcherContainer}>
         <Tabs value={page} onChange={handlePageChange} centered>
           <Tab label={OnboardingPagesDisplayText.home} value="home" className={style.tab} />

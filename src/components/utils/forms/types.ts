@@ -1,5 +1,5 @@
 import { FormikHandlers, FormikValues } from 'formik';
-import { ListCategory, UpdateListBody } from '../../../../services/types';
+import { ListCategory, UpdateListBody } from '../../../services/types';
 
 export interface EditListFormProps extends UpdateListBody {
   onClose: () => void;

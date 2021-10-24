@@ -2,8 +2,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: white !important;
-  overflow: hidden;
+  background-color: whitesmoke !important;
 }
 
 * {
@@ -16,6 +15,10 @@ body {
 
 .root {
   position: relative;
+}
+
+.App {
+  overflow: hidden;
 }
 
 code {

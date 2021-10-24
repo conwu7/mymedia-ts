@@ -32,7 +32,7 @@ export default function UserForm({ action }: UserFormProps): JSX.Element {
       } else {
         ({ err, status } = await signup({ body: values } as { body: SignupBody }));
       }
-      if (status === 200) return window.location.reload();
+      if (status === 200) return (window.location.href = '/');
       setError(err);
     },
   });

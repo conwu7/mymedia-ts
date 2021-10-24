@@ -6,13 +6,26 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
 import { BiMoviePlay, CgDetailsMore, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
+import { useLocation } from 'react-router-dom';
 import { logout } from '../../../services/api';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';
 
-export default function AppHeader(): JSX.Element {
+const pageTypes = {
+  '/': 'Movies & Shows',
+  '/books': 'Books',
+  '/games': 'Video Games',
+  '/shopping': 'Shopping',
+};
+
+export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?: boolean }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const currentPageDescription = pageTypes[location.pathname];
 
   const handleOpenDrawer = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseDrawer = (): void => setAnchorEl(null);
@@ -25,16 +38,24 @@ export default function AppHeader(): JSX.Element {
   };
   return (
     <Box id="appHeaderContainer" sx={{ flexGrow: 1 }} className={`appHeaderContainer ${style.appHeaderContainer}`}>
-      <AppBar position="fixed" className={style.appBar}>
+      <AppBar position={props.useSticky ? 'sticky' : 'fixed'} className={style.appBar}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Button href="/" className={style.homePageLink}>
               MY LISTS
             </Button>
+            {!props.unAuthenticated && currentPageDescription && (
+              <Typography component="span" sx={{ flexGrow: 1 }}>
+                {' | '}
+                {currentPageDescription}
+              </Typography>
+            )}
           </Typography>
-          <IconButton color="inherit" onClick={handleOpenDrawer}>
-            <CgDetailsMore className={style.menuIcon} />
-          </IconButton>
+          {!props.unAuthenticated && (
+            <IconButton color="inherit" onClick={handleOpenDrawer}>
+              <CgDetailsMore className={style.menuIcon} />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
       <Menu

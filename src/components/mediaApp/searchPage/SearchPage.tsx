@@ -102,7 +102,7 @@ function ResultCard({ result }: ResultCardProps): JSX.Element {
         <img src={result.posterUrl || defaultPoster} alt="movie poster" className={style.resultImage} />
       </div>
       <div className={style.movieInfoContainer}>
-        <h3 className={style.mediaTitle}>{result.title}</h3>
+        <h4 className={style.mediaTitle}>{result.title}</h4>
         <p className={style.mediaType}>{result.mediaType}</p>
         <p className={style.actors}>{result.actors}</p>
         <p className={style.releaseDate}>{result.releaseYears || result.releaseDate}</p>
