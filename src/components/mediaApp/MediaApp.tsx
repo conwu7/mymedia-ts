@@ -13,9 +13,9 @@ import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import useFetchApi from '../../hooks/useFetchApi';
-import { getLists, getUserMedia } from '../../services/api';
+import { getAllCompletedLists, getLists, getUserMedia } from '../../services/api';
 import { ListCategory } from '../../services/types';
-import { List } from '../../store/lists';
+import { CompletedLists, List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
 import AppHeader from '../utils/appHeader/AppHeader';
@@ -46,6 +46,11 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     error: errorUserMediaTv,
     data: dataUserMediaTv,
   } = useFetchApi<UserTvShow[], ListCategory>(false, getUserMedia, 'towatchtv');
+  const {
+    isLoading: isLoadingCompleted,
+    error: errorCompleted,
+    data: dataCompleted,
+  } = useFetchApi<CompletedLists>(false, getAllCompletedLists, undefined);
 
   const dispatch: Dispatch = useDispatch();
 
@@ -75,6 +80,21 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
       data: dataTv || [],
     });
   }, [isLoadingTv, dataTv]);
+
+  // store completedLists
+  useEffect(() => {
+    if (isLoadingCompleted || errorCompleted) return;
+    dispatch({
+      type: 'storeList',
+      listType: 'completed',
+      data: dataCompleted.completedLists?._id ? [dataCompleted.completedLists] : [],
+    });
+    dispatch({
+      type: 'storeList',
+      listType: 'completedtv',
+      data: dataCompleted.completedListsTv?._id ? [dataCompleted.completedListsTv] : [],
+    });
+  }, [isLoadingCompleted, dataCompleted]);
 
   // store user movies
   useEffect(() => {

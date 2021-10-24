@@ -30,9 +30,10 @@ export type AddMediaNotesFormProps = {
 };
 
 export type ReviewUserMediaFormProps = {
-  onClose: () => void;
+  onClose: (action?: string) => void;
   listCategory: ListCategory;
   imdbId: string;
   reviewNotes?: string;
   userRating?: number;
+  hideCompleteButton?: boolean;
 };

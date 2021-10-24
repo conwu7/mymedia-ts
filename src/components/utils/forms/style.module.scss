@@ -24,3 +24,20 @@ button.submitBtn {
   color: #76bbbb !important;
   font-size: 35px !important;
 }
+.saveAndCompleteContainer {
+  display: flex;
+  margin: 15px 0 !important;
+  width: 100% !important;
+  justify-content: space-evenly;
+  align-items: center;
+
+  button {
+    width: 40%;
+    height: 50px;
+    margin: 0 !important;
+  }
+  .completeButton {
+    background-color: darkolivegreen;
+    font-size: 18px;
+  }
+}

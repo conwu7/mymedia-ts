@@ -5,7 +5,14 @@ import { useFormik } from 'formik';
 import { SyntheticEvent, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { addUserMediaNotes, createList, reviewUserMedia, updateList, updatePreferences } from '../../../services/api';
+import {
+  addUserMediaNotes,
+  createList,
+  markComplete,
+  reviewUserMedia,
+  updateList,
+  updatePreferences,
+} from '../../../services/api';
 import { ReviewUserMediaBody, UpdateListBody } from '../../../services/types';
 import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
 import { UserPreferences } from '../../../store/userPreferences';
@@ -287,10 +294,12 @@ export function ReviewUserMediaForm({
   reviewNotes,
   userRating: oldUserRating,
   onClose,
+  hideCompleteButton,
 }: ReviewUserMediaFormProps): JSX.Element {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(oldUserRating || 0);
+  const [isCompleting, setIsCompleting] = useState(false);
 
   const dispatch: Dispatch = useDispatch();
 
@@ -302,16 +311,34 @@ export function ReviewUserMediaForm({
     onSubmit: async (values: ReviewUserMediaBody) => {
       setIsLoading(true);
       const { err, result } = await reviewUserMedia(imdbId, { ...values, userRating }, listCategory);
-      if (err) return setError(err);
+      if (err) {
+        setError(err);
+        setIsLoading(false);
+        return onClose();
+      }
+      if (isCompleting) {
+        const { err: markCompleteError, result } = await markComplete(listCategory, imdbId);
+        if (markCompleteError) return setError(markCompleteError);
+        dispatch({
+          type: 'updateList',
+          listType: listCategory === 'towatch' ? 'completed' : 'completedtv',
+          list: result,
+        });
+      }
       dispatch({
         type: 'updateUserMedia',
         listType: listCategory,
         dataSingle: result,
       });
       setIsLoading(false);
-      onClose();
+      onClose(isCompleting ? 'complete' : undefined);
     },
   });
+
+  const handleComplete = async (): Promise<void> => {
+    setIsCompleting(true);
+    await formik.submitForm();
+  };
 
   const handleUserRating = (event: SyntheticEvent, newValue: number | null): void => {
     setUserRating(newValue || 0);
@@ -336,15 +363,28 @@ export function ReviewUserMediaForm({
         minRows={5}
       />
       <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
-      <Button
-        onClick={formik.submitForm}
-        className={style.submitBtn}
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-      >
-        Save
-      </Button>
+      <div className={style.saveAndCompleteContainer}>
+        <Button
+          onClick={formik.submitForm}
+          className={style.submitBtn}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Save
+        </Button>
+        {!hideCompleteButton && (
+          <Button
+            onClick={handleComplete}
+            className={style.completeButton}
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Complete
+          </Button>
+        )}
+      </div>
       <Loading isLoading={isLoading} />
     </Box>
   );

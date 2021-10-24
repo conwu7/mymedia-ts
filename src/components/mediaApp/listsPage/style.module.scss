@@ -47,6 +47,17 @@
   min-height: 50px !important; // space above action menu button
 }
 
+.completedList {
+  background-color: ghostwhite !important;
+
+  .listInformationContainer .listNameHeader {
+    color: #929292;
+  }
+  .listInformationContainer {
+    margin-left: 0;
+  }
+}
+
 .listActionContainer {
   position: absolute;
   left: 15px;

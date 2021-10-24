@@ -15,6 +15,10 @@ export type List = {
   createdAt: string;
   updatedAt: string;
 };
+export type CompletedLists = {
+  completedLists: List;
+  completedListsTv: List;
+};
 export type ListsAction = {
   type: string;
   listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';

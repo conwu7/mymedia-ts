@@ -23,23 +23,38 @@ import UserMediaCard from './userMediaCard/UserMediaCard';
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const [listIds, setListIds] = useState<string[]>([]);
   const [mappedLists, setMappedLists] = useState<List[]>([]);
+  const [completedListIds, setCompletedListIds] = useState<string[]>([]);
+  const [mappedCompletedLists, setMappedCompletedLists] = useState<List[]>([]);
   const lists: ListReference = useSelector((state: { lists: ListsState }) => state.lists[listCategory], shallowEqual);
+  const completedLists: ListReference = useSelector(
+    (state: { lists: ListsState }) => state.lists[listCategory === 'towatch' ? 'completed' : 'completedtv'],
+    shallowEqual,
+  );
   const { listSortPreference, mediaSortPreference } = useSelector(
     (state: { userPreferences: UserPreferences }) => state.userPreferences,
     shallowEqual,
   );
   const [hasFullyLoadedLists, setHasFullyLoadedLists] = useState(false);
   const [hasFullyLoadedListIds, setHasFullyLoadedListIds] = useState(false);
+  const [hasFullyLoadedCompletedListIds, setHasFullyLoadedCompletedListIds] = useState(false);
   const userMedia = useSelector(
     (state: { userMedia: UserMediaState }) => state.userMedia?.[listCategory],
     shallowEqual,
   );
 
+  // set list ids
   useEffect(() => {
     setListIds(Object.keys(lists));
     setHasFullyLoadedListIds(true);
   }, [lists]);
 
+  // set completed list ids
+  useEffect(() => {
+    setCompletedListIds(Object.keys(completedLists));
+    setHasFullyLoadedCompletedListIds(true);
+  }, [completedLists]);
+
+  // set fully mapped lists
   useEffect(() => {
     if (!hasFullyLoadedListIds) return;
     setMappedLists(
@@ -56,6 +71,22 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
     setHasFullyLoadedLists(true);
   }, [mediaSortPreference, listIds]);
 
+  // set fully mapped completed lists
+  useEffect(() => {
+    if (!hasFullyLoadedCompletedListIds) return;
+    setMappedCompletedLists(
+      sortLists(
+        Object.keys(completedLists).map((listId) => completedLists[listId]),
+        listSortPreference,
+      ).map((list) => {
+        return {
+          ...list,
+          mediaInstants: sortMediaInstantLists(list.mediaInstants, userMedia, mediaSortPreference),
+        };
+      }),
+    );
+  }, [mediaSortPreference, completedListIds]);
+
   return (
     <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''}`}>
       <Loading isLoading={!hasFullyLoadedLists} />
@@ -67,11 +98,17 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
       {mappedLists.map((list) => (
         <ListContainer list={list} key={list._id} listCategory={listCategory} />
       ))}
+      {mappedCompletedLists &&
+        mappedCompletedLists.length > 0 &&
+        mappedCompletedLists[0].mediaInstants.length > 0 &&
+        mappedCompletedLists[0] && (
+          <ListContainer list={mappedCompletedLists[0]} listCategory={listCategory} isCompletedList={true} />
+        )}
     </div>
   );
 }
 
-function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element {
+function ListContainer({ list, listCategory, isCompletedList }: ListContainerProps): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isEditingList, setIsEditingList] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,21 +163,23 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   return (
     <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
       <Accordion
-        className={style.listContainer}
+        className={`${style.listContainer}  ${isCompletedList ? style.completedList : ''}`}
         expanded={isListExpanded === 'list'}
         onChange={handleExpandListContainer('list')}
       >
         <AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>
-          <ListInformation name={list.name} description={list.description} />
+          <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
         </AccordionSummary>
         <AccordionDetails className={style.accordionDetails}>
-          <ListUserMediaContainer listCategory={listCategory} list={list} />
+          <ListUserMediaContainer listCategory={listCategory} list={list} isCompletedList={isCompletedList} />
         </AccordionDetails>
       </Accordion>
       <div className={`${style.listActionContainer} ${listActionContainerStyle}`}>
-        <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
-          <MdOutlineArrowDropDownCircle />
-        </IconButton>
+        {!isCompletedList && (
+          <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
+            <MdOutlineArrowDropDownCircle />
+          </IconButton>
+        )}
         <Menu
           id="listPageActionMenu"
           anchorEl={anchorEl}
@@ -187,7 +226,15 @@ function ListInformation({ name, description }: ListDescription): JSX.Element {
   );
 }
 
-function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCategory; list: List }): JSX.Element {
+function ListUserMediaContainer({
+  listCategory,
+  list,
+  isCompletedList,
+}: {
+  listCategory: ListCategory;
+  list: List;
+  isCompletedList?: boolean;
+}): JSX.Element {
   if (list && list.mediaInstants.length < 1) return <div className={style.emptyList}>Empty List</div>;
   return (
     <div className={style.listUserMediaContainer}>
@@ -197,6 +244,7 @@ function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCate
           userMediaId={mediaInstant.userMedia}
           listCategory={listCategory}
           currentListId={list._id}
+          isCompletedList={isCompletedList}
         />
       ))}
     </div>

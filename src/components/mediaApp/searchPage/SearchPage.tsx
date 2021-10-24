@@ -57,9 +57,10 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
               id="searchString"
               name="searchString"
               type="text"
-              color="secondary"
+              color="success"
               value={formik.values.searchString}
               onChange={formik.handleChange}
+              className={style.searchInput}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="clear search characters" onClick={clearInput} edge="end">

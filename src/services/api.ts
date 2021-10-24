@@ -61,6 +61,10 @@ export async function getLists({ signal }: OptionalSignal, listCategory: ListCat
   return makeRequest(`lists/${listCategory}`, 'get', undefined, signal);
 }
 
+export async function getAllCompletedLists({ signal }: OptionalSignal): Promise<ApiResponse> {
+  return makeRequest(`lists/completed`, 'get', undefined, signal);
+}
+
 export async function getUserMedia({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
   return makeRequest(listCategory === 'towatch' ? 'usermovies' : 'usertvshows', 'get', undefined, signal);
 }
@@ -117,4 +121,12 @@ export async function removeItemFromList(
 
 export async function searchForMedia(searchString: string): Promise<ApiResponse> {
   return makeRequest(`search?searchString=${searchString}`, 'get');
+}
+
+export async function markComplete(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${imdbId}/completed`, 'post');
+}
+
+export async function markIncomplete(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
+  return makeRequest(`lists/${listCategory}/${imdbId}/completed`, 'delete');
 }
