@@ -9,7 +9,6 @@ import { MdRateReview } from 'react-icons/md';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import defaultPoster from '../../../../images/default-poster.png';
 import { addItemToList, markIncomplete, removeItemFromList } from '../../../../services/api';
 import { List } from '../../../../store/lists';
 import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
@@ -147,9 +146,9 @@ export default function UserMediaCard({
 
   return (
     <Paper className={`${style.userMediaCard} ${isDeleted ? style.deleted : ''}`}>
-      <div className={style.posterContainer}>
-        <img src={media.posterUrl || defaultPoster} alt={media.title + ' poster'} className={style.poster} />
-      </div>
+      {/*<div className={style.posterContainer}>*/}
+      {/*  <img src={media.posterUrl || defaultPoster} alt={media.title + ' poster'} className={style.poster} />*/}
+      {/*</div>*/}
       <div className={style.mediaInfo}>
         <UserMediaInfo media={media} />
         <div className={style.userMediaActionsContainer}>
