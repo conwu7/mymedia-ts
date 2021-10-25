@@ -267,10 +267,9 @@ function UserMediaInfo({ media }: { media: Movie | TvShow }): JSX.Element {
     <>
       <h1 className={style.mediaTitle}>{media.title}</h1>
       <div className={style.releaseYearRuntimeContainer}>
-        <p className={style.releaseYear}>{media.releaseYear || media.runYears}</p>
-        <p className={style.runtime}>{media.runtime ? media.runtime : '-'} min</p>
+        <p className={style.releaseYear}>{media.runYears || media.releaseYear} </p>
+        {!media.runYears && <p className={style.runtime}>({media.runtime ? media.runtime : '-'} min)</p>}
       </div>
-
       {/*<p className={style.streamingSource}>{userMedia.streamingSource && userMedia.streamingSource.toUpperCase()}</p>*/}
       <p className={style.imdbRating}>
         <Link
