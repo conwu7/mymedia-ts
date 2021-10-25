@@ -1,18 +1,8 @@
 .drawer div:nth-child(3) {
   background-color: transparent !important;
+  box-shadow: none !important;
 }
 .modalContainer {
-  //position: absolute;
-  ////top: 5%;
-  ////left: 2%;
-  ////width: 96vw;
-  //padding: 10px 10px 20px;
-  //background: white;
-  //border-radius: 3px;
-  //outline: none;
-  ////position: absolute;
-  ////bottom: 0;
-  //width: 100vw;
   border-top-left-radius: 15px !important;
   border-top-right-radius: 15px !important;
   overflow: hidden !important;

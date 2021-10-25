@@ -1,6 +1,6 @@
 {
   "name": "mymedia-ts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
@@ -41,7 +41,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && xcopy .\\build\\ ..\\public\\ /h /i /c /k /e /r /y",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
