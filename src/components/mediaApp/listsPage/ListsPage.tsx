@@ -69,7 +69,7 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
       }),
     );
     setHasFullyLoadedLists(true);
-  }, [mediaSortPreference, listIds]);
+  }, [listSortPreference, mediaSortPreference, listIds]);
 
   // set fully mapped completed lists
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
         };
       }),
     );
-  }, [mediaSortPreference, completedListIds]);
+  }, [listSortPreference, mediaSortPreference, completedListIds]);
 
   return (
     <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''}`}>
@@ -166,6 +166,8 @@ function ListContainer({ list, listCategory, isCompletedList }: ListContainerPro
         className={`${style.listContainer}  ${isCompletedList ? style.completedList : ''}`}
         expanded={isListExpanded === 'list'}
         onChange={handleExpandListContainer('list')}
+        TransitionProps={{ unmountOnExit: true }}
+        disableGutters={true}
       >
         <AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>
           <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />

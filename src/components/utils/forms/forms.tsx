@@ -95,6 +95,7 @@ function ListForm({ formik, isLoading, error }: ListFormProps): JSX.Element {
       }}
       noValidate
       autoComplete="off"
+      className={style.listForm}
     >
       <FormTextField label="List Name" name={'listName'} formik={formik} required={true} isMultiLine={true} />
       <FormTextField
@@ -351,6 +352,7 @@ export function ReviewUserMediaForm({
       }}
       noValidate
       autoComplete="off"
+      className={style.reviewForm}
     >
       <Rating className={style.userRating} name="userRating" value={userRating} onChange={handleUserRating} max={10} />
       <FormTextField

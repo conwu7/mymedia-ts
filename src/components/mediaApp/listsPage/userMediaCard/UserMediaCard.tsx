@@ -9,6 +9,7 @@ import { MdRateReview } from 'react-icons/md';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
+import defaultPoster from '../../../../images/default-poster.png';
 import { addItemToList, markIncomplete, removeItemFromList } from '../../../../services/api';
 import { List } from '../../../../store/lists';
 import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
@@ -146,9 +147,9 @@ export default function UserMediaCard({
 
   return (
     <Paper className={`${style.userMediaCard} ${isDeleted ? style.deleted : ''}`}>
-      {/*<div className={style.posterContainer}>*/}
-      {/*  <img src={media.posterUrl || defaultPoster} alt={media.title + ' poster'} className={style.poster} />*/}
-      {/*</div>*/}
+      <div className={style.posterContainer}>
+        <img src={media.posterUrl || defaultPoster} alt={media.title + ' poster'} className={style.poster} />
+      </div>
       <div className={style.mediaInfo}>
         <UserMediaInfo media={media} />
         <div className={style.userMediaActionsContainer}>
@@ -231,7 +232,7 @@ export default function UserMediaCard({
           imdbId={userMedia.imdbID}
         />
       </UniversalModal>
-      <UniversalModal isOpen={isReviewingMedia} onClose={handleCloseReview} title={media.title}>
+      <UniversalModal isOpen={isReviewingMedia} onClose={handleCloseReview} title={`Review - ${media.title}`}>
         <ReviewUserMediaForm
           onClose={handleCloseReview}
           listCategory={listCategory}
@@ -284,7 +285,7 @@ function UserMediaInfo({ media }: { media: Movie | TvShow }): JSX.Element {
         <span className={style.imdbRatingValue}>{media.imdbRating || '-'}</span>
         /10
       </p>
-      <p className={style.genre}>{media.genre && media.genre.slice(0, 2).join(', ')}</p>
+      {/*<p className={style.genre}>{media.genre && media.genre.slice(0, 2).join(', ')}</p>*/}
     </>
   );
 }

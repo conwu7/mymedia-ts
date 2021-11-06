@@ -6,9 +6,9 @@
   position: absolute;
   bottom: 3%;
   width: 100vw;
-  padding: 10px 10px 20px;
+  padding: 5px;
   border: 1px solid darkgray;
-  background: white;
+  background: whitesmoke;
   border-radius: 5px;
   outline: none;
 }
@@ -20,6 +20,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: whitesmoke;
+  padding: 5px;
 }
 
 .modalTitle {
@@ -47,7 +48,7 @@
 
 .modalContentContainer {
   overflow: auto;
-  max-height: 72vh;
+  max-height: 82vh;
 }
 
 @media only screen and (min-width: 800px) {

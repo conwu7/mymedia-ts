@@ -1,3 +1,7 @@
+.listForm, .reviewForm {
+  background-color: white;
+  padding: 5px 0;
+}
 button.submitBtn {
   display: block;
   background: rgba(47, 79, 79, 0.95);
@@ -12,6 +16,7 @@ button.submitBtn {
 }
 .preferenceFormContainer {
   padding: 20px 10px;
+  background-color: white;
 }
 .preferenceForm>* {
   margin: 10px 0 !important;
@@ -20,7 +25,7 @@ button.submitBtn {
   display: flex !important;
   margin: 15px auto !important;
   width: fit-content !important;
-  padding: 20px 10px 5px;
+  padding: 20px 0 5px;
   color: #76bbbb !important;
   font-size: 35px !important;
 }

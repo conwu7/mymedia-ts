@@ -8,7 +8,7 @@ $poster-height-desktop: 270px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 210px;
+  height: 360px;
   flex-shrink: 0;
   flex-basis: 150px;
   flex-wrap: nowrap;
@@ -27,7 +27,7 @@ $poster-height-desktop: 270px;
   .mediaInfo {
     display: flex;
     flex-direction: column;
-    height: 210px;
+    height: 160px;
     justify-content: space-evenly;
     width: 150px;
     padding: 7px 5px 7px 5px;
@@ -41,20 +41,26 @@ $poster-height-desktop: 270px;
       margin: 0 !important;
     }
   }
-  //.poster,
-  //.posterContainer {
-  //  height: 0px;
-  //  width: 160px;
-  //  text-align: center;
-  //}
+  .poster,
+  .posterContainer {
+    height: 200px;
+    width: 150px;
+    text-align: center;
+  }
   .mediaTitle {
-    min-height: 40px;
-    line-height: 1;
-    overflow: auto;
+    line-height: 18px;
+    //min-height: 30px;
+    max-height: 40px;
+    width: 130px;
     margin: 0 0 0 8px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: darkslategray;
+    /* autoprefixer: off */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   .releaseYear {
     font-style: normal;
@@ -65,7 +71,7 @@ $poster-height-desktop: 270px;
   }
   .imdbLink  {
     font-weight: 500;
-    line-height: 1.75;
+    line-height: 1.50;
     letter-spacing: 0.02857em;
   }
   .plot,
