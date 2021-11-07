@@ -264,6 +264,7 @@ export function AddMediaNotesForm({
       }}
       noValidate
       autoComplete="off"
+      className={style.addMediaNotesForm}
     >
       <FormTextField
         label="Watch Notes"

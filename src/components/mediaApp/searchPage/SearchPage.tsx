@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GiCancel } from 'react-icons/gi';
 import { MdPlaylistAdd } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
@@ -28,6 +28,7 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
     initialValues,
     validationSchema: SearchSchema,
     onSubmit: async (values: SearchBody) => {
+      document.getElementById('resultsContainer')?.focus();
       setIsLoading(true);
       if (values.searchString === previousSearch) return setIsLoading(false);
       setPreviousSearch(values.searchString);
@@ -43,12 +44,21 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
     },
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      document.getElementById('searchPage')?.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }, 250);
+  }, [results]);
+
   const clearInput = () => {
     formik.resetForm();
   };
 
   return (
-    <div className={`searchPage ${style.searchPage} ${hidden ? style.hidden : ''}`}>
+    <div className={`searchPage ${style.searchPage} ${hidden ? style.hidden : ''}`} id="searchPage">
       <div className={style.searchBarContainer}>
         <form onSubmit={formik.handleSubmit}>
           <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className={style.searchFormControl}>
@@ -72,7 +82,7 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
             />
           </FormControl>
         </form>
-        <Button variant="contained" className={style.searchButton} onClick={formik.submitForm}>
+        <Button variant="contained" id="searchButton" className={style.searchButton} onClick={formik.submitForm}>
           Search
         </Button>
       </div>
@@ -87,9 +97,9 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
 }
 
 function ResultsContainer({ error, results }: ResultsContainerProps): JSX.Element | null {
-  if (!results && !error) return null;
   return (
-    <div className={style.resultsContainer}>
+    <div className={style.resultsContainer} id="resultsContainer" tabIndex={0}>
+      {!results && !error && null}
       {error && error}
       {results && results.map((result) => <ResultCard key={result.imdbId} result={result} />)}
     </div>

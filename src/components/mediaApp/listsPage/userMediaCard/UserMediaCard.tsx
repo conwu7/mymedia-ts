@@ -4,9 +4,8 @@ import Paper from '@mui/material/Paper';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { AiTwotoneCopy } from 'react-icons/ai';
 import { CgMoveRight, CgNotes } from 'react-icons/cg';
-import { GrMoreVertical } from 'react-icons/gr';
 import { MdRateReview } from 'react-icons/md';
-import { RiDeleteBin2Fill } from 'react-icons/ri';
+import { RiDeleteBin2Fill, RiMore2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import defaultPoster from '../../../../images/default-poster.png';
@@ -157,7 +156,7 @@ export default function UserMediaCard({
             More
           </Button>
           <IconButton className={style.actionButtonWrapper} onClick={handleOpenActionMenu}>
-            <GrMoreVertical />
+            <RiMore2Fill />
           </IconButton>
           <Menu
             id="actionMenu"
