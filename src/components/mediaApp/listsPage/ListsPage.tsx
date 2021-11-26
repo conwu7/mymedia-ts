@@ -8,6 +8,7 @@ import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'rea
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../../services/api';
+import { alertFactory, handleApiErrors } from '../../../services/errorHelpers';
 import { sortLists, sortMediaInstantLists } from '../../../services/sorting';
 import { ListCategory } from '../../../services/types';
 import { List, ListReference, ListsState } from '../../../store/lists';
@@ -138,7 +139,11 @@ function ListContainer({ list, listCategory, isCompletedList }: ListContainerPro
     if (!window.confirm(`Are you sure you want to delete '${list.name}'?`)) return;
     setIsLoading(true);
     const { err } = await deleteList(listCategory, list._id);
-    if (err) return window.alert('Failed to delete list');
+
+    if (err) {
+      return handleApiErrors(err, alertFactory('Failed to delete list'), setIsLoading);
+    }
+
     setIsLoading(false);
     setIsDeleted(true);
   };

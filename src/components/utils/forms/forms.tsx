@@ -13,6 +13,7 @@ import {
   updateList,
   updatePreferences,
 } from '../../../services/api';
+import { alertFactory, handleApiErrors } from '../../../services/errorHelpers';
 import { ReviewUserMediaBody, UpdateListBody } from '../../../services/types';
 import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
 import { UserPreferences } from '../../../store/userPreferences';
@@ -30,7 +31,6 @@ import {
 } from './types';
 
 export function EditListForm(props: EditListFormProps): JSX.Element {
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const initialValues: UpdateListBody = {
     listName: props.listName,
@@ -43,22 +43,27 @@ export function EditListForm(props: EditListFormProps): JSX.Element {
     validationSchema: UpdateListSchema,
     onSubmit: async (values: UpdateListBody) => {
       setIsLoading(true);
+
       const { err, result } = await updateList(values, props.listCategory, props.listId);
-      setIsLoading(false);
-      if (err) return setError(err);
+
+      if (err) {
+        return handleApiErrors(err, alertFactory(`Unable to save changes - ${err}`), setIsLoading);
+      }
+
       dispatch({
         type: 'updateList',
         listType: props.listCategory,
         list: result,
       });
+
+      setIsLoading(false);
       props.onClose();
     },
   });
-  return <ListForm formik={formik} isLoading={isLoading} error={error} />;
+  return <ListForm formik={formik} isLoading={isLoading} />;
 }
 
 export function NewListForm(props: NewListFormProps): JSX.Element {
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const initialValues: UpdateListBody = {
     listName: '',
@@ -71,8 +76,13 @@ export function NewListForm(props: NewListFormProps): JSX.Element {
     validationSchema: UpdateListSchema,
     onSubmit: async (values: UpdateListBody) => {
       setIsLoading(true);
+
       const { err, result } = await createList(values, props.listCategory);
-      if (err) return setError(err);
+
+      if (err) {
+        return handleApiErrors(err, alertFactory(`Unable to save list - ${err}`), setIsLoading);
+      }
+
       dispatch({
         type: 'createList',
         listType: props.listCategory,
@@ -83,7 +93,7 @@ export function NewListForm(props: NewListFormProps): JSX.Element {
     },
   });
 
-  return <ListForm formik={formik} isLoading={isLoading} error={error} />;
+  return <ListForm formik={formik} isLoading={isLoading} />;
 }
 
 function ListForm({ formik, isLoading, error }: ListFormProps): JSX.Element {
@@ -145,16 +155,23 @@ export function PreferencesForm(props: PreferencesFormProps): JSX.Element {
   };
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+
     if (
       preferences.listSortPreference === listSortPreference &&
       preferences.mediaSortPreference === mediaSortPreference &&
       preferences.defaultMediaPage === defaultMediaPage
     ) {
+      setIsLoading(false);
       return onClose();
     }
-    setIsLoading(true);
+
     const { result, err } = await updatePreferences(preferences);
-    if (err) window.alert('Failed to save');
+
+    if (err) {
+      return handleApiErrors(err, alertFactory('Failed to save preferences'), setIsLoading);
+    }
+
     dispatch({
       type: 'storeUserPreferences',
       data: result,
@@ -233,7 +250,6 @@ export function AddMediaNotesForm({
   toWatchNotes,
   onClose,
 }: AddMediaNotesFormProps): JSX.Element {
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const dispatch: Dispatch = useDispatch();
 
@@ -245,12 +261,17 @@ export function AddMediaNotesForm({
     onSubmit: async (values: { toWatchNotes: string }) => {
       setIsLoading(true);
       const { err, result } = await addUserMediaNotes(imdbId, values.toWatchNotes, listCategory);
-      if (err) return setError(err);
+
+      if (err) {
+        return handleApiErrors(err, alertFactory('Unable to save notes'), setIsLoading);
+      }
+
       dispatch({
         type: 'updateUserMedia',
         listType: listCategory,
         dataSingle: result,
       });
+
       setIsLoading(false);
       onClose();
     },
@@ -275,7 +296,6 @@ export function AddMediaNotesForm({
         isMultiLine={true}
         minRows={7}
       />
-      <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
       <Button
         onClick={formik.submitForm}
         className={style.submitBtn}
@@ -298,7 +318,6 @@ export function ReviewUserMediaForm({
   onClose,
   hideCompleteButton,
 }: ReviewUserMediaFormProps): JSX.Element {
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(oldUserRating || 0);
   const [isCompleting, setIsCompleting] = useState(false);
@@ -312,26 +331,32 @@ export function ReviewUserMediaForm({
     validationSchema: UserMediaSchema,
     onSubmit: async (values: ReviewUserMediaBody) => {
       setIsLoading(true);
+
       const { err, result } = await reviewUserMedia(imdbId, { ...values, userRating }, listCategory);
       if (err) {
-        setError(err);
-        setIsLoading(false);
-        return onClose();
+        return handleApiErrors(err, alertFactory('Unable to save'), setIsLoading);
       }
+
       if (isCompleting) {
         const { err: markCompleteError, result } = await markComplete(listCategory, imdbId);
-        if (markCompleteError) return setError(markCompleteError);
+
+        if (markCompleteError) {
+          return handleApiErrors(markCompleteError, alertFactory('Unable to mark complete'), setIsLoading);
+        }
+
         dispatch({
           type: 'updateList',
           listType: listCategory === 'towatch' ? 'completed' : 'completedtv',
           list: result,
         });
       }
+
       dispatch({
         type: 'updateUserMedia',
         listType: listCategory,
         dataSingle: result,
       });
+
       setIsLoading(false);
       onClose(isCompleting ? 'complete' : undefined);
     },
@@ -365,7 +390,6 @@ export function ReviewUserMediaForm({
         isMultiLine={true}
         minRows={5}
       />
-      <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
       <div className={style.saveAndCompleteContainer}>
         <Button
           onClick={formik.submitForm}

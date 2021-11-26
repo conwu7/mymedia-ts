@@ -160,7 +160,7 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
         listCategory={result.listCategory}
         imdbId={result.imdbId}
         onSelect={addMediaToList}
-        modalTitle={`Add ${result.title} to`}
+        modalTitle={`Add '${result.title}' to`}
       />
     </div>
   );

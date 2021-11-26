@@ -15,7 +15,7 @@ export interface NewListFormProps {
 export type ListFormProps = {
   formik: FormikHandlers & FormikValues;
   isLoading: boolean;
-  error: string | undefined;
+  error?: string;
 };
 
 export interface PreferencesFormProps {

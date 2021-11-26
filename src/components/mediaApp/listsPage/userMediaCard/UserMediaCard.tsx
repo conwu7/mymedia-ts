@@ -140,7 +140,7 @@ export default function UserMediaCard({
     }, 400);
   }, [isDeleted]);
 
-  if (!userMedia) return <span>working on it</span>;
+  if (!userMedia) return <span>🙈</span>;
 
   const { media } = userMedia;
 
