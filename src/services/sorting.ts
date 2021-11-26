@@ -5,20 +5,18 @@ import { SortingOptions } from './types';
 export function sortLists(lists: List[], preference?: ListSortPreference): List[] {
   if (!lists || lists.length === 0) return [];
 
-  if (preference === 'alpha+') {
-    return sortValuesByProperty(lists, 'name', { isDescending: false });
+  switch (preference) {
+    case 'alpha+':
+      return sortValuesByProperty(lists, 'name', { isDescending: false });
+    case 'alpha-':
+      return sortValuesByProperty(lists, 'name', { isDescending: true });
+    case 'created+':
+      return sortValuesByProperty(lists, 'createdAt', { isDescending: false });
+    case 'created-':
+      return sortValuesByProperty(lists, 'createdAt', { isDescending: true });
+    default:
+      return lists;
   }
-  if (preference === 'alpha-') {
-    return sortValuesByProperty(lists, 'name', { isDescending: true });
-  }
-  if (preference === 'created+') {
-    return sortValuesByProperty(lists, 'createdAt', { isDescending: false });
-  }
-  if (preference === 'created-') {
-    return sortValuesByProperty(lists, 'createdAt', { isDescending: true });
-  }
-
-  return lists;
 }
 
 export function sortMediaInstantLists<UserMediaStore>(
@@ -28,32 +26,34 @@ export function sortMediaInstantLists<UserMediaStore>(
 ): MediaInstants[] {
   if (!mediaInstants || mediaInstants.length === 0) return [];
 
-  if (preference === 'alpha+') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'title', { isDescending: false });
-  }
-  if (preference === 'alpha-') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'title', { isDescending: true });
-  }
-  if (preference === 'added+') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'addedOn', { isDescending: false, useDateParse: true });
-  }
-  if (preference === 'added-') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'addedOn', { isDescending: true, useDateParse: true });
-  }
-  if (preference === 'imdb+') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'imdbRating', { isDescending: false, isNumber: true });
-  }
-  if (preference === 'imdb-') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'imdbRating', { isDescending: true, isNumber: true });
-  }
-  if (preference === 'release+') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'releaseYear', { isDescending: false, isNumber: true });
-  }
-  if (preference === 'release-') {
-    return sortMediaInstants(mediaInstants, userMediaStore, 'releaseYear', { isDescending: true, isNumber: true });
-  }
+  switch (preference) {
+    case 'alpha+':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'title', { isDescending: false });
 
-  return mediaInstants;
+    case 'alpha-':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'title', { isDescending: true });
+
+    case 'added+':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'addedOn', { isDescending: false, useDateParse: true });
+
+    case 'added-':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'addedOn', { isDescending: true, useDateParse: true });
+
+    case 'imdb+':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'imdbRating', { isDescending: false, isNumber: true });
+
+    case 'imdb-':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'imdbRating', { isDescending: true, isNumber: true });
+
+    case 'release+':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'releaseYear', { isDescending: false, isNumber: true });
+
+    case 'release-':
+      return sortMediaInstants(mediaInstants, userMediaStore, 'releaseYear', { isDescending: true, isNumber: true });
+
+    default:
+      return mediaInstants;
+  }
 }
 
 function sortValuesByProperty<ArrayType>(arr: ArrayType[], property: string, options: SortingOptions = {}) {
