@@ -10,7 +10,7 @@ import {
   UpdateListBody,
 } from './types';
 
-const addBase = (path: string) => `api/${path}`;
+const buildFullPath = (path: string) => `api/${path}`;
 
 const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): RequestInit => ({
   credentials: 'include',
@@ -25,7 +25,7 @@ const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): Requ
 
 const makeRequest: MakeRequest = async (path, method, body, signal) => {
   try {
-    return window.fetch(addBase(path), buildOptions(body, method, signal)).then(async (response) => {
+    return window.fetch(buildFullPath(path), buildOptions(body, method, signal)).then(async (response) => {
       return {
         ...(await response.json()),
         status: response.status,
