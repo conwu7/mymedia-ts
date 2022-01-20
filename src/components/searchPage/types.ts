@@ -1,4 +1,4 @@
-import { ListCategory } from '../../../services/types';
+import { ListCategory } from '../../services/types';
 
 export type SearchProps = {
   hidden: boolean;

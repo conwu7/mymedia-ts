@@ -1,5 +1,5 @@
-import { ListCategory } from '../../../services/types';
-import { List } from '../../../store/lists';
+import { ListCategory } from '../../services/types';
+import { List } from '../../store/lists';
 
 export type ListsPageProps = {
   listCategory: ListCategory;

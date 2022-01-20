@@ -19,12 +19,12 @@ import { ListCategory } from '../../services/types';
 import { CompletedLists, List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
+import ListsPage from '../listsPage/ListsPage';
+import SearchPage from '../searchPage/SearchPage';
 import AppHeader from '../utils/appHeader/AppHeader';
 import { NewListForm, PreferencesForm } from '../utils/forms/forms';
 import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
-import ListsPage from './listsPage/ListsPage';
-import SearchPage from './searchPage/SearchPage';
 import style from './style.module.scss';
 import { BottomNavigationProps, NavigationTab } from './types';
 

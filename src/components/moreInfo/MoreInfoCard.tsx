@@ -5,7 +5,7 @@ import Rating from '@mui/material/Rating';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
-import defaultPoster from '../../../../images/default-poster.png';
+import defaultPoster from '../../images/default-poster.png';
 import style from './style.module.scss';
 import {
   HandleTabChange,

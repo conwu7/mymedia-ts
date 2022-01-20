@@ -8,16 +8,16 @@ import { MdRateReview } from 'react-icons/md';
 import { RiDeleteBin2Fill, RiMore2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import defaultPoster from '../../../../images/default-poster.png';
-import { addItemToList, markIncomplete, removeItemFromList } from '../../../../services/api';
-import { List } from '../../../../store/lists';
-import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../../../store/userMedia';
-import { AddMediaNotesForm, ReviewUserMediaForm } from '../../../utils/forms/forms';
-import { ListSelectorModal } from '../../../utils/listSelector/ListSelector';
-import Loading from '../../../utils/loading/Loading';
-import UniversalModal from '../../../utils/universalModal/UniversalModal';
+import defaultPoster from '../../images/default-poster.png';
+import { addItemToList, markIncomplete, removeItemFromList } from '../../services/api';
+import { List } from '../../store/lists';
+import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../store/userMedia';
+import { UserMediaCardProps } from '../listsPage/types';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
-import { UserMediaCardProps } from '../types';
+import { AddMediaNotesForm, ReviewUserMediaForm } from '../utils/forms/forms';
+import { ListSelectorModal } from '../utils/listSelector/ListSelector';
+import Loading from '../utils/loading/Loading';
+import UniversalModal from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 
 export default function UserMediaCard({

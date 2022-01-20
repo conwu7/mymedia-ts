@@ -8,12 +8,12 @@ import { GiCancel } from 'react-icons/gi';
 import { MdPlaylistAdd } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import defaultPoster from '../../../images/default-poster.png';
-import { addItemToList, getUserMedia, searchForMedia } from '../../../services/api';
-import { SearchSchema } from '../../../services/validation';
-import ErrorFieldContainer from '../../utils/errorFieldContainer/ErrorFieldContainer';
-import { ListSelectorModal } from '../../utils/listSelector/ListSelector';
-import Loading from '../../utils/loading/Loading';
+import defaultPoster from '../../images/default-poster.png';
+import { addItemToList, getUserMedia, searchForMedia } from '../../services/api';
+import { SearchSchema } from '../../services/validation';
+import ErrorFieldContainer from '../utils/errorFieldContainer/ErrorFieldContainer';
+import { ListSelectorModal } from '../utils/listSelector/ListSelector';
+import Loading from '../utils/loading/Loading';
 import style from './style.module.scss';
 import { ResultCardProps, ResultsContainerProps, SearchBody, SearchProps, SearchResults } from './types';
 
