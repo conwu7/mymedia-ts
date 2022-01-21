@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+## My Media Lists - Organized media lists
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Check out the app at [MyMediaLists.app](https://www.allmylists.app/)
 
-## Available Scripts
+Instead of managing lists in every streaming service available or multiple apps, organize all your media in one single location. Create as many unique lists as you need for your tv shows and movies.
 
-In the project directory, you can run:
+### Creating Lists
 
-### `npm start`
+You can create new lists either from the ‘Add to list’ modal on the search tabs or copying/moving from the item another list.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Each list applies to only one form of media and is only shown on the media’s tab i.e. You can only add movies to a list with type of movies. To add items to a list, simple search for it and use the ‘Add to list’ button that is on each result.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+By default, lists, and the items within them are sorted by old to new. You can change this to any of the following (Ascending or Descending) in the ‘More’ tab under ‘Preferences’ -
 
-### `npm test`
+-       Name (list)
+-       Date Created (list)
+-       Title (media)
+-       Date Added to List (media)
+-       Release Date (media)
+-       IMDB rating (media)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Media Actions
 
-### `npm run build`
+You can choose a source for accessing content or streaming while selecting a list to add an item. This source will show up on the media tabs.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+On each media item, there are five actions available. The first four are in a hidden menu above the media’s poster. Click on the three dots to expose the available actions.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Edit -
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-  Add/update to watch notes
+-  Rate and add a review
 
-### `npm run eject`
+2. Copy/Move items between lists.
+3. Mark Completed – This will remove the item from the current list and add it to a system created ‘Completed List’. The Completed list will always show up on the bottom of each page if it is not empty.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4. Remove – Remove the item from the current list.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The fifth action is available below the media’s poster. 5. More Info – view more info about the media. Consists of movie/episode runtime, total number of seasons, IMDB rating, cast.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
