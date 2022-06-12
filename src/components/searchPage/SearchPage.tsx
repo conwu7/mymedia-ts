@@ -9,7 +9,7 @@ import { MdPlaylistAdd } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import defaultPoster from '../../images/default-poster.png';
-import { addItemToList, getUserMedia, searchForMedia } from '../../services/api';
+import { addItemToList, getUserMedia, is2xxStatus, searchForMedia } from '../../services/api';
 import { SearchSchema } from '../../services/validation';
 import ErrorFieldContainer from '../utils/errorFieldContainer/ErrorFieldContainer';
 import { ListSelectorModal } from '../utils/listSelector/ListSelector';
@@ -33,7 +33,7 @@ export default function SearchPage({ hidden }: SearchProps): JSX.Element {
       if (values.searchString === previousSearch) return setIsLoading(false);
       setPreviousSearch(values.searchString);
       const { result, err, status } = await searchForMedia(values.searchString);
-      if (status !== 200) {
+      if (!is2xxStatus(status)) {
         setErrorMessage(err);
         setResults(null);
         return setIsLoading(false);
@@ -134,7 +134,7 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
   // API HANDLERS
   const addMediaToList = async (newListId: string): Promise<void> => {
     const { status, result: apiResult, err } = await addItemToList(result.imdbId, newListId, result.listCategory);
-    if (status !== 200) return alert(err);
+    if (!is2xxStatus(status)) return alert(err);
     const { result: updatedUserMediaList } = await getUserMedia({}, result.listCategory);
     dispatch({
       type: 'storeUserMedia',

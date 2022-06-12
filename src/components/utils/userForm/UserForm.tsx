@@ -7,14 +7,16 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { login, signup } from '../../../services/api';
+import { is2xxStatus, login, signup } from '../../../services/api';
 import { LoginBody, SignupBody } from '../../../services/types';
 import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
 import style from './style.module.scss';
 import { FormTextFieldProps, UserFormBody, UserFormProps, UserFormSchema, UserFormTypeDisplay } from './types';
+import Loading from '../loading/Loading';
 
 export default function UserForm({ action }: UserFormProps): JSX.Element {
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const initialValues: UserFormBody = {
     username: '',
     password: '',
@@ -25,6 +27,7 @@ export default function UserForm({ action }: UserFormProps): JSX.Element {
     initialValues,
     validationSchema: UserFormSchema[action],
     onSubmit: async (values: UserFormBody) => {
+      setLoading(true);
       let err: string;
       let status: number;
       if (action === 'login') {
@@ -32,13 +35,15 @@ export default function UserForm({ action }: UserFormProps): JSX.Element {
       } else {
         ({ err, status } = await signup({ body: values } as { body: SignupBody }));
       }
-      if (status === 200) return (window.location.href = '/');
+      if (is2xxStatus(status)) return (window.location.href = '/');
       setError(err);
+      setLoading(false);
     },
   });
 
   return (
     <Container component="main" maxWidth="xs">
+      <Loading isLoading={loading} />
       <Box
         sx={{
           marginTop: 8,

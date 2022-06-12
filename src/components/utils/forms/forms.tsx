@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 import {
   addUserMediaNotes,
   createList,
-  markComplete,
+  markAsWatched,
   reviewUserMedia,
   updateList,
   updatePreferences,
@@ -320,7 +320,7 @@ export function ReviewUserMediaForm({
 }: ReviewUserMediaFormProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(oldUserRating || 0);
-  const [isCompleting, setIsCompleting] = useState(false);
+  const [isMarkingAsWatched, setIsMarkingAsWatched] = useState(false);
 
   const dispatch: Dispatch = useDispatch();
 
@@ -337,17 +337,17 @@ export function ReviewUserMediaForm({
         return handleApiErrors(err, alertFactory('Unable to save'), setIsLoading);
       }
 
-      if (isCompleting) {
-        const { err: markCompleteError, result } = await markComplete(listCategory, imdbId);
+      if (isMarkingAsWatched) {
+        const { err: markAsWatchedError, result: markAsWatchedResponse } = await markAsWatched(listCategory, imdbId);
 
-        if (markCompleteError) {
-          return handleApiErrors(markCompleteError, alertFactory('Unable to mark complete'), setIsLoading);
+        if (markAsWatchedError) {
+          return handleApiErrors(markAsWatchedError, alertFactory('Unable to mark complete'), setIsLoading);
         }
 
         dispatch({
           type: 'updateList',
-          listType: listCategory === 'towatch' ? 'completed' : 'completedtv',
-          list: result,
+          listType: listCategory,
+          list: markAsWatchedResponse,
         });
       }
 
@@ -358,16 +358,16 @@ export function ReviewUserMediaForm({
       });
 
       setIsLoading(false);
-      onClose(isCompleting ? 'complete' : undefined);
+      onClose(isMarkingAsWatched ? 'complete' : undefined);
     },
   });
 
-  const handleComplete = async (): Promise<void> => {
-    setIsCompleting(true);
+  const handleMarkAsWatched = async (): Promise<void> => {
+    setIsMarkingAsWatched(true);
     await formik.submitForm();
   };
 
-  const handleUserRating = (event: SyntheticEvent, newValue: number | null): void => {
+  const handleUserRating = (_event: SyntheticEvent, newValue: number | null): void => {
     setUserRating(newValue || 0);
   };
   return (
@@ -402,7 +402,7 @@ export function ReviewUserMediaForm({
         </Button>
         {!hideCompleteButton && (
           <Button
-            onClick={handleComplete}
+            onClick={handleMarkAsWatched}
             className={style.completeButton}
             fullWidth
             variant="contained"

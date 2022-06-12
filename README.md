@@ -25,13 +25,12 @@ You can choose a source for accessing content or streaming while selecting a lis
 
 On each media item, there are five actions available. The first four are in a hidden menu above the media’s poster. Click on the three dots to expose the available actions.
 
-1. Edit -
-
+1. Edit
 -  Add/update to watch notes
 -  Rate and add a review
 
 2. Copy/Move items between lists.
-3. Mark Completed – This will remove the item from the current list and add it to a system created ‘Completed List’. The Completed list will always show up on the bottom of each page if it is not empty.
+3. Mark Completed – This will remove the item from the current list and add it to a 'Watched' list. The Completed list will always show up on the bottom of each page if it is not empty.
 
 4. Remove – Remove the item from the current list.
 

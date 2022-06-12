@@ -10,7 +10,15 @@ import {
   UpdateListBody,
 } from './types';
 
-const buildFullPath = (path: string) => `api/${path}`;
+const USER_MEDIA_MAP = {
+  towatch: 'usermovies',
+  towatchtv: 'usertvshows',
+};
+
+const LIST_MEDIA_TYPE_MAP = {
+  towatch: 'movies',
+  towatchtv: 'tvshows',
+};
 
 const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): RequestInit => ({
   credentials: 'include',
@@ -23,12 +31,26 @@ const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): Requ
   signal,
 });
 
+const getResponseBody = async (response: Response) => {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+};
+
+export const is2xxStatus = (status: number | string): boolean => status.toString()[0] === '2';
+
 const makeRequest: MakeRequest = async (path, method, body, signal) => {
   try {
-    return window.fetch(buildFullPath(path), buildOptions(body, method, signal)).then(async (response) => {
+    return window.fetch(path, buildOptions(body, method, signal)).then(async (response) => {
+      const responseBody = await getResponseBody(response);
+
       return {
-        ...(await response.json()),
         status: response.status,
+        success: !!responseBody.success,
+        result: is2xxStatus(response.status) ? responseBody : undefined,
+        err: responseBody.message,
       };
     });
   } catch {
@@ -42,35 +64,35 @@ const makeRequest: MakeRequest = async (path, method, body, signal) => {
 };
 
 export async function login({ body }: { body: LoginBody }): Promise<ApiResponse> {
-  return makeRequest('login', 'post', body);
+  return makeRequest('auth/login', 'post', body);
 }
 
 export async function logout(): Promise<ApiResponse> {
-  return makeRequest('logout', 'post');
+  return makeRequest('auth/logout', 'post');
 }
 
 export async function signup({ body }: { body: SignupBody }): Promise<ApiResponse> {
-  return makeRequest('signup', 'post', body);
+  return makeRequest('auth/signup', 'post', body);
 }
 
 export async function getUserDetails({ signal }: OptionalSignal): Promise<ApiResponse> {
-  return makeRequest('getuserdetails', 'get', undefined, signal);
+  return makeRequest('users/me/info', 'get', undefined, signal);
 }
 
 export async function getLists({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}`, 'get', undefined, signal);
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}`, 'get', undefined, signal);
 }
 
-export async function getAllCompletedLists({ signal }: OptionalSignal): Promise<ApiResponse> {
+export async function getAllCompletedListsDEPRACATED({ signal }: OptionalSignal): Promise<ApiResponse> {
   return makeRequest(`lists/completed`, 'get', undefined, signal);
 }
 
 export async function getUserMedia({ signal }: OptionalSignal, listCategory: ListCategory): Promise<ApiResponse> {
-  return makeRequest(listCategory === 'towatch' ? 'usermovies' : 'usertvshows', 'get', undefined, signal);
+  return makeRequest(`usermedia/${USER_MEDIA_MAP[listCategory]}`, 'get', undefined, signal);
 }
 
 export async function createList(body: UpdateListBody, listCategory: ListCategory): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}`, 'post', body);
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}`, 'post', body);
 }
 
 export async function updateList(
@@ -78,15 +100,15 @@ export async function updateList(
   listCategory: ListCategory,
   listId: string,
 ): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${listId}`, 'put', body);
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}/${listId}`, 'patch', body);
 }
 
 export async function deleteList(listCategory: ListCategory, listId: string): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${listId}`, 'delete');
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}/${listId}`, 'delete');
 }
 
 export async function updatePreferences(preferences: UserPreferences): Promise<ApiResponse> {
-  return makeRequest('user/preferences', 'put', preferences);
+  return makeRequest('users/me/info', 'patch', preferences);
 }
 
 export async function addUserMediaNotes(
@@ -94,7 +116,8 @@ export async function addUserMediaNotes(
   toWatchNotes: string,
   listCategory: ListCategory,
 ): Promise<ApiResponse> {
-  return makeRequest(`${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'put', {
+  const userMediaType = listCategory === 'towatch' ? 'usermovies' : 'usertvshows';
+  return makeRequest(`usermedia/${userMediaType}/${imdbId}`, 'patch', {
     toWatchNotes,
   });
 }
@@ -104,11 +127,11 @@ export async function reviewUserMedia(
   body: ReviewUserMediaBody,
   listCategory: ListCategory,
 ): Promise<ApiResponse> {
-  return makeRequest(`${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'put', body);
+  return makeRequest(`usermedia/${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'patch', body);
 }
 
 export async function addItemToList(imdbId: string, listId: string, listCategory: ListCategory): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${listId}/${imdbId}`, 'post');
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}/${listId}/${imdbId}`, 'post');
 }
 
 export async function removeItemFromList(
@@ -116,17 +139,13 @@ export async function removeItemFromList(
   listId: string,
   listCategory: ListCategory,
 ): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${listId}/${imdbId}`, 'delete');
+  return makeRequest(`lists/${LIST_MEDIA_TYPE_MAP[listCategory]}/${listId}/${imdbId}`, 'delete');
 }
 
 export async function searchForMedia(searchString: string): Promise<ApiResponse> {
-  return makeRequest(`search?searchString=${searchString}`, 'get');
+  return makeRequest(`media/search?searchString=${searchString}`, 'get');
 }
 
-export async function markComplete(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${imdbId}/completed`, 'post');
-}
-
-export async function markIncomplete(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
-  return makeRequest(`lists/${listCategory}/${imdbId}/completed`, 'delete');
+export async function markAsWatched(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
+  return makeRequest(`lists/watched/${LIST_MEDIA_TYPE_MAP[listCategory]}/${imdbId}`, 'post');
 }
