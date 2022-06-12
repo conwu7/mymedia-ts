@@ -33,8 +33,6 @@ export default function useFetchApi<DataType, FuncArguments = unknown>(
       },
       useTimeout ? 300 : 0,
     );
-    // return () => clearTimeout(fetchTimeout);
-    // return () => controller.abort();
   }, [isFunctionPending, data]);
 
   return {

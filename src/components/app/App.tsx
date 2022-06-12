@@ -5,11 +5,12 @@ import MediaApp from '../mediaApp/MediaApp';
 import OnboardingPage from '../onboardingPage/OnboardingPage';
 import './App.css';
 import { User } from './types';
+import Loading from '../utils/loading/Loading';
 
 function App(): JSX.Element | null {
   const { data: user, isLoading } = useFetchApi<User>(true, getUserDetails, undefined);
 
-  if (isLoading && !user) return null;
+  if (isLoading && !user) return <Loading isLoading={true} />;
   return (
     <Switch>
       {!user && <OnboardingPage />}

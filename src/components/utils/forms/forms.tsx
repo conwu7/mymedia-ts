@@ -17,7 +17,7 @@ import { alertFactory, handleApiErrors } from '../../../services/errorHelpers';
 import { ReviewUserMediaBody, UpdateListBody } from '../../../services/types';
 import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
 import { UserPreferences } from '../../../store/userPreferences';
-import { FormTextField } from '../../onboardingPage/userForm/UserForm';
+import { FormTextField } from '../userForm/UserForm';
 import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';

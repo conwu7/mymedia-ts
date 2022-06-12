@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import { useState } from 'react';
 import { login, signup } from '../../../services/api';
 import { LoginBody, SignupBody } from '../../../services/types';
-import ErrorFieldContainer from '../../utils/errorFieldContainer/ErrorFieldContainer';
+import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
 import style from './style.module.scss';
 import { FormTextFieldProps, UserFormBody, UserFormProps, UserFormSchema, UserFormTypeDisplay } from './types';
 

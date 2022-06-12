@@ -58,11 +58,6 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
           <img src={posterUrl || defaultPoster} alt={`${title} poster`} className={style.posterInMore} />
         </div>
         <div className={style.mainInfoContainer}>
-          {/*<h1 className={style.mediaTitle}>{title}</h1>*/}
-          {/*<p className={style.runtime}>*/}
-          {/*  <span className={style.mediaInfoLabel}>Streaming: </span>*/}
-          {/*  {'-'}*/}
-          {/*</p>*/}
           <p className={style.releaseDate}>
             <span className={style.mediaInfoLabel}>Release: </span>
             {runYears && totalSeasons ? runYears : releaseDate}
@@ -74,7 +69,7 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
           </p>
           <p className={style.runtime}>
             <span className={style.mediaInfoLabel}>Runtime: </span>
-            {runtime ? runtime : '-'} min
+            {runtime ?? '-'} min
           </p>
           <p className={style.languages}>
             <span className={style.mediaInfoLabel}>Languages: </span>
@@ -90,7 +85,7 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
             >
               IMDB:
             </Link>
-            <span className={style.imdbRatingValue}> {imdbRating || '-'}</span>
+            <span className={style.imdbRatingValue}> {imdbRating ?? '-'}</span>
             /10
           </p>
           <p className={style.genre}>
@@ -100,8 +95,6 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
         </div>
       </section>
       <section className={style.otherInfoContainer}>
-        {/*<span className={style.mediaInfoLabel}>Release Date:</span>*/}
-
         <span className={style.mediaInfoLabel}>Plot:</span>
         <p className={style.plot}>{plot || '-'}</p>
         <span className={style.mediaInfoLabel}>Cast:</span>
@@ -112,7 +105,7 @@ function MediaInfoCard({ media }: { media: MoreInfoMedia }): JSX.Element {
 }
 
 function MediaReviewCard({ userMedia }: MediaReviewCardProps): JSX.Element {
-  const { userRating, toWatchNotes, reviewNotes } = userMedia || {};
+  const { userRating, toWatchNotes, reviewNotes } = userMedia ?? {};
   return (
     <div className={style.reviewCardContainer}>
       <span className={style.mediaInfoLabel}>Watch notes:</span>
@@ -120,9 +113,9 @@ function MediaReviewCard({ userMedia }: MediaReviewCardProps): JSX.Element {
       <span className={style.mediaInfoLabel}>Your review:</span>
       <div className={style.userRatingContainer}>
         <Rating name="read-only" value={userRating} readOnly max={10} className={style.userRating} />
-        <span className={style.userRatingValue}>{userRating || '-'}/10</span>
+        <span className={style.userRatingValue}>{userRating ?? '-'}/10</span>
       </div>
-      <p className={style.reviewNotes}>{reviewNotes || '-'}</p>
+      <p className={style.reviewNotes}>{reviewNotes ?? '-'}</p>
     </div>
   );
 }

@@ -4,9 +4,9 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import AppHeader from '../utils/appHeader/AppHeader';
-import LoginPage from './loginPage/LoginPage';
-import SignupPage from './signupPage/SignupPage';
-import SitePreviewPage from './sitePreviewPage/SitePreviewPage';
+import LoginPage from '../loginPage/LoginPage';
+import SignupPage from '../signupPage/SignupPage';
+import SitePreviewPage from '../sitePreviewPage/SitePreviewPage';
 import style from './style.module.scss';
 import { HandlePageChange, OnboardingPages, OnboardingPagesDisplayText } from './types';
 

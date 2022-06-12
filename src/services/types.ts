@@ -23,7 +23,7 @@ export type OptionalSignal = {
 };
 
 export type ListCategory = 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
-export enum LIstCategoryDisplay {
+export enum ListCategoryDisplay {
   towatch = 'Movie',
   towatchtv = 'Tv Show',
   completed = 'Movie',

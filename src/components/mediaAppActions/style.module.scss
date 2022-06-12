@@ -1,0 +1,17 @@
+.mediaAppFloatingButton {
+    position: absolute !important;
+    bottom: 180px;
+    right: 20px;
+    background-color: #85c6c6 !important;
+    z-index: 100;
+
+    svg {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.mediaAppActionMenu>div:nth-child(3) {
+    bottom: 175px !important;
+    top: auto !important;
+}

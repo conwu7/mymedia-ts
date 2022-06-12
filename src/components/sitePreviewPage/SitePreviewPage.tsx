@@ -1,10 +1,10 @@
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import mediaActions from '../../../images/sample-photos/media-actions_iphone12black_portrait.png';
-import mediaListsPage from '../../../images/sample-photos/media-lists_iphone12black_portrait.png';
-import mediaInfo from '../../../images/sample-photos/media-more-info_iphone12black_portrait.png';
-import mediaStatusNotes from '../../../images/sample-photos/media-status-notes_iphone12black_portrait.png';
-import search from '../../../images/sample-photos/search_iphone12black_portrait.png';
+import mediaActions from '../../images/sample-photos/media-actions_iphone12black_portrait.png';
+import mediaListsPage from '../../images/sample-photos/media-lists_iphone12black_portrait.png';
+import mediaInfo from '../../images/sample-photos/media-more-info_iphone12black_portrait.png';
+import mediaStatusNotes from '../../images/sample-photos/media-status-notes_iphone12black_portrait.png';
+import search from '../../images/sample-photos/search_iphone12black_portrait.png';
 
 import style from './style.module.scss';
 
