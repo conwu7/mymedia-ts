@@ -5,11 +5,11 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { AiTwotoneCopy } from 'react-icons/ai';
 import { CgMoveRight, CgNotes } from 'react-icons/cg';
 import { MdRateReview } from 'react-icons/md';
-import { RiDeleteBin2Fill, RiMore2Fill } from 'react-icons/ri';
+import { RiMore2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import defaultPoster from '../../images/default-poster.png';
-import { addItemToList, markIncomplete, removeItemFromList } from '../../services/api';
+import { addItemToList, is2xxStatus, removeItemFromList } from '../../services/api';
 import { List } from '../../store/lists';
 import { Movie, TvShow, UserMediaCombo, UserMediaState } from '../../store/userMedia';
 import { UserMediaCardProps } from '../listsPage/types';
@@ -19,13 +19,9 @@ import { ListSelectorModal } from '../utils/listSelector/ListSelector';
 import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
+import { RiDeleteBin2Fill } from 'react-icons/all';
 
-export default function UserMediaCard({
-  userMediaId,
-  listCategory,
-  currentListId,
-  isCompletedList,
-}: UserMediaCardProps): JSX.Element {
+export default function UserMediaCard({ userMediaId, listCategory, currentListId }: UserMediaCardProps): JSX.Element {
   const userMedia: UserMediaCombo = useSelector(
     (state: { userMedia: UserMediaState }) => state.userMedia?.[listCategory]?.[userMediaId],
     shallowEqual,
@@ -81,7 +77,7 @@ export default function UserMediaCard({
   // API HANDLERS
   const copyMediaToList = async (newListId: string): Promise<void> => {
     const { status, result, err } = await addItemToList(media.imdbID, newListId, listCategory);
-    if (status !== 200) return alert(err);
+    if (!is2xxStatus(status)) return alert(err);
     dispatch({
       type: 'updateList',
       listType: listCategory,
@@ -93,20 +89,7 @@ export default function UserMediaCard({
     handleCloseActionMenu();
     setIsLoading(true);
     const { status, result, err } = await removeItemFromList(media.imdbID, currentListId, listCategory);
-    if (status !== 200) {
-      setIsLoading(false);
-      return alert(err);
-    }
-    setUpdatedList(result as List);
-    setIsDeleted(true);
-    setIsLoading(false);
-  };
-
-  const markMediaIncomplete = async (): Promise<void> => {
-    handleCloseActionMenu();
-    setIsLoading(true);
-    const { status, result, err } = await markIncomplete(listCategory, media.imdbID);
-    if (status !== 200) {
+    if (!is2xxStatus(status)) {
       setIsLoading(false);
       return alert(err);
     }
@@ -118,12 +101,8 @@ export default function UserMediaCard({
   const moveMediaToList = async (newListId: string): Promise<void> => {
     setIsLoading(true);
     await copyMediaToList(newListId);
+    await removeMediaFromList();
     setIsLoading(false);
-    if (isCompletedList) {
-      await markMediaIncomplete();
-    } else {
-      await removeMediaFromList();
-    }
     handleCloseMoveMedia();
   };
 
@@ -131,10 +110,9 @@ export default function UserMediaCard({
   useEffect(() => {
     if (!isDeleted) return;
     setTimeout(() => {
-      const completedLabel = listCategory === 'towatch' ? 'completed' : 'completedtv';
       dispatch({
         type: 'updateList',
-        listType: !isCompletedList ? listCategory : completedLabel,
+        listType: listCategory,
         list: updatedList,
       });
     }, 400);
@@ -208,10 +186,7 @@ export default function UserMediaCard({
               </ListItemIcon>
               <ListItemText>Copy</ListItemText>
             </MenuItem>
-            <MenuItem
-              onClick={isCompletedList ? markMediaIncomplete : removeMediaFromList}
-              className={`${style.actionMenuItem} ${style.removeActionMenuItem}`}
-            >
+            <MenuItem onClick={removeMediaFromList} className={`${style.actionMenuItem} ${style.removeActionMenuItem}`}>
               <ListItemIcon>
                 <RiDeleteBin2Fill />
               </ListItemIcon>
@@ -238,7 +213,6 @@ export default function UserMediaCard({
           imdbId={userMedia.imdbID}
           userRating={userMedia.userRating}
           reviewNotes={userMedia.reviewNotes}
-          hideCompleteButton={!!isCompletedList}
         />
       </UniversalModal>
       <ListSelectorModal

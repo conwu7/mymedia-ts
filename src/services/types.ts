@@ -22,12 +22,10 @@ export type OptionalSignal = {
   signal?: AbortSignal;
 };
 
-export type ListCategory = 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
+export type ListCategory = 'towatch' | 'towatchtv';
 export enum ListCategoryDisplay {
   towatch = 'Movie',
   towatchtv = 'Tv Show',
-  completed = 'Movie',
-  completedtv = 'Tv Show',
 }
 
 export type UpdateListBody = {

@@ -15,13 +15,10 @@ export type List = {
   createdAt: string;
   updatedAt: string;
 };
-export type CompletedLists = {
-  completedLists: List;
-  completedListsTv: List;
-};
+
 export type ListsAction = {
   type: string;
-  listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
+  listType: 'towatch' | 'towatchtv';
   data: List[];
   list: List;
   listToDelete: string;
@@ -30,8 +27,6 @@ export type ListsAction = {
 export type ListsState = {
   towatch: ListReference;
   towatchtv: ListReference;
-  completed: ListReference;
-  completedtv: ListReference;
 };
 
 export type ListReference = {
@@ -41,8 +36,6 @@ export type ListReference = {
 const initialState: ListsState = {
   towatch: {},
   towatchtv: {},
-  completed: {},
-  completedtv: {},
 };
 
 const listsReducer = (state: ListsState = initialState, action: ListsAction): ListsState => {

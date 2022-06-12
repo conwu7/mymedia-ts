@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
 import { BiMoviePlay, CgDetailsMore, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
 import { useLocation } from 'react-router-dom';
-import { logout } from '../../../services/api';
+import { is2xxStatus, logout } from '../../../services/api';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';
 
@@ -32,7 +32,7 @@ export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?
   const handleLogout = async () => {
     setIsLoading(true);
     const { status } = await logout();
-    if (status === 200) return window.location.reload();
+    if (is2xxStatus(status)) return window.location.reload();
     alert('There was issue with that request. Try refreshing the page.');
     setIsLoading(false);
   };

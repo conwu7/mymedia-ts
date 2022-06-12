@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ApiResponse } from '../services/types';
+import { is2xxStatus } from '../services/api';
 
 export default function useFetchApi<DataType, FuncArguments = unknown>(
   useTimeout: boolean,
@@ -20,7 +21,7 @@ export default function useFetchApi<DataType, FuncArguments = unknown>(
       () => {
         asyncFunc({ signal: controller.signal }, funcArguments)
           .then((response) => {
-            if (response.status !== 200) {
+            if (!is2xxStatus(response.status)) {
               setError(response.err);
               return;
             }

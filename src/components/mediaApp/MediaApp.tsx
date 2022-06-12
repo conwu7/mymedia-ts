@@ -4,9 +4,9 @@ import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import useFetchApi from '../../hooks/useFetchApi';
-import { getAllCompletedLists, getLists, getUserMedia } from '../../services/api';
+import { getLists, getUserMedia } from '../../services/api';
 import { ListCategory } from '../../services/types';
-import { CompletedLists, List } from '../../store/lists';
+import { List } from '../../store/lists';
 import { UserMovie, UserTvShow } from '../../store/userMedia';
 import { User } from '../app/types';
 import ListsPage from '../listsPage/ListsPage';
@@ -38,11 +38,6 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     error: errorUserMediaTv,
     data: dataUserMediaTv,
   } = useFetchApi<UserTvShow[], ListCategory>(false, getUserMedia, 'towatchtv');
-  const {
-    isLoading: isLoadingCompleted,
-    error: errorCompleted,
-    data: dataCompleted,
-  } = useFetchApi<CompletedLists>(false, getAllCompletedLists, undefined);
 
   const dispatch: Dispatch = useDispatch();
 
@@ -73,21 +68,6 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     });
   }, [isLoadingTv, dataTv]);
 
-  // store completedLists
-  useEffect(() => {
-    if (isLoadingCompleted || errorCompleted) return;
-    dispatch({
-      type: 'storeList',
-      listType: 'completed',
-      data: dataCompleted.completedLists?._id ? [dataCompleted.completedLists] : [],
-    });
-    dispatch({
-      type: 'storeList',
-      listType: 'completedtv',
-      data: dataCompleted.completedListsTv?._id ? [dataCompleted.completedListsTv] : [],
-    });
-  }, [isLoadingCompleted, dataCompleted]);
-
   // store user movies
   useEffect(() => {
     if (isLoadingUserMedia || errorUserMedia) return;
@@ -108,7 +88,7 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     });
   }, [isLoadingUserMediaTv, errorUserMediaTv, dataUserMediaTv]);
 
-  const handleNavTabChange = (event: SyntheticEvent, newTab: NavigationTab): void => {
+  const handleNavTabChange = (_event: SyntheticEvent, newTab: NavigationTab): void => {
     if (currentNavTab === 'search' && newTab === 'search') {
       document.getElementById('searchString')?.focus();
     }

@@ -58,7 +58,7 @@ export type UserMediaListCombo = UserMovie[] | UserTvShow[];
 
 export type UserMediaComboAction = {
   type: string;
-  listType: 'towatch' | 'towatchtv' | 'completed' | 'completedtv';
+  listType: 'towatch' | 'towatchtv';
   data: UserMediaCombo[];
   dataSingle: UserMediaCombo;
 };
@@ -73,15 +73,11 @@ export type UserTvShowMap = {
 export type UserMediaState = {
   towatch: UserMovieMap;
   towatchtv: UserTvShowMap;
-  completed: UserMovieMap;
-  completedtv: UserTvShowMap;
 };
 
 const initialState: UserMediaState = {
   towatch: {} as UserMovieMap,
   towatchtv: {} as UserTvShowMap,
-  completed: {} as UserMovieMap,
-  completedtv: {} as UserTvShowMap,
 };
 
 type UserMediaReducer = (state: UserMediaState, action: UserMediaComboAction) => UserMediaState;
