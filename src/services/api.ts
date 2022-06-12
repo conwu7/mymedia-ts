@@ -43,7 +43,7 @@ export const is2xxStatus = (status: number | string): boolean => status.toString
 
 const makeRequest: MakeRequest = async (path, method, body, signal) => {
   try {
-    return window.fetch(path, buildOptions(body, method, signal)).then(async (response) => {
+    return window.fetch(`api/${path}`, buildOptions(body, method, signal)).then(async (response) => {
       const responseBody = await getResponseBody(response);
 
       return {
