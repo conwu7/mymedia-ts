@@ -2,6 +2,12 @@
   "name": "mymedia-ts",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "npm": ">=8.7.0"
+  },
+  "overrides": {
+    "react": "$react"
+  },
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
