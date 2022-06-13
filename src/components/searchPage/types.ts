@@ -1,4 +1,4 @@
-import { ListCategory } from '../../services/types';
+import { ListCategory, MediaType } from '../../services/types';
 
 export type SearchProps = {
   hidden: boolean;
@@ -26,4 +26,33 @@ export type ResultsContainerProps = {
 
 export type ResultCardProps = {
   result: SearchResults;
+};
+
+export type MoreInfoOnResultsCardProps = {
+  isShowingMoreInfo: boolean;
+  imdbID: string;
+  onClose: () => void;
+};
+
+export type MoreMediaDetails = {
+  mediaType: MediaType;
+  listCategory: ListCategory;
+  imdbID: string;
+  title: string;
+  genre: string[];
+  plot: string;
+  runtime: number;
+  posterUrl: string;
+  releaseDate: string;
+  releaseYear: number;
+  runYears: string;
+  imdbRating: number;
+  imdbVotes: number;
+  metascore: number;
+  director: string[];
+  actors: string[];
+  language: string[];
+  createdAt: string;
+  updatedAt: string;
+  totalSeasons?: number;
 };

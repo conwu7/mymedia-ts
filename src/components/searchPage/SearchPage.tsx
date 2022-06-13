@@ -9,13 +9,24 @@ import { MdPlaylistAdd } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import defaultPoster from '../../images/default-poster.png';
-import { addItemToList, getUserMedia, is2xxStatus, searchForMedia } from '../../services/api';
+import { addItemToList, getMoreMediaDetails, getUserMedia, is2xxStatus, searchForMedia } from '../../services/api';
 import { SearchSchema } from '../../services/validation';
 import ErrorFieldContainer from '../utils/errorFieldContainer/ErrorFieldContainer';
 import { ListSelectorModal } from '../utils/listSelector/ListSelector';
-import Loading from '../utils/loading/Loading';
+import Loading, { LoadingWithoutModal } from '../utils/loading/Loading';
 import style from './style.module.scss';
-import { ResultCardProps, ResultsContainerProps, SearchBody, SearchProps, SearchResults } from './types';
+import {
+  MoreInfoOnResultsCardProps,
+  MoreMediaDetails,
+  ResultCardProps,
+  ResultsContainerProps,
+  SearchBody,
+  SearchProps,
+  SearchResults,
+} from './types';
+import { HiOutlineInformationCircle } from 'react-icons/all';
+import UniversalModal from '../utils/universalModal/UniversalModal';
+import MoreInfoCard from '../moreInfo/MoreInfoCard';
 
 export default function SearchPage({ hidden }: SearchProps): JSX.Element {
   const [previousSearch, setPreviousSearch] = useState('');
@@ -125,11 +136,15 @@ function ResultCard({ result }: ResultCardProps): JSX.Element {
 
 function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
   const [isAddingToList, setIsAddingToList] = useState(false);
+  const [isShowingMoreInfo, setIsShowingMoreInfo] = useState(false);
 
   const dispatch: Dispatch = useDispatch();
 
   const handleAddToList = (): void => setIsAddingToList(true);
   const handleCloseAddToList = (): void => setIsAddingToList(false);
+
+  const handleShowMoreInfo = (): void => setIsShowingMoreInfo(true);
+  const handleCloseShowMoreInfo = (): void => setIsShowingMoreInfo(false);
 
   // API HANDLERS
   const addMediaToList = async (newListId: string): Promise<void> => {
@@ -151,8 +166,11 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
 
   return (
     <div className={style.searchActionContainer}>
-      <IconButton onClick={handleAddToList}>
+      <IconButton onClick={handleAddToList} className={style.addToListBtn}>
         <MdPlaylistAdd />
+      </IconButton>
+      <IconButton onClick={handleShowMoreInfo} className={style.moreInfoBtn}>
+        <HiOutlineInformationCircle />
       </IconButton>
       <ListSelectorModal
         isOpen={isAddingToList}
@@ -162,6 +180,50 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
         onSelect={addMediaToList}
         modalTitle={`Add '${result.title}' to`}
       />
+      <MoreInfoOnResultCardModal
+        isShowingMoreInfo={isShowingMoreInfo}
+        imdbID={result.imdbId}
+        onClose={handleCloseShowMoreInfo}
+      />
     </div>
+  );
+}
+
+function MoreInfoOnResultCardModal({ isShowingMoreInfo, imdbID, onClose }: MoreInfoOnResultsCardProps): JSX.Element {
+  const [mediaDetails, setMediaDetails] = useState<MoreMediaDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getMediaDetails = async (imdbId: string) => {
+    setIsLoading(true);
+
+    const response = await getMoreMediaDetails(imdbId);
+
+    if (!is2xxStatus(response.status)) {
+      setError('Failed to get more info on this title');
+      setIsLoading(false);
+      return;
+    }
+
+    setMediaDetails(response.result as MoreMediaDetails);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (!isShowingMoreInfo) return;
+
+    if (!!mediaDetails) return;
+
+    getMediaDetails(imdbID).then((e) => console.log(e));
+  }, [imdbID, isShowingMoreInfo]);
+
+  return (
+    <UniversalModal isOpen={isShowingMoreInfo} onClose={onClose} title={mediaDetails?.title ?? ''}>
+      <>
+        <LoadingWithoutModal isLoading={isLoading} />
+        {!!error && <p>{error}</p>}
+        {!!mediaDetails && <MoreInfoCard media={mediaDetails} />}
+      </>
+    </UniversalModal>
   );
 }

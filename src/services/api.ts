@@ -146,6 +146,10 @@ export async function searchForMedia(searchString: string): Promise<ApiResponse>
   return makeRequest(`media/search?searchString=${searchString}`, 'get');
 }
 
+export async function getMoreMediaDetails(imdbID: string): Promise<ApiResponse> {
+  return makeRequest(`media/${imdbID}`, 'get');
+}
+
 export async function markAsWatched(listCategory: ListCategory, imdbId: string): Promise<ApiResponse> {
   return makeRequest(`lists/watched/${LIST_MEDIA_TYPE_MAP[listCategory]}/${imdbId}`, 'post');
 }
