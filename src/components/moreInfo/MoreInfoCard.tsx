@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import style from './style.module.scss';
 import { MediaReview, MoreInfoCardProps, MoreInfoMedia } from './types';
 
-export default function MoreInfoCard({ hideReviewTab, media, userMedia }: MoreInfoCardProps): JSX.Element {
+export default function MoreInfoCard({ media, userMedia }: MoreInfoCardProps): JSX.Element {
   return (
     <div className={style.mediaInfoCard}>
       <Box>

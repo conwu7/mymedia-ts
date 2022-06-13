@@ -22,7 +22,10 @@ export type OptionalSignal = {
   signal?: AbortSignal;
 };
 
+export type MediaType = 'movie' | 'tvShow';
+
 export type ListCategory = 'towatch' | 'towatchtv';
+
 export enum ListCategoryDisplay {
   towatch = 'Movie',
   towatchtv = 'Tv Show',

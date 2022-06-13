@@ -87,6 +87,12 @@
   }
 }
 .searchActionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
   width: 40px;
   padding: 5px;
 
@@ -94,9 +100,15 @@
     padding: 0 !important;
   }
 
-  svg {
+  .addToListBtn svg {
     width: 30px;
     height: 30px;
+    color: dimgray;
+  }
+
+  .moreInfoBtn svg {
+    width: 25px;
+    height: 25px;
     color: dimgray;
   }
 }

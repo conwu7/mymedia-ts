@@ -13,7 +13,6 @@ export type MoreInfoMedia = {
   language?: string[];
 };
 export type MoreInfoCardProps = {
-  hideReviewTab?: boolean;
   media: MoreInfoMedia;
   userMedia?: MediaReview;
 };

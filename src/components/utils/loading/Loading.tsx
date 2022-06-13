@@ -13,3 +13,11 @@ export default function Loading({ isLoading }: LoadingProps): JSX.Element {
     </Modal>
   );
 }
+
+export function LoadingWithoutModal({ isLoading }: LoadingProps): JSX.Element | null {
+  return isLoading ? (
+    <Box className={style.loadingContainer}>
+      <CircularProgress color="secondary" size={80} />
+    </Box>
+  ) : null;
+}
