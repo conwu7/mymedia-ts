@@ -11,6 +11,8 @@ export type MoreInfoMedia = {
   actors?: string[];
   totalSeasons?: number;
   language?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };
 export type MoreInfoCardProps = {
   media: MoreInfoMedia;

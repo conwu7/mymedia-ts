@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import style from './style.module.scss';
 import { MediaReview, MoreInfoCardProps, MoreInfoMedia } from './types';
+import Paper from '@mui/material/Paper';
 
 export default function MoreInfoCard({ media, userMedia }: MoreInfoCardProps): JSX.Element {
   return (
@@ -20,7 +21,7 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
   const { userRating, toWatchNotes, reviewNotes } = userMedia ?? {};
 
   return (
-    <div className={style.moreInfoContainer}>
+    <Paper className={style.moreInfoContainer}>
       <p className={style.imdbRating}>
         <Link
           href={`https://imdb.com/title/${imdbID}`}
@@ -33,6 +34,9 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
         </Link>
         <span className={style.imdbRatingValue}> {imdbRating ?? '-'}</span>
         /10
+        {!!media.updatedAt && (
+          <span className={style.imdbRatingAsOfDate}> (as of {new Date(media.updatedAt).toDateString()})</span>
+        )}
       </p>
       <span className={style.mediaInfoLabel}>Release: </span>
       <p className={style.releaseDate}>
@@ -62,7 +66,6 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
       </div>
       <span className={style.mediaInfoLabel}>Review Notes:</span>
       <p className={style.reviewNotes}>{reviewNotes ?? '-'}</p>
-      <br />
-    </div>
+    </Paper>
   );
 }

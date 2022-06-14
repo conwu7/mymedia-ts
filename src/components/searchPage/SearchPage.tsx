@@ -214,7 +214,7 @@ function MoreInfoOnResultCardModal({ isShowingMoreInfo, imdbID, onClose }: MoreI
 
     if (!!mediaDetails) return;
 
-    getMediaDetails(imdbID).then((e) => console.log(e));
+    getMediaDetails(imdbID).catch((e) => console.log(e));
   }, [imdbID, isShowingMoreInfo]);
 
   return (
