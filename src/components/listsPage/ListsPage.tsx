@@ -60,11 +60,11 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
   }, [listSortPreference, mediaSortPreference, listIds]);
 
   return (
-    <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''}`}>
+    <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''} ${hidden ? '' : 'active'}`}>
       <Loading isLoading={!hasFullyLoadedLists} />
       {mappedLists.length < 1 && hasFullyLoadedLists && (
         <div className={style.emptyLists}>
-          <p>Your {listCategory === 'towatch' ? 'movies' : 'tv shows'} list is empty</p>
+          <p>You have no lists</p>
         </div>
       )}
       {mappedLists.map((list) => (

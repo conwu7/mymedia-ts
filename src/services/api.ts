@@ -13,11 +13,13 @@ import {
 const USER_MEDIA_MAP = {
   towatch: 'usermovies',
   towatchtv: 'usertvshows',
+  togame: 'uservideogames',
 };
 
 const LIST_MEDIA_TYPE_MAP = {
   towatch: 'movies',
   towatchtv: 'tvshows',
+  togame: 'videogames',
 };
 
 const buildOptions = (body: unknown, method = 'get', signal?: AbortSignal): RequestInit => ({
@@ -127,7 +129,7 @@ export async function reviewUserMedia(
   body: ReviewUserMediaBody,
   listCategory: ListCategory,
 ): Promise<ApiResponse> {
-  return makeRequest(`usermedia/${listCategory === 'towatch' ? 'usermovies' : 'usertvshows'}/${imdbId}`, 'patch', body);
+  return makeRequest(`usermedia/${USER_MEDIA_MAP[listCategory]}/${imdbId}`, 'patch', body);
 }
 
 export async function addItemToList(imdbId: string, listId: string, listCategory: ListCategory): Promise<ApiResponse> {

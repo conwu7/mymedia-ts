@@ -22,13 +22,39 @@ export type OptionalSignal = {
   signal?: AbortSignal;
 };
 
-export type MediaType = 'movie' | 'tvShow';
+export type MediaType = 'movie' | 'tvShow' | 'videoGame';
 
-export type ListCategory = 'towatch' | 'towatchtv';
+export type ListCategory = 'towatch' | 'towatchtv' | 'togame';
+
+export const navBarsToListCategory = (navBar: string): ListCategory => {
+  switch (navBar) {
+    case 'movies':
+      return 'towatch';
+    case 'tvShows':
+      return 'towatchtv';
+    case 'videoGames':
+      return 'togame';
+    default:
+      return 'towatch';
+  }
+};
+export const listCategoryToUserMediaCategory = (listCategory: ListCategory): string => {
+  switch (listCategory) {
+    case 'towatch':
+      return 'usermovies';
+    case 'towatchtv':
+      return 'usertvshows';
+    case 'togame':
+      return 'uservideogames';
+    default:
+      return 'usermovies';
+  }
+};
 
 export enum ListCategoryDisplay {
   towatch = 'Movie',
   towatchtv = 'Tv Show',
+  togame = 'Video Game',
 }
 
 export type UpdateListBody = {
