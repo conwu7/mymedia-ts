@@ -1,4 +1,6 @@
-export type Movie = {
+import { ListCategory } from '../services/types';
+
+export type Media = {
   _id: string;
   imdbID: string;
   title?: string;
@@ -16,6 +18,9 @@ export type Movie = {
   actors?: string[];
   language?: string[];
 };
+
+export type Movie = Media;
+export type VideoGame = Media;
 
 export type TvShow = {
   imdbID: string;
@@ -52,13 +57,17 @@ export interface UserTvShow extends UserMedia {
   media: TvShow;
 }
 
-export type UserMediaCombo = UserMovie | UserTvShow;
+export interface UserVideoGame extends UserMedia {
+  media: VideoGame;
+}
 
-export type UserMediaListCombo = UserMovie[] | UserTvShow[];
+export type UserMediaCombo = UserMovie | UserTvShow | UserVideoGame;
+
+export type UserMediaListCombo = UserMovie[] | UserTvShow[] | UserVideoGame[];
 
 export type UserMediaComboAction = {
   type: string;
-  listType: 'towatch' | 'towatchtv';
+  listType: ListCategory;
   data: UserMediaCombo[];
   dataSingle: UserMediaCombo;
 };
@@ -69,15 +78,20 @@ export type UserMovieMap = {
 export type UserTvShowMap = {
   [key: string]: UserTvShow;
 };
+export type UserVideoGameMap = {
+  [key: string]: UserVideoGame;
+};
 
 export type UserMediaState = {
   towatch: UserMovieMap;
   towatchtv: UserTvShowMap;
+  togame: UserVideoGameMap;
 };
 
 const initialState: UserMediaState = {
   towatch: {} as UserMovieMap,
   towatchtv: {} as UserTvShowMap,
+  togame: {} as UserVideoGameMap,
 };
 
 type UserMediaReducer = (state: UserMediaState, action: UserMediaComboAction) => UserMediaState;
@@ -87,7 +101,7 @@ const userMediaReducer: UserMediaReducer = (state = initialState, action) => {
       return {
         ...state,
         [action.listType]: action.data.reduce(
-          (acc, userMedia: UserMediaCombo): UserMovieMap | UserTvShowMap => ({
+          (acc, userMedia: UserMediaCombo): UserMovieMap | UserTvShowMap | UserVideoGameMap => ({
             ...acc,
             [userMedia._id]: userMedia,
           }),

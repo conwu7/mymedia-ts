@@ -40,7 +40,7 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
       </p>
       <span className={style.mediaInfoLabel}>Release: </span>
       <p className={style.releaseDate}>
-        {runYears && totalSeasons ? runYears : releaseDate}{' '}
+        {runYears && totalSeasons ? runYears : releaseDate ?? runYears}{' '}
         {totalSeasons && (
           <span className={style.totalSeasons}>
             ({totalSeasons} season{totalSeasons > 1 ? 's' : ''})

@@ -111,7 +111,7 @@ function ResultsContainer({ error, results }: ResultsContainerProps): JSX.Elemen
   return (
     <div className={style.resultsContainer} id="resultsContainer" tabIndex={0}>
       {!results && !error && null}
-      {error && error}
+      {error ?? null}
       {results && results.map((result) => <ResultCard key={result.imdbId} result={result} />)}
     </div>
   );

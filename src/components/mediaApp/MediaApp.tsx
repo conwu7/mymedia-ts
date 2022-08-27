@@ -1,13 +1,10 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { BiCameraMovie } from 'react-icons/bi';
-import { RiMovie2Line, RiSearchLine } from 'react-icons/ri';
+import { RiGamepadLine, RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import useFetchApi from '../../hooks/useFetchApi';
-import { getLists, getUserMedia } from '../../services/api';
-import { ListCategory } from '../../services/types';
-import { List } from '../../store/lists';
-import { UserMovie, UserTvShow } from '../../store/userMedia';
+import { getLists, getUserMedia, is2xxStatus } from '../../services/api';
+import { ListCategory, navBarsToListCategory } from '../../services/types';
 import { User } from '../app/types';
 import ListsPage from '../listsPage/ListsPage';
 import SearchPage from '../searchPage/SearchPage';
@@ -20,26 +17,40 @@ import { BottomNavTabs } from '../utils/bottomNavTabs/BottomNavTabs';
 import { BottomNavBarItem } from '../utils/bottomNavTabs/types';
 
 export default function MediaApp({ user }: { user: User }): JSX.Element {
-  const defaultPage = user.defaultMediaPage === 'tvShows' ? 'towatchtv' : 'towatch';
-  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>(defaultPage);
-  const { isLoading, error, data } = useFetchApi<List, ListCategory>(false, getLists, 'towatch');
-  const {
-    isLoading: isLoadingTv,
-    error: errorTv,
-    data: dataTv,
-  } = useFetchApi<List, ListCategory>(false, getLists, 'towatchtv');
-  const {
-    isLoading: isLoadingUserMedia,
-    error: errorUserMedia,
-    data: dataUserMedia,
-  } = useFetchApi<UserMovie[], ListCategory>(false, getUserMedia, 'towatch');
-  const {
-    isLoading: isLoadingUserMediaTv,
-    error: errorUserMediaTv,
-    data: dataUserMediaTv,
-  } = useFetchApi<UserTvShow[], ListCategory>(false, getUserMedia, 'towatchtv');
+  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>(user.defaultMediaPage as NavigationTab);
+  const [isLoading, setIsLoading] = useState(false);
+  const initialLoadStatus: Record<ListCategory, boolean> = {
+    towatch: false,
+    towatchtv: false,
+    togame: false,
+  };
+  const loadStatus = useRef(initialLoadStatus);
 
   const dispatch: Dispatch = useDispatch();
+
+  const getAndStoreList = async (listCategory: ListCategory) => {
+    setIsLoading(true);
+    const { status, err, result } = await getLists({}, listCategory);
+    if (!is2xxStatus(status) || err) return setIsLoading(false);
+    dispatch({
+      type: 'storeList',
+      listType: listCategory,
+      data: result || [],
+    });
+    setIsLoading(false);
+  };
+
+  const getAndStoreUserMedia = async (listCategory: ListCategory) => {
+    setIsLoading(true);
+    const { status, err, result } = await getUserMedia({}, listCategory);
+    if (!is2xxStatus(status) || err) return setIsLoading(false);
+    dispatch({
+      type: 'storeUserMedia',
+      listType: listCategory,
+      data: result || [],
+    });
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     dispatch({
@@ -48,45 +59,31 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     });
   }, [user]);
 
-  // store movies
   useEffect(() => {
-    if (isLoading || error) return;
-    dispatch({
-      type: 'storeList',
-      listType: 'towatch',
-      data: data || [],
-    });
-  }, [isLoading, data]);
+    // TODO: Keep for individual pages. separate movies vs tvshows view.
+    // const listCategory = navBarsToListCategory(currentNavTab);
+    // if (loadStatus.current[listCategory]) return;
+    //
+    // getAndStoreList(listCategory).catch();
+    // getAndStoreUserMedia(listCategory).catch();
+    // loadStatus.current[listCategory] = true;
 
-  // store tv shows
-  useEffect(() => {
-    if (isLoadingTv || errorTv) return;
-    dispatch({
-      type: 'storeList',
-      listType: 'towatchtv',
-      data: dataTv || [],
-    });
-  }, [isLoadingTv, dataTv]);
+    const listCategory = navBarsToListCategory(currentNavTab);
+    if (loadStatus.current[listCategory]) return;
 
-  // store user movies
-  useEffect(() => {
-    if (isLoadingUserMedia || errorUserMedia) return;
-    dispatch({
-      type: 'storeUserMedia',
-      listType: 'towatch',
-      data: dataUserMedia || [],
-    });
-  }, [isLoadingUserMedia, errorUserMedia, dataUserMedia]);
+    getAndStoreList('towatch').catch();
+    getAndStoreUserMedia('towatch').catch();
 
-  // store user tv shows
-  useEffect(() => {
-    if (isLoadingUserMediaTv || errorUserMediaTv) return;
-    dispatch({
-      type: 'storeUserMedia',
-      listType: 'towatchtv',
-      data: dataUserMediaTv || [],
-    });
-  }, [isLoadingUserMediaTv, errorUserMediaTv, dataUserMediaTv]);
+    getAndStoreList('towatchtv').catch();
+    getAndStoreUserMedia('towatchtv').catch();
+
+    getAndStoreList('togame').catch();
+    getAndStoreUserMedia('togame').catch();
+
+    loadStatus.current.towatch = true;
+    loadStatus.current.towatchtv = true;
+    loadStatus.current.togame = true;
+  }, [currentNavTab]);
 
   const handleNavTabChange = (_event: SyntheticEvent, newTab: NavigationTab): void => {
     if (currentNavTab === 'search' && newTab === 'search') {
@@ -95,21 +92,23 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     setCurrentNavTab(newTab);
   };
 
-  if (isLoading || isLoadingTv || isLoadingUserMedia || isLoadingUserMediaTv) {
+  if (isLoading || (!loadStatus.current.towatch && !loadStatus.current.towatchtv && loadStatus.current.togame)) {
     return <Loading isLoading={true} />;
   }
 
   const bottomNavBarItems: BottomNavBarItem[] = [
-    { label: 'Movies', value: 'towatch', icon: <BiCameraMovie /> },
-    { label: 'Tv Shows', value: 'towatchtv', icon: <RiMovie2Line /> },
+    { label: 'Movies', value: 'movies', icon: <BiCameraMovie /> },
+    { label: 'Tv Shows', value: 'tvShows', icon: <RiMovie2Line /> },
+    { label: 'Games', value: 'videoGames', icon: <RiGamepadLine /> },
     { label: 'Search', value: 'search', icon: <RiSearchLine /> },
   ];
 
   return (
     <div className={`mediaApp ${style.mediaApp}`}>
       <AppHeader />
-      <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'towatch'} />
-      <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'towatchtv'} />
+      <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'movies'} />
+      <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'tvShows'} />
+      <ListsPage listCategory={'togame'} hidden={currentNavTab !== 'videoGames'} />
       <SearchPage hidden={currentNavTab !== 'search'} />
       {currentNavTab !== 'search' && <MediaAppActions currentTab={currentNavTab} />}
       <BottomNavTabs

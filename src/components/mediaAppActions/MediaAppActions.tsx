@@ -1,4 +1,4 @@
-import { ListCategory } from '../../services/types';
+import { navBarsToListCategory } from '../../services/types';
 import { SyntheticEvent, useState } from 'react';
 import Fab from '@mui/material/Fab';
 import style from './style.module.scss';
@@ -32,7 +32,7 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
 
   const handleScrollToTop = (): void => {
     handleCloseMenu();
-    document.querySelectorAll(`.listsPage`)[currentTab === 'towatch' ? 0 : 1]?.scrollTo({
+    document.querySelectorAll(`.listsPage.active`)[0]?.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
@@ -82,7 +82,7 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
       </Menu>
       {/*Create list Modal*/}
       <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
-        <NewListForm onClose={handleCloseCreateList} listCategory={currentTab as ListCategory} />
+        <NewListForm onClose={handleCloseCreateList} listCategory={navBarsToListCategory(currentTab)} />
       </UniversalModal>
       {/*Modify Preferences Modal*/}
       <UniversalModal isOpen={isModifyingPreferences} onClose={handleCloseModifyPreferences} title="Modify Preferences">

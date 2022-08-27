@@ -20,6 +20,7 @@ import Loading from '../utils/loading/Loading';
 import UniversalModal from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { RiDeleteBin2Fill } from 'react-icons/all';
+import { ListCategory } from '../../services/types';
 
 export default function UserMediaCard({ userMediaId, listCategory, currentListId }: UserMediaCardProps): JSX.Element {
   const userMedia: UserMediaCombo = useSelector(
@@ -128,7 +129,7 @@ export default function UserMediaCard({ userMediaId, listCategory, currentListId
         <img src={media.posterUrl || defaultPoster} alt={media.title + ' poster'} className={style.poster} />
       </div>
       <div className={style.mediaInfo}>
-        <UserMediaInfo media={media} />
+        <UserMediaInfo media={media} listCategory={listCategory} />
         <div className={style.userMediaActionsContainer}>
           <Button variant="contained" className={style.moreInfoButton} onClick={handleOpenMore}>
             More
@@ -236,7 +237,7 @@ export default function UserMediaCard({ userMediaId, listCategory, currentListId
   );
 }
 
-function UserMediaInfo({ media }: { media: Movie | TvShow }): JSX.Element {
+function UserMediaInfo({ media, listCategory }: { media: Movie | TvShow; listCategory: ListCategory }): JSX.Element {
   return (
     <>
       <h1 className={style.mediaTitle}>{media.title}</h1>
@@ -245,19 +246,21 @@ function UserMediaInfo({ media }: { media: Movie | TvShow }): JSX.Element {
         {!media.runYears && <p className={style.runtime}>({media.runtime ? media.runtime : '-'} min)</p>}
       </div>
       {/*<p className={style.streamingSource}>{userMedia.streamingSource && userMedia.streamingSource.toUpperCase()}</p>*/}
-      <p className={style.imdbRating}>
-        <Link
-          href={`https://imdb.com/title/${media.imdbID}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          underline="none"
-          className={style.imdbLink}
-        >
-          IMDB
-        </Link>
-        <span className={style.imdbRatingValue}>{media.imdbRating || '-'}</span>
-        /10
-      </p>
+      {listCategory !== 'togame' && (
+        <p className={style.imdbRating}>
+          <Link
+            href={`https://imdb.com/title/${media.imdbID}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            className={style.imdbLink}
+          >
+            IMDB
+          </Link>
+          <span className={style.imdbRatingValue}>{media.imdbRating || '-'}</span>
+          /10
+        </p>
+      )}
       {/*<p className={style.genre}>{media.genre && media.genre.slice(0, 2).join(', ')}</p>*/}
     </>
   );

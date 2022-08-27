@@ -1,3 +1,5 @@
+import { ListCategory } from '../services/types';
+
 export type MediaInstants = {
   _id: string;
   userMedia: string;
@@ -18,7 +20,7 @@ export type List = {
 
 export type ListsAction = {
   type: string;
-  listType: 'towatch' | 'towatchtv';
+  listType: ListCategory;
   data: List[];
   list: List;
   listToDelete: string;
@@ -27,6 +29,7 @@ export type ListsAction = {
 export type ListsState = {
   towatch: ListReference;
   towatchtv: ListReference;
+  togame: ListReference;
 };
 
 export type ListReference = {
@@ -36,6 +39,7 @@ export type ListReference = {
 const initialState: ListsState = {
   towatch: {},
   towatchtv: {},
+  togame: {},
 };
 
 const listsReducer = (state: ListsState = initialState, action: ListsAction): ListsState => {
