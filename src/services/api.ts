@@ -145,7 +145,7 @@ export async function removeItemFromList(
 }
 
 export async function searchForMedia(searchString: string): Promise<ApiResponse> {
-  return makeRequest(`media/search?searchString=${searchString}`, 'get');
+  return makeRequest(encodeURI(`media/search?searchString=${searchString}`), 'get');
 }
 
 export async function getMoreMediaDetails(imdbID: string): Promise<ApiResponse> {
