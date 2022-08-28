@@ -1,31 +1,18 @@
-import { IconButton, Link, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
-import { BiMoviePlay, CgDetailsMore, ImBooks, ImExit, IoGameControllerSharp, IoMdPaper } from 'react-icons/all';
-import { useLocation } from 'react-router-dom';
+import { CgDetailsMore, ImExit } from 'react-icons/all';
 import { is2xxStatus, logout } from '../../../services/api';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';
 
-const pageTypes = {
-  '/': 'Movies & Shows',
-  '/books': 'Books',
-  '/games': 'Video Games',
-  '/shopping': 'Shopping',
-};
-
 export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?: boolean }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const currentPageDescription = pageTypes[location.pathname];
 
   const handleOpenDrawer = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseDrawer = (): void => setAnchorEl(null);
@@ -44,12 +31,6 @@ export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?
             <Button href="/" className={style.homePageLink}>
               MY LISTS
             </Button>
-            {!props.unAuthenticated && currentPageDescription && (
-              <Typography component="span" sx={{ flexGrow: 1 }}>
-                {' | '}
-                {currentPageDescription}
-              </Typography>
-            )}
           </Typography>
           {!props.unAuthenticated && (
             <IconButton color="inherit" onClick={handleOpenDrawer}>
@@ -67,38 +48,6 @@ export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?
           'aria-labelledby': 'appHeaderActionMenu',
         }}
       >
-        <MenuItem onClick={undefined} divider>
-          <ListItemIcon>
-            <BiMoviePlay />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href="#">Movies & Shows</Link>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={undefined} divider>
-          <ListItemIcon>
-            <ImBooks />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href="#">Books</Link>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={undefined} divider>
-          <ListItemIcon>
-            <IoGameControllerSharp />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href="#">Video Games</Link>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={undefined} divider>
-          <ListItemIcon>
-            <IoMdPaper />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href="#">Shopping</Link>
-          </ListItemText>
-        </MenuItem>
         <MenuItem onClick={handleLogout} className={style.logoutMenuItem}>
           <ListItemIcon>
             <ImExit />
