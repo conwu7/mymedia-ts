@@ -2,9 +2,17 @@
   background-color: transparent !important;
   box-shadow: none !important;
 }
-.modalContainer {
+.drawerContainer {
   border-top-left-radius: 8px !important;
   border-top-right-radius: 8px !important;
+  overflow: hidden !important;
+  background-color: white;
+}
+
+.modalContainer {
+  margin: 70px 10px 20px;
+  max-height: calc(100vh - 90px);
+  border-radius: 5px;
   overflow: hidden !important;
   background-color: white;
 }
@@ -44,12 +52,12 @@
 
 .modalContentContainer {
   overflow: auto;
-  max-height: 90vh;
+  max-height: 80vh;
   padding: 5px;
 }
 
 @media only screen and (min-width: 800px) {
-  .modalContainer {
+  .drawerContainer {
     width: fit-content;
     min-width: 500px;
     max-width: 800px;

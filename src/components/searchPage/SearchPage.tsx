@@ -25,7 +25,7 @@ import {
   SearchResults,
 } from './types';
 import { HiOutlineInformationCircle } from 'react-icons/all';
-import UniversalModal from '../utils/universalModal/UniversalModal';
+import { UniversalModal } from '../utils/universalModal/UniversalModal';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
 
 export default function SearchPage({ hidden }: SearchProps): JSX.Element {

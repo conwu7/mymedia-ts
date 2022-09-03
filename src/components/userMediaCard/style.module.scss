@@ -1,18 +1,18 @@
-$poster-width: 130px;
-$poster-height: 195px;
-$poster-width-desktop: 180px;
-$poster-height-desktop: 270px;
+$poster-width: 120px;
+$poster-height: 180px;
 
 .userMediaCard {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 360px;
+  height: 100%;
   flex-shrink: 0;
-  flex-basis: 144px;
+  flex-grow: 1;
+  width: 100px;
   flex-wrap: nowrap;
   margin: 0 5px;
+  padding-bottom: 3px;
   position: relative;
   background: rgba(245, 245, 245, 0.6) !important;
   border-radius: 3px !important;
@@ -27,33 +27,29 @@ $poster-height-desktop: 270px;
   .mediaInfo {
     display: flex;
     flex-direction: column;
-    height: 160px;
+    gap: 2px;
     justify-content: space-evenly;
-    width: 144px;
-    padding: 7px 5px 7px 5px;
+    padding: 7px 4px;
   }
   .releaseYearRuntimeContainer {
     display: flex;
     justify-content: flex-start;
-    margin-left: 8px;
-    margin-right: 8px;
     * {
       margin: 0 !important;
     }
   }
   .poster,
   .posterContainer {
-    height: 200px;
-    width: 144px;
+    height: 150px;
     text-align: center;
     border-radius: 3px;
   }
   .mediaTitle {
     line-height: 18px;
-    //min-height: 30px;
+    min-height: 36px;
     max-height: 40px;
-    width: 130px;
-    margin: 0 0 0 8px;
+    width: 100%;
+    margin: 0 auto;
     font-size: 16px;
     font-weight: 600;
     color: darkslategray;
@@ -98,21 +94,24 @@ $poster-height-desktop: 270px;
   .genre,
   .imdbRating {
     white-space: pre-wrap;
-    margin: 0 auto 0 8px;
+    margin: 0;
+  }
+  .runtime,
+  .releaseYear{
+    font-size: .8em;
   }
 }
 .moreInfoButton {
   background: rgb(105, 166, 166) !important;
-  height: 35px;
-  width: 90px;
+  height: 30px;
+  width: 50px;
 }
 .userMediaActionsContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 5px;
-  padding-top: 5px;
   height: 35px;
+  width: 100%;
 }
 .actionButtonWrapper {
   display: flex;
@@ -143,15 +142,4 @@ $poster-height-desktop: 270px;
 }
 .removeActionMenuItem {
   color: firebrick !important;
-}
-
-@media only screen and (min-width: 680px) {
-  .mediaInfo {
-    width: 450px;
-  }
-  .poster,
-  .posterContainer {
-    height: $poster-height-desktop;
-    width: $poster-width-desktop;
-  }
 }

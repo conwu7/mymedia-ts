@@ -17,7 +17,7 @@ import MoreInfoCard from '../moreInfo/MoreInfoCard';
 import { AddMediaNotesForm, ReviewUserMediaForm } from '../utils/forms/forms';
 import { ListSelectorModal } from '../utils/listSelector/ListSelector';
 import Loading from '../utils/loading/Loading';
-import UniversalModal from '../utils/universalModal/UniversalModal';
+import { UniversalModal } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { RiDeleteBin2Fill } from 'react-icons/all';
 import { ListCategory } from '../../services/types';
@@ -261,7 +261,6 @@ function UserMediaInfo({ media, listCategory }: { media: Movie | TvShow; listCat
           /10
         </p>
       )}
-      {/*<p className={style.genre}>{media.genre && media.genre.slice(0, 2).join(', ')}</p>*/}
     </>
   );
 }

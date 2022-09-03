@@ -7,7 +7,7 @@ import { ListReference, ListsState } from '../../../store/lists';
 import { UserPreferences } from '../../../store/userPreferences';
 import { NewListForm } from '../forms/forms';
 import Loading from '../loading/Loading';
-import UniversalModal from '../universalModal/UniversalModal';
+import { UniversalModal } from '../universalModal/UniversalModal';
 import style from './style.module.scss';
 import { ListSelectorModalProps, ListSelectorProps, ListWithSelectButtonStatus } from './types';
 

@@ -1,8 +1,4 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -17,9 +13,11 @@ import { UserPreferences } from '../../store/userPreferences';
 import UserMediaCard from '../userMediaCard/UserMediaCard';
 import { EditListForm } from '../utils/forms/forms';
 import Loading from '../utils/loading/Loading';
-import UniversalModal from '../utils/universalModal/UniversalModal';
+import { UniversalDrawer, UniversalModal } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { ListContainerProps, ListDescription, ListsPageProps } from './types';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const [listIds, setListIds] = useState<string[]>([]);
@@ -76,12 +74,15 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
 
 function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isEditingList, setIsEditingList] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [isListExpanded, setListContainerExpanded] = useState<string | boolean>(false);
 
   const dispatch: Dispatch = useDispatch();
+
+  const handleOpenList = () => setIsOpen(true);
+  const handleCloseList = () => setIsOpen(false);
 
   const handleOpenActionMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseActionMenu = (): void => setAnchorEl(null);
@@ -92,10 +93,6 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   };
   const handleCloseEditList = () => {
     setIsEditingList(false);
-  };
-
-  const handleExpandListContainer = (container: string) => (_event: SyntheticEvent, isExpanded: string | boolean) => {
-    setListContainerExpanded(isExpanded ? container : false);
   };
 
   const handleDeleteList = async () => {
@@ -125,29 +122,35 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
     }, 400);
   }, [isDeleted]);
 
-  let listActionContainerStyle = '';
-  if (isListExpanded) {
-    listActionContainerStyle = list.mediaInstants.length < 1 ? style.emptyListExpanded : style.listExpanded;
-  }
+  // let listActionContainerStyle = '';
+  // if (isListExpanded) {
+  //   listActionContainerStyle = list.mediaInstants.length < 1 ? style.emptyListExpanded : style.listExpanded;
+  // }
 
   return (
     <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
-      <Accordion
-        className={style.listContainer}
-        expanded={isListExpanded === 'list'}
-        onChange={handleExpandListContainer('list')}
-        TransitionProps={{ unmountOnExit: true }}
-        disableGutters={true}
-      >
-        <AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>
-          <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
-        </AccordionSummary>
-        <AccordionDetails className={style.accordionDetails}>
-          <ListUserMediaContainer listCategory={listCategory} list={list} />
-        </AccordionDetails>
-      </Accordion>
-      <div className={`${style.listActionContainer} ${listActionContainerStyle}`}>
-        <IconButton onClick={handleOpenActionMenu} className={style.listActionButton}>
+      <Button variant="contained" onClick={handleOpenList} className={style.listContainerBtn}>
+        <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
+      </Button>
+      <UniversalModal isOpen={isOpen} onClose={handleCloseList} title={list.name ?? ''}>
+        <ListUserMediaContainer listCategory={listCategory} list={list} />
+      </UniversalModal>
+      {/*<Accordion*/}
+      {/*  className={style.listContainer}*/}
+      {/*  expanded={isListExpanded === 'list'}*/}
+      {/*  onChange={handleExpandListContainer('list')}*/}
+      {/*  TransitionProps={{ unmountOnExit: true }}*/}
+      {/*  disableGutters={true}*/}
+      {/*>*/}
+      {/*  /!*<AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>*!/*/}
+      {/*  /!*  <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />*!/*/}
+      {/*  /!*</AccordionSummary>*!/*/}
+      {/*  /!*<AccordionDetails className={style.accordionDetails}>*!/*/}
+      {/*  /!*  <ListUserMediaContainer listCategory={listCategory} list={list} />*!/*/}
+      {/*  /!*</AccordionDetails>*!/*/}
+      {/*</Accordion>*/}
+      <div className={`${style.listActionContainer}`}>
+        <IconButton onClick={handleOpenActionMenu} className={style.listActionBtn}>
           <MdOutlineArrowDropDownCircle />
         </IconButton>
         <Menu
@@ -173,7 +176,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
           </MenuItem>
         </Menu>
       </div>
-      <UniversalModal isOpen={isEditingList} onClose={handleCloseEditList} title={'Edit List'}>
+      <UniversalDrawer isOpen={isEditingList} onClose={handleCloseEditList} title={'Edit List'}>
         <EditListForm
           onClose={handleCloseEditList}
           listCategory={listCategory}
@@ -181,7 +184,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
           listName={list.name}
           description={list.description}
         />
-      </UniversalModal>
+      </UniversalDrawer>
       <Loading isLoading={isLoading} />
     </div>
   );
@@ -199,15 +202,18 @@ function ListInformation({ name, description }: ListDescription): JSX.Element {
 function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCategory; list: List }): JSX.Element {
   if (list && list.mediaInstants.length < 1) return <div className={style.emptyList}>Empty List</div>;
   return (
-    <div className={style.listUserMediaContainer}>
+    // <div className={style.listUserMediaContainer}>
+    <Grid sx={{ flexGrow: 1 }} container className={style.listUserMediaContainer}>
       {list.mediaInstants.map((mediaInstant) => (
-        <UserMediaCard
-          key={mediaInstant._id}
-          userMediaId={mediaInstant.userMedia}
-          listCategory={listCategory}
-          currentListId={list._id}
-        />
+        <Grid key={mediaInstant._id}>
+          <UserMediaCard
+            key={mediaInstant._id}
+            userMediaId={mediaInstant.userMedia}
+            listCategory={listCategory}
+            currentListId={list._id}
+          />
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 }

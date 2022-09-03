@@ -6,7 +6,7 @@ import { MdReadMore, MdRoomPreferences } from 'react-icons/md';
 import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { IoMdCreate } from 'react-icons/io';
 import { GrLinkTop } from 'react-icons/gr';
-import UniversalModal from '../utils/universalModal/UniversalModal';
+import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import { NewListForm, PreferencesForm } from '../utils/forms/forms';
 import { NavigationTab } from '../mediaApp/types';
 
@@ -81,13 +81,17 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
         </MenuItem>
       </Menu>
       {/*Create list Modal*/}
-      <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
+      <UniversalDrawer isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
         <NewListForm onClose={handleCloseCreateList} listCategory={navBarsToListCategory(currentTab)} />
-      </UniversalModal>
+      </UniversalDrawer>
       {/*Modify Preferences Modal*/}
-      <UniversalModal isOpen={isModifyingPreferences} onClose={handleCloseModifyPreferences} title="Modify Preferences">
+      <UniversalDrawer
+        isOpen={isModifyingPreferences}
+        onClose={handleCloseModifyPreferences}
+        title="Modify Preferences"
+      >
         <PreferencesForm onClose={handleCloseModifyPreferences} />
-      </UniversalModal>
+      </UniversalDrawer>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { RiGamepadLine, RiMovie2Line, RiSearchLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { getLists, getUserMedia, is2xxStatus } from '../../services/api';
-import { ListCategory, navBarsToListCategory } from '../../services/types';
+import { ListCategory, ListCategoryEnum, navBarsToListCategory } from '../../services/types';
 import { User } from '../app/types';
 import ListsPage from '../listsPage/ListsPage';
 import SearchPage from '../searchPage/SearchPage';
@@ -71,14 +71,14 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     const listCategory = navBarsToListCategory(currentNavTab);
     if (loadStatus.current[listCategory]) return;
 
-    getAndStoreList('towatch').catch();
-    getAndStoreUserMedia('towatch').catch();
+    getAndStoreList(ListCategoryEnum.towatch).catch();
+    getAndStoreUserMedia(ListCategoryEnum.towatch).catch();
 
-    getAndStoreList('towatchtv').catch();
-    getAndStoreUserMedia('towatchtv').catch();
+    getAndStoreList(ListCategoryEnum.towatchtv).catch();
+    getAndStoreUserMedia(ListCategoryEnum.towatchtv).catch();
 
-    getAndStoreList('togame').catch();
-    getAndStoreUserMedia('togame').catch();
+    getAndStoreList(ListCategoryEnum.togame).catch();
+    getAndStoreUserMedia(ListCategoryEnum.togame).catch();
 
     loadStatus.current.towatch = true;
     loadStatus.current.towatchtv = true;
@@ -106,9 +106,9 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
   return (
     <div className={`mediaApp ${style.mediaApp}`}>
       <AppHeader />
-      <ListsPage listCategory={'towatch'} hidden={currentNavTab !== 'movies'} />
-      <ListsPage listCategory={'towatchtv'} hidden={currentNavTab !== 'tvShows'} />
-      <ListsPage listCategory={'togame'} hidden={currentNavTab !== 'videoGames'} />
+      <ListsPage listCategory={ListCategoryEnum.towatch} hidden={currentNavTab !== 'movies'} />
+      <ListsPage listCategory={ListCategoryEnum.towatchtv} hidden={currentNavTab !== 'tvShows'} />
+      <ListsPage listCategory={ListCategoryEnum.togame} hidden={currentNavTab !== 'videoGames'} />
       <SearchPage hidden={currentNavTab !== 'search'} />
       {currentNavTab !== 'search' && <MediaAppActions currentTab={currentNavTab} />}
       <BottomNavTabs

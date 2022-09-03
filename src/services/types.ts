@@ -25,6 +25,11 @@ export type OptionalSignal = {
 export type MediaType = 'movie' | 'tvShow' | 'videoGame';
 
 export type ListCategory = 'towatch' | 'towatchtv' | 'togame';
+export enum ListCategoryEnum {
+  towatch = 'towatch',
+  towatchtv = 'towatchtv',
+  togame = 'togame',
+}
 
 export const navBarsToListCategory = (navBar: string): ListCategory => {
   switch (navBar) {
@@ -38,6 +43,7 @@ export const navBarsToListCategory = (navBar: string): ListCategory => {
       return 'towatch';
   }
 };
+
 export const listCategoryToUserMediaCategory = (listCategory: ListCategory): string => {
   switch (listCategory) {
     case 'towatch':
