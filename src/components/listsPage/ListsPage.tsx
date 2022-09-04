@@ -60,14 +60,18 @@ export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX
   return (
     <div className={`listsPage ${style.listsPage} ${hidden ? style.hidden : ''} ${hidden ? '' : 'active'}`}>
       <Loading isLoading={!hasFullyLoadedLists} />
-      {mappedLists.length < 1 && hasFullyLoadedLists && (
-        <div className={style.emptyLists}>
-          <p>You have no lists</p>
-        </div>
-      )}
-      {mappedLists.map((list) => (
-        <ListContainer list={list} key={list._id} listCategory={listCategory} />
-      ))}
+      <Grid sx={{ flexGrow: 1 }} container columns={2} className={style.listsGridContainer}>
+        {mappedLists.length < 1 && hasFullyLoadedLists && (
+          <div className={style.emptyLists}>
+            <p>You have no lists</p>
+          </div>
+        )}
+        {mappedLists.map((list) => (
+          <Grid key={list._id} className={style.listsGrid}>
+            <ListContainer list={list} key={list._id} listCategory={listCategory} />
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 }
@@ -122,33 +126,14 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
     }, 400);
   }, [isDeleted]);
 
-  // let listActionContainerStyle = '';
-  // if (isListExpanded) {
-  //   listActionContainerStyle = list.mediaInstants.length < 1 ? style.emptyListExpanded : style.listExpanded;
-  // }
-
   return (
     <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
-      <Button variant="contained" onClick={handleOpenList} className={style.listContainerBtn}>
+      <Button onClick={handleOpenList} className={style.listContainerBtn}>
         <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
       </Button>
       <UniversalModal isOpen={isOpen} onClose={handleCloseList} title={list.name ?? ''}>
         <ListUserMediaContainer listCategory={listCategory} list={list} />
       </UniversalModal>
-      {/*<Accordion*/}
-      {/*  className={style.listContainer}*/}
-      {/*  expanded={isListExpanded === 'list'}*/}
-      {/*  onChange={handleExpandListContainer('list')}*/}
-      {/*  TransitionProps={{ unmountOnExit: true }}*/}
-      {/*  disableGutters={true}*/}
-      {/*>*/}
-      {/*  /!*<AccordionSummary className={style.listInformationContainerParent} expandIcon={<ExpandMoreIcon />}>*!/*/}
-      {/*  /!*  <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />*!/*/}
-      {/*  /!*</AccordionSummary>*!/*/}
-      {/*  /!*<AccordionDetails className={style.accordionDetails}>*!/*/}
-      {/*  /!*  <ListUserMediaContainer listCategory={listCategory} list={list} />*!/*/}
-      {/*  /!*</AccordionDetails>*!/*/}
-      {/*</Accordion>*/}
       <div className={`${style.listActionContainer}`}>
         <IconButton onClick={handleOpenActionMenu} className={style.listActionBtn}>
           <MdOutlineArrowDropDownCircle />
@@ -190,11 +175,11 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   );
 }
 
-function ListInformation({ name, description }: ListDescription): JSX.Element {
+function ListInformation({ name }: ListDescription): JSX.Element {
   return (
     <div className={style.listInformationContainer}>
       <h4 className={style.listNameHeader}>{name.toLocaleUpperCase()}</h4>
-      <h4 className={style.listDescription}>{description}</h4>
+      {/*<h4 className={style.listDescription}>{description}</h4>*/}
     </div>
   );
 }
