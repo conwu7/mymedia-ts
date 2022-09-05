@@ -234,6 +234,8 @@ export function PreferencesForm(props: PreferencesFormProps): JSX.Element {
           >
             <MenuItem value="movies">Movies</MenuItem>
             <MenuItem value="tvShows">Tv Shows</MenuItem>
+            <MenuItem value="videoGames">Video Games</MenuItem>
+            <MenuItem value="lastViewed">Last Viewed</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={handleSubmit} className={style.submitBtn} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

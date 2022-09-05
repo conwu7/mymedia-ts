@@ -25,7 +25,7 @@ import {
   SearchResults,
 } from './types';
 import { HiOutlineInformationCircle } from 'react-icons/all';
-import { UniversalModal } from '../utils/universalModal/UniversalModal';
+import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
 
 export default function SearchPage({ hidden }: SearchProps): JSX.Element {
@@ -218,12 +218,12 @@ function MoreInfoOnResultCardModal({ isShowingMoreInfo, imdbID, onClose }: MoreI
   }, [imdbID, isShowingMoreInfo]);
 
   return (
-    <UniversalModal isOpen={isShowingMoreInfo} onClose={onClose} title={mediaDetails?.title ?? ''}>
+    <UniversalDrawer isOpen={isShowingMoreInfo} onClose={onClose} title={mediaDetails?.title ?? ''}>
       <>
         <LoadingWithoutModal isLoading={isLoading} />
         {!!error && <p>{error}</p>}
         {!!mediaDetails && <MoreInfoCard media={mediaDetails} />}
       </>
-    </UniversalModal>
+    </UniversalDrawer>
   );
 }

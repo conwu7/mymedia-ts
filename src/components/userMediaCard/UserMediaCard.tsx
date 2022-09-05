@@ -17,12 +17,17 @@ import MoreInfoCard from '../moreInfo/MoreInfoCard';
 import { AddMediaNotesForm, ReviewUserMediaForm } from '../utils/forms/forms';
 import { ListSelectorModal } from '../utils/listSelector/ListSelector';
 import Loading from '../utils/loading/Loading';
-import { UniversalModal } from '../utils/universalModal/UniversalModal';
+import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { RiDeleteBin2Fill } from 'react-icons/all';
 import { ListCategory } from '../../services/types';
 
-export default function UserMediaCard({ userMediaId, listCategory, currentListId }: UserMediaCardProps): JSX.Element {
+export default function UserMediaCard({
+  userMediaId,
+  listCategory,
+  currentListId,
+  currentListName,
+}: UserMediaCardProps): JSX.Element {
   const userMedia: UserMediaCombo = useSelector(
     (state: { userMedia: UserMediaState }) => state.userMedia?.[listCategory]?.[userMediaId],
     shallowEqual,
@@ -196,26 +201,27 @@ export default function UserMediaCard({ userMediaId, listCategory, currentListId
           </Menu>
         </div>
       </div>
-      <UniversalModal isOpen={isViewingMore} onClose={handleCloseMore} title={media.title}>
+      <UniversalDrawer isOpen={isViewingMore} onClose={handleCloseMore} title={media.title}>
         <MoreInfoCard media={userMedia.media} userMedia={userMedia} />
-      </UniversalModal>
-      <UniversalModal isOpen={isAddingNotes} onClose={handleCloseAddNotes} title={media.title}>
+      </UniversalDrawer>
+      <UniversalDrawer isOpen={isAddingNotes} onClose={handleCloseAddNotes} title={media.title}>
         <AddMediaNotesForm
           toWatchNotes={userMedia.toWatchNotes}
           onClose={handleCloseAddNotes}
           listCategory={listCategory}
           imdbId={userMedia.imdbID}
         />
-      </UniversalModal>
-      <UniversalModal isOpen={isReviewingMedia} onClose={handleCloseReview} title={`Review - ${media.title}`}>
+      </UniversalDrawer>
+      <UniversalDrawer isOpen={isReviewingMedia} onClose={handleCloseReview} title={`Review - ${media.title}`}>
         <ReviewUserMediaForm
           onClose={handleCloseReview}
           listCategory={listCategory}
           imdbId={userMedia.imdbID}
           userRating={userMedia.userRating}
           reviewNotes={userMedia.reviewNotes}
+          hideCompleteButton={currentListName?.toLowerCase() === 'watched'}
         />
-      </UniversalModal>
+      </UniversalDrawer>
       <ListSelectorModal
         isOpen={isMoving}
         onClose={handleCloseMoveMedia}

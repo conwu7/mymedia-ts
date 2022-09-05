@@ -1,4 +1,9 @@
-import { UserPreferences } from '../../store/userPreferences';
+import {
+  DefaultMediaPage,
+  ListSortPreference,
+  MediaSortPreference,
+  UserPreferences,
+} from '../../store/userPreferences';
 
 export type AppProps = {
   storePreferences: (userPreferences: UserPreferences) => void;
@@ -6,7 +11,7 @@ export type AppProps = {
 
 export type User = {
   username: string;
-  listSortPreference: string;
-  mediaSortPreference: string;
-  defaultMediaPage: string;
+  listSortPreference: ListSortPreference;
+  mediaSortPreference: MediaSortPreference;
+  defaultMediaPage: DefaultMediaPage;
 };

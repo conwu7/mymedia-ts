@@ -15,9 +15,23 @@ import { NavigationTab } from './types';
 import { MediaAppActions } from '../mediaAppActions/MediaAppActions';
 import { BottomNavTabs } from '../utils/bottomNavTabs/BottomNavTabs';
 import { BottomNavBarItem } from '../utils/bottomNavTabs/types';
+import { DefaultMediaPage } from '../../store/userPreferences';
+
+const LOCAL_STORAGE_LAST_VIEWED_KEY = 'lastViewedMediaPage';
+
+function getDefaultNavTab(defaultMediaPage?: DefaultMediaPage): NavigationTab {
+  if (!defaultMediaPage) return NavigationTab.movies;
+
+  if (defaultMediaPage === 'lastViewed') {
+    const tab = localStorage.getItem(LOCAL_STORAGE_LAST_VIEWED_KEY) as NavigationTab;
+    return tab ?? NavigationTab.movies;
+  }
+
+  return defaultMediaPage as NavigationTab;
+}
 
 export default function MediaApp({ user }: { user: User }): JSX.Element {
-  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>(user.defaultMediaPage as NavigationTab);
+  const [currentNavTab, setCurrentNavTab] = useState<NavigationTab>(getDefaultNavTab(user.defaultMediaPage));
   const [isLoading, setIsLoading] = useState(false);
   const initialLoadStatus: Record<ListCategory, boolean> = {
     towatch: false,
@@ -85,11 +99,17 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     loadStatus.current.togame = true;
   }, [currentNavTab]);
 
+  const setLastViewedMediaPage = (mediaPage: NavigationTab): void => {
+    if (mediaPage === 'search') return;
+    localStorage.setItem(LOCAL_STORAGE_LAST_VIEWED_KEY, mediaPage);
+  };
+
   const handleNavTabChange = (_event: SyntheticEvent, newTab: NavigationTab): void => {
     if (currentNavTab === 'search' && newTab === 'search') {
       document.getElementById('searchString')?.focus();
     }
     setCurrentNavTab(newTab);
+    setLastViewedMediaPage(newTab);
   };
 
   if (isLoading || (!loadStatus.current.towatch && !loadStatus.current.towatchtv && loadStatus.current.togame)) {
@@ -110,7 +130,7 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
       <ListsPage listCategory={ListCategoryEnum.towatchtv} hidden={currentNavTab !== 'tvShows'} />
       <ListsPage listCategory={ListCategoryEnum.togame} hidden={currentNavTab !== 'videoGames'} />
       <SearchPage hidden={currentNavTab !== 'search'} />
-      {currentNavTab !== 'search' && <MediaAppActions currentTab={currentNavTab} />}
+      {<MediaAppActions currentTab={currentNavTab} />}
       <BottomNavTabs
         handleChange={handleNavTabChange}
         currentTab={currentNavTab}

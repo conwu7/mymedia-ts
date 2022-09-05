@@ -13,11 +13,11 @@ import { UserPreferences } from '../../store/userPreferences';
 import UserMediaCard from '../userMediaCard/UserMediaCard';
 import { EditListForm } from '../utils/forms/forms';
 import Loading from '../utils/loading/Loading';
-import { UniversalDrawer, UniversalModal } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { ListContainerProps, ListDescription, ListsPageProps } from './types';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const [listIds, setListIds] = useState<string[]>([]);
@@ -131,9 +131,9 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
       <Button onClick={handleOpenList} className={style.listContainerBtn}>
         <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
       </Button>
-      <UniversalModal isOpen={isOpen} onClose={handleCloseList} title={list.name ?? ''}>
+      <UniversalDrawer isOpen={isOpen} onClose={handleCloseList} title={list.name ?? ''}>
         <ListUserMediaContainer listCategory={listCategory} list={list} />
-      </UniversalModal>
+      </UniversalDrawer>
       <div className={`${style.listActionContainer}`}>
         <IconButton onClick={handleOpenActionMenu} className={style.listActionBtn}>
           <MdOutlineArrowDropDownCircle />
@@ -196,6 +196,7 @@ function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCate
             userMediaId={mediaInstant.userMedia}
             listCategory={listCategory}
             currentListId={list._id}
+            currentListName={list.name}
           />
         </Grid>
       ))}

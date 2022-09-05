@@ -10,6 +10,7 @@ export type UserMediaCardProps = {
   userMediaId: string;
   listCategory: ListCategory;
   currentListId: string;
+  currentListName: string;
 };
 
 export type ListContainerProps = {

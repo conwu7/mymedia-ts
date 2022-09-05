@@ -44,6 +44,19 @@ export const navBarsToListCategory = (navBar: string): ListCategory => {
   }
 };
 
+export const navBarsToListCategoryDisplay = (navBar: string): string => {
+  switch (navBar) {
+    case 'movies':
+      return 'Movie';
+    case 'tvShows':
+      return 'Tv Show';
+    case 'videoGames':
+      return 'Video Game';
+    default:
+      return '';
+  }
+};
+
 export const listCategoryToUserMediaCategory = (listCategory: ListCategory): string => {
   switch (listCategory) {
     case 'towatch':

@@ -7,7 +7,7 @@ import { ListReference, ListsState } from '../../../store/lists';
 import { UserPreferences } from '../../../store/userPreferences';
 import { NewListForm } from '../forms/forms';
 import Loading from '../loading/Loading';
-import { UniversalModal } from '../universalModal/UniversalModal';
+import { UniversalDrawer } from '../universalModal/UniversalModal';
 import style from './style.module.scss';
 import { ListSelectorModalProps, ListSelectorProps, ListWithSelectButtonStatus } from './types';
 
@@ -66,9 +66,9 @@ export function ListSelector(props: ListSelectorProps): JSX.Element {
           Create New List
         </Button>
       </ButtonGroup>
-      <UniversalModal isOpen={isCreatingList} onClose={handleCloseCreateList}>
+      <UniversalDrawer isOpen={isCreatingList} onClose={handleCloseCreateList}>
         <NewListForm onClose={handleCloseCreateList} listCategory={props.listCategory} />
-      </UniversalModal>
+      </UniversalDrawer>
     </div>
   );
 }
@@ -82,9 +82,9 @@ export function ListSelectorModal(props: ListSelectorModalProps): JSX.Element {
   };
   return (
     <>
-      <UniversalModal isOpen={props.isOpen} onClose={props.onClose} title={props.modalTitle || 'Select a list'}>
+      <UniversalDrawer isOpen={props.isOpen} onClose={props.onClose} title={props.modalTitle || 'Select a list'}>
         <ListSelector listCategory={props.listCategory} imdbId={props.imdbId} onSelect={handleSelection} />
-      </UniversalModal>
+      </UniversalDrawer>
       <Loading isLoading={isLoading} />
     </>
   );

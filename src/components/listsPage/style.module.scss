@@ -36,7 +36,8 @@
 }
 
 .emptyList {
-  padding: 0 40px;
+  padding: 20px 40px;
+  color: darkgrey;
 }
 
 .listsPage {
@@ -135,10 +136,9 @@
 }
 
 .listUserMediaContainer {
-  padding: 0 5px;
+  padding: 10px 5px;
   gap: 5px 0;
   height: fit-content;
-  padding-top: 8px !important;
 }
 
 

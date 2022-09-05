@@ -1,4 +1,4 @@
-import { navBarsToListCategory } from '../../services/types';
+import { navBarsToListCategory, navBarsToListCategoryDisplay } from '../../services/types';
 import { SyntheticEvent, useState } from 'react';
 import Fab from '@mui/material/Fab';
 import style from './style.module.scss';
@@ -32,7 +32,8 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
 
   const handleScrollToTop = (): void => {
     handleCloseMenu();
-    document.querySelectorAll(`.listsPage.active`)[0]?.scrollTo({
+    const classSelector = currentTab === 'search' ? '.searchPage' : '.listsPage.active';
+    document.querySelectorAll(classSelector)[0]?.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
@@ -59,12 +60,14 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
         className={style.mediaAppActionMenu}
       >
         {/*Create New List*/}
-        <MenuItem onClick={handleOpenCreateList} divider>
-          <ListItemIcon>
-            <IoMdCreate />
-          </ListItemIcon>
-          <ListItemText>Create List</ListItemText>
-        </MenuItem>
+        {currentTab !== 'search' && (
+          <MenuItem onClick={handleOpenCreateList} divider>
+            <ListItemIcon>
+              <IoMdCreate />
+            </ListItemIcon>
+            <ListItemText>Create List</ListItemText>
+          </MenuItem>
+        )}
         {/*Modify User Preferences*/}
         <MenuItem onClick={handleOpenModifyPreferences} divider>
           <ListItemIcon>
@@ -81,7 +84,11 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
         </MenuItem>
       </Menu>
       {/*Create list Modal*/}
-      <UniversalDrawer isOpen={isCreatingList} onClose={handleCloseCreateList} title="New List">
+      <UniversalDrawer
+        isOpen={isCreatingList}
+        onClose={handleCloseCreateList}
+        title={`New ${navBarsToListCategoryDisplay(currentTab)} List`}
+      >
         <NewListForm onClose={handleCloseCreateList} listCategory={navBarsToListCategory(currentTab)} />
       </UniversalDrawer>
       {/*Modify Preferences Modal*/}

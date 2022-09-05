@@ -10,7 +10,7 @@ export type MediaSortPreference =
   | 'release-'
   | 'default'
   | undefined;
-export type DefaultMediaPage = 'movies' | 'tvShows' | 'default' | undefined;
+export type DefaultMediaPage = 'movies' | 'tvShows' | 'default' | 'videoGames' | 'lastViewed' | undefined;
 
 export type UserPreferences = {
   listSortPreference?: ListSortPreference;
