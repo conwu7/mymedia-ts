@@ -4,6 +4,7 @@ import { ListCategory, UpdateListBody } from '../../../services/types';
 export interface EditListFormProps extends UpdateListBody {
   onClose: () => void;
   listCategory: ListCategory;
+  color: string;
   listId: string;
 }
 
@@ -16,6 +17,8 @@ export type ListFormProps = {
   formik: FormikHandlers & FormikValues;
   isLoading: boolean;
   error?: string;
+  selectedColor: string;
+  setColor: (color: string) => void;
 };
 
 export interface PreferencesFormProps {
@@ -37,3 +40,25 @@ export type ReviewUserMediaFormProps = {
   userRating?: number;
   hideCompleteButton?: boolean;
 };
+
+export const MuiColors = [
+  'red',
+  'pink',
+  'purple',
+  'deepPurple',
+  'indigo',
+  'blue',
+  'lightBlue',
+  'cyan',
+  'teal',
+  'green',
+  'lightGreen',
+  'lime',
+  'yellow',
+  'amber',
+  'orange',
+  'deepOrange',
+  'brown',
+  'grey',
+  'blueGrey',
+];

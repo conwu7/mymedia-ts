@@ -1,7 +1,7 @@
 import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { BiCameraMovie } from 'react-icons/bi';
 import { RiGamepadLine, RiMovie2Line, RiSearchLine } from 'react-icons/ri';
-import { useDispatch } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { getLists, getUserMedia, is2xxStatus } from '../../services/api';
 import { ListCategory, ListCategoryEnum, navBarsToListCategory } from '../../services/types';
@@ -16,6 +16,8 @@ import { MediaAppActions } from '../mediaAppActions/MediaAppActions';
 import { BottomNavTabs } from '../utils/bottomNavTabs/BottomNavTabs';
 import { BottomNavBarItem } from '../utils/bottomNavTabs/types';
 import { DefaultMediaPage } from '../../store/userPreferences';
+import { Alerts } from '../../store/alerts';
+import { AlertBox } from '../utils/alertDialog/alertDialog';
 
 const LOCAL_STORAGE_LAST_VIEWED_KEY = 'lastViewedMediaPage';
 
@@ -38,9 +40,15 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     towatchtv: false,
     togame: false,
   };
+  const alerts = useSelector((state: { alerts: Alerts }) => state.alerts, shallowEqual);
+
   const loadStatus = useRef(initialLoadStatus);
 
   const dispatch: Dispatch = useDispatch();
+
+  const closeAlert = async () => {
+    dispatch({ type: 'close' });
+  };
 
   const getAndStoreList = async (listCategory: ListCategory) => {
     setIsLoading(true);
@@ -126,6 +134,14 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
   return (
     <div className={`mediaApp ${style.mediaApp}`}>
       <AppHeader />
+      <AlertBox
+        onClose={closeAlert}
+        isOpen={alerts.isOpen}
+        isFailedAlert={alerts.isFailedAlert}
+        dialogContentText={alerts.dialogContentText}
+        dialogTitle={alerts.dialogTitle}
+        dialogCloseText={alerts.dialogCloseText}
+      />
       <ListsPage listCategory={ListCategoryEnum.towatch} hidden={currentNavTab !== 'movies'} />
       <ListsPage listCategory={ListCategoryEnum.towatchtv} hidden={currentNavTab !== 'tvShows'} />
       <ListsPage listCategory={ListCategoryEnum.togame} hidden={currentNavTab !== 'videoGames'} />

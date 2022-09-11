@@ -4,12 +4,14 @@ import { MdOutlineClose } from 'react-icons/all';
 import style from './style.module.scss';
 import { UniversalModalProps } from './types';
 import Modal from '@mui/material/Modal';
+import * as REACT_MATERIAL_COLORS from '@mui/material/colors';
+import { hexToRgbA } from '../../../services/colors';
 
-export function UniversalDrawer({ isOpen, onClose, children, title }: UniversalModalProps): JSX.Element {
+export function UniversalDrawer(props: UniversalModalProps): JSX.Element {
   return (
     <SwipeableDrawer
-      open={isOpen}
-      onClose={onClose}
+      open={props.isOpen}
+      onClose={props.onClose}
       onOpen={() => undefined}
       anchor="bottom"
       className={style.drawer}
@@ -18,13 +20,31 @@ export function UniversalDrawer({ isOpen, onClose, children, title }: UniversalM
       variant="temporary"
     >
       <Box className={style.drawerContainer}>
-        <Box className={style.modalHeader}>
-          <header className={style.modalTitle}>{title}</header>
-          <IconButton className={style.closeModalButtonWrapper} onClick={onClose}>
+        <Box
+          className={style.modalHeader}
+          style={{
+            backgroundColor:
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              hexToRgbA(REACT_MATERIAL_COLORS[props.style?.contentContainerBackgroundColor]?.[50], 1) ?? 'whitesmoke',
+          }}
+        >
+          <header className={style.modalTitle}>{props.title}</header>
+          <IconButton className={style.closeModalButtonWrapper} onClick={props.onClose}>
             <MdOutlineClose />
           </IconButton>
         </Box>
-        <Box className={style.modalContentContainer}>{children}</Box>
+        <Box
+          className={style.modalContentContainer}
+          style={{
+            backgroundColor:
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              hexToRgbA(REACT_MATERIAL_COLORS[props.style?.contentContainerBackgroundColor]?.[50], 0.3) ?? 'white',
+          }}
+        >
+          {props.children}
+        </Box>
       </Box>
     </SwipeableDrawer>
   );

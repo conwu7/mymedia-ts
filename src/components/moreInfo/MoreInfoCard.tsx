@@ -1,6 +1,5 @@
-import { Link } from '@mui/material';
+import { Link, Rating } from '@mui/material';
 import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
 import style from './style.module.scss';
 import { MediaReview, MoreInfoCardProps, MoreInfoMedia } from './types';
 import Paper from '@mui/material/Paper';
@@ -30,9 +29,9 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
           underline="none"
           className={style.imdbLink}
         >
-          IMDB:
+          IMDB
         </Link>
-        <span className={style.imdbRatingValue}> {imdbRating ?? '-'}</span>
+        <span className={style.imdbRatingValue}>: {imdbRating ?? '-'}</span>
         /10
         {!!media.updatedAt && (
           <span className={style.imdbRatingAsOfDate}> (as of {new Date(media.updatedAt).toDateString()})</span>
@@ -43,12 +42,11 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
         {runYears && totalSeasons ? runYears : releaseDate ?? runYears}{' '}
         {totalSeasons && (
           <span className={style.totalSeasons}>
-            ({totalSeasons} season{totalSeasons > 1 ? 's' : ''})
+            ({totalSeasons} season{totalSeasons > 1 ? 's' : ''}){' '}
           </span>
         )}
+        {runtime && `- (${runtime} min)`}
       </p>
-      <span className={style.mediaInfoLabel}>Runtime: </span>
-      <p className={style.runtime}>{runtime ?? '-'} min</p>
       <span className={style.mediaInfoLabel}>Plot:</span>
       <p className={style.plot}>{plot || '-'}</p>
       <span className={style.mediaInfoLabel}>Cast:</span>
@@ -56,16 +54,28 @@ function MediaInfoCard({ media, userMedia }: { media: MoreInfoMedia; userMedia?:
       <span className={style.mediaInfoLabel}>Genre:{'  '}</span>
       <p className={style.genre}>{genre && genre.join(', ')}</p>
       <span className={style.mediaInfoLabel}>Languages: </span>
-      <p className={style.languages}>{language && language.join(', ')}</p>
-      <span className={style.mediaInfoLabel}>Watch notes:</span>
-      <p className={style.toWatchNotes}>{toWatchNotes || '-'}</p>
-      <span className={style.mediaInfoLabel}>Your review:</span>
-      <div className={style.userRatingContainer}>
-        <Rating name="read-only" value={userRating} readOnly max={10} className={style.userRating} />
-        <span className={style.userRatingValue}>{userRating ?? '-'}/10</span>
-      </div>
-      <span className={style.mediaInfoLabel}>Review Notes:</span>
-      <p className={style.reviewNotes}>{reviewNotes ?? '-'}</p>
+      <p className={style.languages}>{language?.join(', ') || '-'}</p>
+      {toWatchNotes && (
+        <>
+          <span className={style.mediaInfoLabel}>Watch notes:</span>
+          <p className={style.toWatchNotes}>{toWatchNotes || '-'}</p>
+        </>
+      )}
+      {userRating && (
+        <>
+          <span className={style.mediaInfoLabel}>Your review:</span>
+          <div className={style.userRatingContainer}>
+            <Rating name="read-only" value={userRating} readOnly max={10} className={style.userRating} />
+            <span className={style.userRatingValue}>{userRating ?? '-'}/10</span>
+          </div>
+        </>
+      )}
+      {reviewNotes && (
+        <>
+          <span className={style.mediaInfoLabel}>Review Notes:</span>
+          <p className={style.reviewNotes}>{reviewNotes ?? '-'}</p>
+        </>
+      )}
     </Paper>
   );
 }

@@ -79,6 +79,7 @@ export enum ListCategoryDisplay {
 export type UpdateListBody = {
   listName: string;
   description?: string;
+  color?: string;
 };
 
 export type ReviewUserMediaBody = {

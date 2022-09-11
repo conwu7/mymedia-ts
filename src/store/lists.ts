@@ -13,6 +13,7 @@ export type List = {
   _id: string;
   name: string;
   description?: string;
+  color?: string;
   mediaInstants: MediaInstants[];
   createdAt: string;
   updatedAt: string;

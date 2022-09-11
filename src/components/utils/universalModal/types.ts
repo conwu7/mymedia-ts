@@ -3,4 +3,7 @@ export type UniversalModalProps = {
   onClose: () => void;
   children: JSX.Element | (() => JSX.Element) | string | null;
   title?: string;
+  style?: {
+    contentContainerBackgroundColor?: string;
+  };
 };

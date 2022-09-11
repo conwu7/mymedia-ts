@@ -1,4 +1,4 @@
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -18,6 +18,8 @@ import { ListContainerProps, ListDescription, ListsPageProps } from './types';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
+import AlertDialog from '../utils/alertDialog/alertDialog';
+import * as MuiColors from '@mui/material/colors';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const [listIds, setListIds] = useState<string[]>([]);
@@ -81,6 +83,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
   const [isOpen, setIsOpen] = useState(false);
   const [isEditingList, setIsEditingList] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeletingList, setIsDeletingList] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
   const dispatch: Dispatch = useDispatch();
@@ -99,20 +102,49 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
     setIsEditingList(false);
   };
 
+  const handleOpenDeleteList = () => {
+    handleCloseActionMenu();
+    setIsDeletingList(true);
+  };
+  const handleCloseDeleteList = () => {
+    setIsDeletingList(false);
+  };
+
   const handleDeleteList = async () => {
     handleCloseActionMenu();
 
-    if (!window.confirm(`Are you sure you want to delete '${list.name}'?`)) return;
     setIsLoading(true);
+    setIsDeletingList(false);
+
     const { err } = await deleteList(listCategory, list._id);
 
     if (err) {
-      return handleApiErrors(err, alertFactory('Failed to delete list'), setIsLoading);
+      return handleApiErrors(
+        err,
+        alertFactory(
+          {
+            dialogContentText: 'Failed to delete list',
+            isFailedAlert: true,
+          },
+          dispatch,
+        ),
+        setIsLoading,
+      );
     }
 
     setIsLoading(false);
     setIsDeleted(true);
   };
+
+  // set list background color
+  useEffect(() => {
+    const listBtn = document.querySelector(`[data-list-id="${list._id}"].${style.listContainerBtn}`) as HTMLElement;
+    if (listBtn) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      listBtn.style.backgroundColor = MuiColors[list.color]?.[50] ?? 'white';
+    }
+  }, [list.color]);
 
   // complete delete
   useEffect(() => {
@@ -128,10 +160,15 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
 
   return (
     <div className={`${style.listContainerParent} ${isDeleted ? style.deleted : ''}`}>
-      <Button onClick={handleOpenList} className={style.listContainerBtn}>
+      <Button onClick={handleOpenList} className={style.listContainerBtn} data-list-id={list._id}>
         <ListInformation name={list.name || 'list with no name, how?'} description={list.description} />
       </Button>
-      <UniversalDrawer isOpen={isOpen} onClose={handleCloseList} title={list.name ?? ''}>
+      <UniversalDrawer
+        isOpen={isOpen}
+        onClose={handleCloseList}
+        title={list.name ?? ''}
+        style={{ contentContainerBackgroundColor: list.color }}
+      >
         <ListUserMediaContainer listCategory={listCategory} list={list} />
       </UniversalDrawer>
       <div className={`${style.listActionContainer}`}>
@@ -153,7 +190,7 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
             </ListItemIcon>
             <ListItemText>Edit List</ListItemText>
           </MenuItem>
-          <MenuItem onClick={handleDeleteList}>
+          <MenuItem onClick={handleOpenDeleteList}>
             <ListItemIcon>
               <RiDeleteBin2Fill />
             </ListItemIcon>
@@ -168,18 +205,28 @@ function ListContainer({ list, listCategory }: ListContainerProps): JSX.Element 
           listId={list._id}
           listName={list.name}
           description={list.description}
+          color={list.color ?? 'white'}
         />
       </UniversalDrawer>
+      <AlertDialog
+        onClose={handleCloseDeleteList}
+        onAccept={handleDeleteList}
+        isOpen={isDeletingList}
+        dialogContentText={`Are you sure you want to delete '${list.name}'?`}
+        dialogTitle="Confirm - Delete List"
+        dialogOkText="Yes"
+      />
       <Loading isLoading={isLoading} />
     </div>
   );
 }
 
-function ListInformation({ name }: ListDescription): JSX.Element {
+function ListInformation({ name, description }: ListDescription): JSX.Element {
   return (
     <div className={style.listInformationContainer}>
-      <h4 className={style.listNameHeader}>{name.toLocaleUpperCase()}</h4>
-      {/*<h4 className={style.listDescription}>{description}</h4>*/}
+      <h4 className={style.listNameHeader}>{name}</h4>
+      <Divider light text-align="left" />
+      <h4 className={style.listDescription}>{description || '-'}</h4>
     </div>
   );
 }
@@ -190,7 +237,7 @@ function ListUserMediaContainer({ listCategory, list }: { listCategory: ListCate
     // <div className={style.listUserMediaContainer}>
     <Grid sx={{ flexGrow: 1 }} container className={style.listUserMediaContainer}>
       {list.mediaInstants.map((mediaInstant) => (
-        <Grid key={mediaInstant._id}>
+        <Grid key={mediaInstant._id} className={style.userMediaCardContainer}>
           <UserMediaCard
             key={mediaInstant._id}
             userMediaId={mediaInstant.userMedia}

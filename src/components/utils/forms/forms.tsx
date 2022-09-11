@@ -21,20 +21,46 @@ import { FormTextField } from '../userForm/UserForm';
 import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';
+import CheckIcon from '@mui/icons-material/Check';
 import {
   AddMediaNotesFormProps,
   EditListFormProps,
   ListFormProps,
+  MuiColors,
   NewListFormProps,
   PreferencesFormProps,
   ReviewUserMediaFormProps,
 } from './types';
+import * as REACT_MATERIAL_COLORS from '@mui/material/colors';
+
+function MuiColorPicker(props: { selectedColor: string; setColor: (color: string) => void }): JSX.Element {
+  return (
+    <div className={style.colorPickerContainer}>
+      {['white', ...MuiColors].map((color) => {
+        return (
+          <div
+            key={color}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            style={{ backgroundColor: REACT_MATERIAL_COLORS[color]?.[50] ?? 'white' }}
+            onClick={() => props.setColor(color)}
+          >
+            {color === props.selectedColor && <CheckIcon />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function EditListForm(props: EditListFormProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
+  const [listColor, setListColor] = useState(props.color || 'white');
+
   const initialValues: UpdateListBody = {
     listName: props.listName,
     description: props.description || '',
+    color: listColor,
   };
   const dispatch: Dispatch = useDispatch();
 
@@ -44,10 +70,20 @@ export function EditListForm(props: EditListFormProps): JSX.Element {
     onSubmit: async (values: UpdateListBody) => {
       setIsLoading(true);
 
-      const { err, result } = await updateList(values, props.listCategory, props.listId);
+      const { err, result } = await updateList({ ...values, color: listColor }, props.listCategory, props.listId);
 
       if (err) {
-        return handleApiErrors(err, alertFactory(`Unable to save changes - ${err}`), setIsLoading);
+        return handleApiErrors(
+          err,
+          alertFactory(
+            {
+              dialogContentText: `Unable to save changes - ${err}`,
+              isFailedAlert: true,
+            },
+            dispatch,
+          ),
+          setIsLoading,
+        );
       }
 
       dispatch({
@@ -60,14 +96,17 @@ export function EditListForm(props: EditListFormProps): JSX.Element {
       props.onClose();
     },
   });
-  return <ListForm formik={formik} isLoading={isLoading} />;
+  return <ListForm formik={formik} isLoading={isLoading} selectedColor={listColor} setColor={setListColor} />;
 }
 
 export function NewListForm(props: NewListFormProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
+  const [listColor, setListColor] = useState('white');
+
   const initialValues: UpdateListBody = {
     listName: '',
     description: '',
+    color: 'white',
   };
   const dispatch: Dispatch = useDispatch();
 
@@ -77,10 +116,21 @@ export function NewListForm(props: NewListFormProps): JSX.Element {
     onSubmit: async (values: UpdateListBody) => {
       setIsLoading(true);
 
-      const { err, result } = await createList(values, props.listCategory);
+      const { err, result } = await createList({ ...values, color: listColor }, props.listCategory);
 
       if (err) {
-        return handleApiErrors(err, alertFactory(`Unable to save list - ${err}`), setIsLoading);
+        formik.errors.listName = err;
+        return handleApiErrors(
+          err,
+          alertFactory(
+            {
+              dialogContentText: `Unable to save list - ${err}`,
+              isFailedAlert: true,
+            },
+            dispatch,
+          ),
+          setIsLoading,
+        );
       }
 
       dispatch({
@@ -93,10 +143,10 @@ export function NewListForm(props: NewListFormProps): JSX.Element {
     },
   });
 
-  return <ListForm formik={formik} isLoading={isLoading} />;
+  return <ListForm formik={formik} isLoading={isLoading} selectedColor={listColor} setColor={setListColor} />;
 }
 
-function ListForm({ formik, isLoading, error }: ListFormProps): JSX.Element {
+function ListForm({ formik, isLoading, error, selectedColor, setColor }: ListFormProps): JSX.Element {
   return (
     <Box
       component="form"
@@ -117,6 +167,7 @@ function ListForm({ formik, isLoading, error }: ListFormProps): JSX.Element {
         isMultiLine={true}
       />
       <ErrorFieldContainer showError={Boolean(error)} errorMessage={error} />
+      <MuiColorPicker setColor={setColor} selectedColor={selectedColor} />
       <Button
         onClick={formik.submitForm}
         className={style.submitBtn}
@@ -169,7 +220,17 @@ export function PreferencesForm(props: PreferencesFormProps): JSX.Element {
     const { result, err } = await updatePreferences(preferences);
 
     if (err) {
-      return handleApiErrors(err, alertFactory('Failed to save preferences'), setIsLoading);
+      return handleApiErrors(
+        err,
+        alertFactory(
+          {
+            dialogContentText: 'Failed to save preferences',
+            isFailedAlert: true,
+          },
+          dispatch,
+        ),
+        setIsLoading,
+      );
     }
 
     dispatch({
@@ -265,7 +326,17 @@ export function AddMediaNotesForm({
       const { err, result } = await addUserMediaNotes(imdbId, values.toWatchNotes, listCategory);
 
       if (err) {
-        return handleApiErrors(err, alertFactory('Unable to save notes'), setIsLoading);
+        return handleApiErrors(
+          err,
+          alertFactory(
+            {
+              dialogContentText: `Unable to save notes`,
+              isFailedAlert: true,
+            },
+            dispatch,
+          ),
+          setIsLoading,
+        );
       }
 
       dispatch({
@@ -336,14 +407,28 @@ export function ReviewUserMediaForm({
 
       const { err, result } = await reviewUserMedia(imdbId, { ...values, userRating }, listCategory);
       if (err) {
-        return handleApiErrors(err, alertFactory('Unable to save'), setIsLoading);
+        return handleApiErrors(
+          err,
+          alertFactory(
+            {
+              dialogContentText: `Unable to save`,
+              isFailedAlert: true,
+            },
+            dispatch,
+          ),
+          setIsLoading,
+        );
       }
 
       if (isMarkingAsWatched) {
         const { err: markAsWatchedError, result: markAsWatchedResponse } = await markAsWatched(listCategory, imdbId);
 
         if (markAsWatchedError) {
-          return handleApiErrors(markAsWatchedError, alertFactory('Unable to mark complete'), setIsLoading);
+          return handleApiErrors(
+            markAsWatchedError,
+            alertFactory({ dialogContentText: 'Unable to mark complete', isFailedAlert: true }, dispatch),
+            setIsLoading,
+          );
         }
 
         dispatch({

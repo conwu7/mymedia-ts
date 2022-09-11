@@ -1,3 +1,6 @@
+import { AlertsReducerActions } from '../store/alerts';
+import { Dispatch } from 'redux';
+
 // eslint-disable-next-line
 type Callback = (...args: any[]) => void;
 
@@ -16,6 +19,24 @@ export function handleApiErrors(
   if (otherCallback) otherCallback();
 }
 
-export function alertFactory(message?: string): () => void {
-  return () => window.alert(message || 'Failed');
+export interface AlertFactoryOptions {
+  isFailedAlert?: boolean;
+  dialogTitle?: string;
+  dialogContentText: string;
+  dialogCloseText?: string;
+}
+
+export function alertFactory(options: AlertFactoryOptions, dispatch: Dispatch): () => void {
+  const failedAlertTitle = options.dialogTitle ?? 'Action Failed';
+  return () => {
+    const dispatchAction: AlertsReducerActions = {
+      type: 'useAlert',
+      data: {
+        isOpen: true,
+        ...options,
+        dialogTitle: options.isFailedAlert ? failedAlertTitle : options.dialogTitle,
+      },
+    };
+    dispatch(dispatchAction);
+  };
 }

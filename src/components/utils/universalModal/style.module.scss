@@ -1,4 +1,4 @@
-.drawer div:nth-child(3) {
+.drawer>div:nth-child(3) {
   background-color: transparent !important;
   box-shadow: none !important;
 }
@@ -27,7 +27,6 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  background-color: whitesmoke;
   border-top-left-radius: 8px !important;
   border-top-right-radius: 8px !important;
   padding: 5px 10px;
@@ -64,7 +63,7 @@
   .drawerContainer {
     width: fit-content;
     min-width: 500px;
-    max-width: 800px;
+    max-width: 1200px;
     margin: auto;
   }
 }

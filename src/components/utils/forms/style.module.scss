@@ -2,6 +2,27 @@
   background-color: white;
   padding: 5px 0;
 }
+
+.colorPickerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 90% !important;
+  margin: 35px auto !important;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
+    border: 1px solid lightslategray;
+    border-radius: 22px;
+  }
+}
+
 button.submitBtn {
   display: block;
   background: rgba(47, 79, 79, 0.95);
@@ -29,6 +50,7 @@ button.submitBtn {
   color: #76bbbb !important;
   font-size: 35px !important;
 }
+
 .saveAndCompleteContainer {
   display: flex;
   margin: 15px 0 !important;
