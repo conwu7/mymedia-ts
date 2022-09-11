@@ -124,7 +124,7 @@ export default function MediaApp({ user }: { user: User }): JSX.Element {
     return <Loading isLoading={true} />;
   }
 
-  const bottomNavBarItems: BottomNavBarItem[] = [
+  const bottomNavBarItems: BottomNavBarItem<unknown>[] = [
     { label: 'Movies', value: 'movies', icon: <BiCameraMovie /> },
     { label: 'Tv Shows', value: 'tvShows', icon: <RiMovie2Line /> },
     { label: 'Games', value: 'videoGames', icon: <RiGamepadLine /> },

@@ -20,7 +20,13 @@ export function BottomNavTabs<TabTypes>({
       <Box className={style.bottomNavContainer}>
         <BottomNavigation showLabels value={currentTab} onChange={handleChange}>
           {bottomNavBarItems.map((item, index) => (
-            <BottomNavigationAction key={index} label={item.label} value={item.value} icon={item.icon} />
+            <BottomNavigationAction
+              key={index}
+              label={item.label}
+              value={item.value}
+              icon={item.icon}
+              className={currentTab === item.value ? style.selected : ''}
+            />
           ))}
         </BottomNavigation>
       </Box>
