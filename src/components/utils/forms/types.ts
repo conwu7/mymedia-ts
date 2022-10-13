@@ -21,6 +21,11 @@ export type ListFormProps = {
   setColor: (color: string) => void;
 };
 
+export interface AddFromImdbLinkFormProps {
+  onClose: () => void;
+  listCategory: ListCategory;
+}
+
 export interface PreferencesFormProps {
   onClose: () => void;
 }

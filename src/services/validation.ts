@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { parseImdbTitleIdFromUrl } from './imdb';
 
 // Signup - username, email, password
 // Login - username, password
@@ -32,6 +33,15 @@ export const UpdateListSchema = Yup.object().shape({
     .max(40, 'Too Long - Max 40 characters')
     .required('Required'),
   description: Yup.string().max(140, 'Too Long - Max 140 characters'),
+});
+
+export const ImdbLinkSchema = Yup.object().shape({
+  imdbLink: Yup.string()
+    .trim()
+    .required('Required')
+    .test('Valid IMDB link', 'Invalid imdb title link', (value) => {
+      return !!parseImdbTitleIdFromUrl(value);
+    }),
 });
 
 export const UserMediaSchema = Yup.object().shape({

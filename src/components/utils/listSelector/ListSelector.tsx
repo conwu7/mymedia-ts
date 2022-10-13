@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { sortLists } from '../../../services/sorting';
 import { ListReference, ListsState } from '../../../store/lists';
 import { UserPreferences } from '../../../store/userPreferences';
@@ -9,7 +9,12 @@ import { NewListForm } from '../forms/forms';
 import Loading from '../loading/Loading';
 import { UniversalDrawer } from '../universalModal/UniversalModal';
 import style from './style.module.scss';
-import { ListSelectorModalProps, ListSelectorProps, ListWithSelectButtonStatus } from './types';
+import { AddToListModalProps, ListSelectorModalProps, ListSelectorProps, ListWithSelectButtonStatus } from './types';
+import { addItemToList, getUserMedia, is2xxStatus } from '../../../services/api';
+import { Dispatch } from 'redux';
+import { AlertBox } from '../alertDialog/alertDialog';
+import { Alerts } from '../../../store/alerts';
+import { alertFactory, handleApiErrors } from '../../../services/errorHelpers';
 
 export function ListSelector(props: ListSelectorProps): JSX.Element {
   const [isCreatingList, setIsCreatingList] = useState(false);
@@ -83,6 +88,71 @@ export function ListSelectorModal(props: ListSelectorModalProps): JSX.Element {
   return (
     <>
       <UniversalDrawer isOpen={props.isOpen} onClose={props.onClose} title={props.modalTitle || 'Select a list'}>
+        <ListSelector listCategory={props.listCategory} imdbId={props.imdbId} onSelect={handleSelection} />
+      </UniversalDrawer>
+      <Loading isLoading={isLoading} />
+    </>
+  );
+}
+
+export function AddToListModal(props: AddToListModalProps): JSX.Element {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const alerts = useSelector((state: { alerts: Alerts }) => state.alerts, shallowEqual);
+
+  const dispatch: Dispatch = useDispatch();
+
+  const closeAlert = async () => {
+    dispatch({ type: 'close' });
+  };
+
+  // API HANDLERS
+  const handleSelection = async (newListId: string): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const { status, result: apiResult, err } = await addItemToList(props.imdbId, newListId, props.listCategory);
+      if (!is2xxStatus(status)) throw new Error(err);
+      const { result: updatedUserMediaList } = await getUserMedia({}, props.listCategory);
+      dispatch({
+        type: 'storeUserMedia',
+        listType: props.listCategory,
+        data: updatedUserMediaList || [],
+      });
+      dispatch({
+        type: 'updateList',
+        listType: props.listCategory,
+        list: apiResult,
+      });
+      setIsLoading(false);
+      props.onSelect();
+    } catch (err) {
+      if (err) {
+        return handleApiErrors(
+          'Failed to add item to list',
+          alertFactory(
+            {
+              dialogContentText: 'Failed to add item to list',
+              isFailedAlert: true,
+            },
+            dispatch,
+          ),
+          setIsLoading,
+        );
+      }
+    }
+  };
+
+  return (
+    <>
+      <AlertBox
+        onClose={closeAlert}
+        isOpen={alerts.isOpen}
+        isFailedAlert={alerts.isFailedAlert}
+        dialogContentText={alerts.dialogContentText}
+        dialogTitle={alerts.dialogTitle}
+        dialogCloseText={alerts.dialogCloseText}
+      />
+      <UniversalDrawer isOpen={props.isOpen} onClose={props.onCancel} title={props.modalTitle || 'Select a list'}>
         <ListSelector listCategory={props.listCategory} imdbId={props.imdbId} onSelect={handleSelection} />
       </UniversalDrawer>
       <Loading isLoading={isLoading} />

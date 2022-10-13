@@ -14,6 +14,15 @@ export interface ListSelectorModalProps extends ListSelectorProps {
   onSelect: (selection: string) => Promise<void>;
 }
 
+export interface AddToListModalProps {
+  modalTitle?: string;
+  listCategory: ListCategory;
+  imdbId: string;
+  isOpen: boolean;
+  onSelect: () => void;
+  onCancel: () => void;
+}
+
 export type ListWithSelectButtonStatus = {
   isPrivate: boolean;
   _id: string;

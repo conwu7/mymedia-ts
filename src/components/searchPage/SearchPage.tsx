@@ -6,13 +6,11 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { GiCancel } from 'react-icons/gi';
 import { MdPlaylistAdd } from 'react-icons/md';
-import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
 import defaultPoster from '../../images/default-poster.png';
-import { addItemToList, getMoreMediaDetails, getUserMedia, is2xxStatus, searchForMedia } from '../../services/api';
+import { getMoreMediaDetails, is2xxStatus, searchForMedia } from '../../services/api';
 import { SearchSchema } from '../../services/validation';
 import ErrorFieldContainer from '../utils/errorFieldContainer/ErrorFieldContainer';
-import { ListSelectorModal } from '../utils/listSelector/ListSelector';
+import { AddToListModal } from '../utils/listSelector/ListSelector';
 import Loading, { LoadingWithoutModal } from '../utils/loading/Loading';
 import style from './style.module.scss';
 import {
@@ -138,31 +136,11 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
   const [isAddingToList, setIsAddingToList] = useState(false);
   const [isShowingMoreInfo, setIsShowingMoreInfo] = useState(false);
 
-  const dispatch: Dispatch = useDispatch();
-
   const handleAddToList = (): void => setIsAddingToList(true);
   const handleCloseAddToList = (): void => setIsAddingToList(false);
 
   const handleShowMoreInfo = (): void => setIsShowingMoreInfo(true);
   const handleCloseShowMoreInfo = (): void => setIsShowingMoreInfo(false);
-
-  // API HANDLERS
-  const addMediaToList = async (newListId: string): Promise<void> => {
-    const { status, result: apiResult, err } = await addItemToList(result.imdbId, newListId, result.listCategory);
-    if (!is2xxStatus(status)) return alert(err);
-    const { result: updatedUserMediaList } = await getUserMedia({}, result.listCategory);
-    dispatch({
-      type: 'storeUserMedia',
-      listType: result.listCategory,
-      data: updatedUserMediaList || [],
-    });
-    dispatch({
-      type: 'updateList',
-      listType: result.listCategory,
-      list: apiResult,
-    });
-    handleCloseAddToList();
-  };
 
   return (
     <div className={style.searchActionContainer}>
@@ -172,12 +150,12 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
       <IconButton onClick={handleShowMoreInfo} className={style.moreInfoBtn}>
         <HiOutlineInformationCircle />
       </IconButton>
-      <ListSelectorModal
+      <AddToListModal
         isOpen={isAddingToList}
-        onClose={handleCloseAddToList}
         listCategory={result.listCategory}
         imdbId={result.imdbId}
-        onSelect={addMediaToList}
+        onSelect={handleCloseAddToList}
+        onCancel={handleCloseAddToList}
         modalTitle={`Add '${result.title}' to`}
       />
       <MoreInfoOnResultCardModal

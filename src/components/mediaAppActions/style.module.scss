@@ -14,4 +14,9 @@
 .mediaAppActionMenu>div:nth-child(3) {
     bottom: 175px !important;
     top: auto !important;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
 }

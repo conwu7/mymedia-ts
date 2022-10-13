@@ -21,6 +21,7 @@ import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
 import { RiDeleteBin2Fill } from 'react-icons/all';
 import { ListCategory } from '../../services/types';
+import { alertFactory } from '../../services/errorHelpers';
 
 export default function UserMediaCard({
   userMediaId,
@@ -83,7 +84,11 @@ export default function UserMediaCard({
   // API HANDLERS
   const copyMediaToList = async (newListId: string): Promise<void> => {
     const { status, result, err } = await addItemToList(media.imdbID, newListId, listCategory);
-    if (!is2xxStatus(status)) return alert(err);
+    if (!is2xxStatus(status))
+      return alertFactory(
+        { dialogContentText: err, dialogTitle: 'Failed to copy item', isFailedAlert: true },
+        dispatch,
+      )();
     dispatch({
       type: 'updateList',
       listType: listCategory,
@@ -97,7 +102,10 @@ export default function UserMediaCard({
     const { status, result, err } = await removeItemFromList(media.imdbID, currentListId, listCategory);
     if (!is2xxStatus(status)) {
       setIsLoading(false);
-      return alert(err);
+      return alertFactory(
+        { dialogContentText: err, dialogTitle: 'Failed to remove item', isFailedAlert: true },
+        dispatch,
+      )();
     }
     setUpdatedList(result as List);
     setIsDeleted(true);

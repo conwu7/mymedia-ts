@@ -15,7 +15,7 @@ import {
 } from '../../../services/api';
 import { alertFactory, handleApiErrors } from '../../../services/errorHelpers';
 import { ReviewUserMediaBody, UpdateListBody } from '../../../services/types';
-import { UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
+import { ImdbLinkSchema, UpdateListSchema, UserMediaNotesSchema, UserMediaSchema } from '../../../services/validation';
 import { UserPreferences } from '../../../store/userPreferences';
 import { FormTextField } from '../userForm/UserForm';
 import ErrorFieldContainer from '../errorFieldContainer/ErrorFieldContainer';
@@ -23,6 +23,7 @@ import Loading from '../loading/Loading';
 import style from './style.module.scss';
 import CheckIcon from '@mui/icons-material/Check';
 import {
+  AddFromImdbLinkFormProps,
   AddMediaNotesFormProps,
   EditListFormProps,
   ListFormProps,
@@ -32,6 +33,8 @@ import {
   ReviewUserMediaFormProps,
 } from './types';
 import * as REACT_MATERIAL_COLORS from '@mui/material/colors';
+import { AddToListModal } from '../listSelector/ListSelector';
+import { parseImdbTitleIdFromUrl } from '../../../services/imdb';
 
 function MuiColorPicker(props: { selectedColor: string; setColor: (color: string) => void }): JSX.Element {
   return (
@@ -178,6 +181,67 @@ function ListForm({ formik, isLoading, error, selectedColor, setColor }: ListFor
         Save
       </Button>
       <Loading isLoading={isLoading} />
+    </Box>
+  );
+}
+
+export function AddFromImdbLinkForm(props: AddFromImdbLinkFormProps): JSX.Element {
+  const [isSelectingList, setIsSelectingList] = useState(false);
+
+  const initialValues = { imdbLink: '' };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: ImdbLinkSchema,
+    onSubmit: async () => {
+      setIsSelectingList(true);
+    },
+  });
+
+  const handleCloseAfterSelect = () => {
+    handleCloseForm();
+    props.onClose();
+  };
+
+  const handleCloseForm = () => {
+    setIsSelectingList(false);
+  };
+
+  return (
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+      className={style.listForm}
+    >
+      <FormTextField
+        label="IMDB URL"
+        name={'imdbLink'}
+        formik={formik}
+        required={true}
+        showErrorImmediately={false}
+        isMultiLine={false}
+      />
+      <Button
+        onClick={formik.submitForm}
+        className={style.submitBtn}
+        disabled={!parseImdbTitleIdFromUrl(formik.values.imdbLink)}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Select a list
+      </Button>
+      <AddToListModal
+        listCategory={props.listCategory}
+        imdbId={parseImdbTitleIdFromUrl(formik.values.imdbLink) ?? ''}
+        isOpen={isSelectingList}
+        onSelect={handleCloseAfterSelect}
+        onCancel={handleCloseForm}
+      />
     </Box>
   );
 }

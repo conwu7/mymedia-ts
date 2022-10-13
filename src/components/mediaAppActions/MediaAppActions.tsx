@@ -7,28 +7,27 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { IoMdCreate } from 'react-icons/io';
 import { GrLinkTop } from 'react-icons/gr';
 import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
-import { NewListForm, PreferencesForm } from '../utils/forms/forms';
+import { AddFromImdbLinkForm, NewListForm, PreferencesForm } from '../utils/forms/forms';
 import { NavigationTab } from '../mediaApp/types';
+import { ContentPaste } from '@mui/icons-material';
 
 export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [isCreatingList, setIsCreatingList] = useState(false);
   const [isModifyingPreferences, setIsModifyingPreferences] = useState(false);
+  const [isPastingImdbLink, setIsPastingImdbLink] = useState(false);
 
   const handleOpenMenu = (event: SyntheticEvent): void => setAnchorEl(event.currentTarget);
   const handleCloseMenu = (): void => setAnchorEl(null);
 
-  const handleOpenCreateList = (): void => {
+  const handleOpenSubMenuItem = (setFunction: (status: boolean) => void) => () => {
     handleCloseMenu();
-    setIsCreatingList(true);
+    setFunction(true);
   };
-  const handleCloseCreateList = (): void => setIsCreatingList(false);
 
-  const handleOpenModifyPreferences = (): void => {
-    handleCloseMenu();
-    setIsModifyingPreferences(true);
+  const handleCloseSubMenuItem = (setFunction: (status: boolean) => void) => () => {
+    setFunction(false);
   };
-  const handleCloseModifyPreferences = (): void => setIsModifyingPreferences(false);
 
   const handleScrollToTop = (): void => {
     handleCloseMenu();
@@ -61,15 +60,22 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
       >
         {/*Create New List*/}
         {currentTab !== 'search' && (
-          <MenuItem onClick={handleOpenCreateList} divider>
+          <MenuItem onClick={handleOpenSubMenuItem(setIsCreatingList)} divider>
             <ListItemIcon>
               <IoMdCreate />
             </ListItemIcon>
-            <ListItemText>Create List</ListItemText>
+            <ListItemText>Create list</ListItemText>
           </MenuItem>
         )}
+        {/*Paste IMDB Link*/}
+        <MenuItem onClick={handleOpenSubMenuItem(setIsPastingImdbLink)} divider>
+          <ListItemIcon>
+            <ContentPaste />
+          </ListItemIcon>
+          <ListItemText>Paste IMDB link</ListItemText>
+        </MenuItem>
         {/*Modify User Preferences*/}
-        <MenuItem onClick={handleOpenModifyPreferences} divider>
+        <MenuItem onClick={handleOpenSubMenuItem(setIsModifyingPreferences)} divider>
           <ListItemIcon>
             <MdRoomPreferences />
           </ListItemIcon>
@@ -86,18 +92,32 @@ export function MediaAppActions({ currentTab }: { currentTab: NavigationTab }): 
       {/*Create list Modal*/}
       <UniversalDrawer
         isOpen={isCreatingList}
-        onClose={handleCloseCreateList}
+        onClose={handleCloseSubMenuItem(setIsCreatingList)}
         title={`New ${navBarsToListCategoryDisplay(currentTab)} List`}
       >
-        <NewListForm onClose={handleCloseCreateList} listCategory={navBarsToListCategory(currentTab)} />
+        <NewListForm
+          onClose={handleCloseSubMenuItem(setIsCreatingList)}
+          listCategory={navBarsToListCategory(currentTab)}
+        />
+      </UniversalDrawer>
+      {/*Add from Imdb Link Modal*/}
+      <UniversalDrawer
+        isOpen={isPastingImdbLink}
+        onClose={handleCloseSubMenuItem(setIsPastingImdbLink)}
+        title="Add media to one your lists using an IMDB link"
+      >
+        <AddFromImdbLinkForm
+          onClose={handleCloseSubMenuItem(setIsPastingImdbLink)}
+          listCategory={navBarsToListCategory(currentTab)}
+        />
       </UniversalDrawer>
       {/*Modify Preferences Modal*/}
       <UniversalDrawer
         isOpen={isModifyingPreferences}
-        onClose={handleCloseModifyPreferences}
+        onClose={handleCloseSubMenuItem(setIsModifyingPreferences)}
         title="Modify Preferences"
       >
-        <PreferencesForm onClose={handleCloseModifyPreferences} />
+        <PreferencesForm onClose={handleCloseSubMenuItem(setIsModifyingPreferences)} />
       </UniversalDrawer>
     </>
   );
