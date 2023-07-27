@@ -5,7 +5,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { AiTwotoneCopy } from 'react-icons/ai';
 import { CgMoveRight, CgNotes } from 'react-icons/cg';
 import { MdRateReview } from 'react-icons/md';
-import { RiMore2Fill } from 'react-icons/ri';
+import { RiDeleteBin2Fill, RiMore2Fill } from 'react-icons/ri';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import defaultPoster from '../../images/default-poster.png';
@@ -19,7 +19,6 @@ import { ListSelectorModal } from '../utils/listSelector/ListSelector';
 import Loading from '../utils/loading/Loading';
 import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import style from './style.module.scss';
-import { RiDeleteBin2Fill } from 'react-icons/all';
 import { ListCategory } from '../../services/types';
 import { alertFactory } from '../../services/errorHelpers';
 

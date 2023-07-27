@@ -22,9 +22,9 @@ import {
   SearchProps,
   SearchResults,
 } from './types';
-import { HiOutlineInformationCircle } from 'react-icons/all';
 import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import MoreInfoCard from '../moreInfo/MoreInfoCard';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
 
 export default function SearchPage({ hidden }: SearchProps): JSX.Element {
   const [previousSearch, setPreviousSearch] = useState('');
@@ -148,7 +148,7 @@ function SearchActionBar({ result }: { result: SearchResults }): JSX.Element {
         <MdPlaylistAdd />
       </IconButton>
       <IconButton onClick={handleShowMoreInfo} className={style.moreInfoBtn}>
-        <HiOutlineInformationCircle />
+        <IoMdInformationCircleOutline />
       </IconButton>
       <AddToListModal
         isOpen={isAddingToList}

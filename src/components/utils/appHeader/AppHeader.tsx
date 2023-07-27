@@ -5,10 +5,11 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SyntheticEvent, useState } from 'react';
-import { CgDetailsMore, ImExit } from 'react-icons/all';
 import { is2xxStatus, logout } from '../../../services/api';
 import Loading from '../loading/Loading';
 import style from './style.module.scss';
+import { CgDetailsMore } from 'react-icons/cg';
+import { IoMdExit } from 'react-icons/io';
 
 export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?: boolean }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -50,7 +51,7 @@ export default function AppHeader(props: { useSticky?: boolean; unAuthenticated?
       >
         <MenuItem onClick={handleLogout} className={style.logoutMenuItem}>
           <ListItemIcon>
-            <ImExit />
+            <IoMdExit />
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>

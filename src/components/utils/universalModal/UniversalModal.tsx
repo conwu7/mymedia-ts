@@ -1,11 +1,11 @@
 import { Fade, IconButton, SwipeableDrawer } from '@mui/material';
 import Box from '@mui/material/Box';
-import { MdOutlineClose } from 'react-icons/all';
 import style from './style.module.scss';
 import { UniversalModalProps } from './types';
 import Modal from '@mui/material/Modal';
 import * as REACT_MATERIAL_COLORS from '@mui/material/colors';
 import { hexToRgbA } from '../../../services/colors';
+import { MdOutlineClose } from 'react-icons/md';
 
 export function UniversalDrawer(props: UniversalModalProps): JSX.Element {
   return (
@@ -55,11 +55,11 @@ export function UniversalModal({ isOpen, onClose, children, title }: UniversalMo
     <Modal
       open={isOpen}
       onClose={onClose}
-      // keepMounted
-      // // closeAfterTransition
-      // BackdropProps={{
-      //   timeout: 200,
-      // }}
+    // keepMounted
+    // // closeAfterTransition
+    // BackdropProps={{
+    //   timeout: 200,
+    // }}
     >
       <Fade in={isOpen}>
         <Box className={style.modalContainer}>

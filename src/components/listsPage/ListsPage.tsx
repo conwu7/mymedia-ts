@@ -1,6 +1,5 @@
 import { Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { MdOutlineArrowDropDownCircle, RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/all';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { deleteList } from '../../services/api';
@@ -20,6 +19,8 @@ import Grid from '@mui/material/Grid';
 import { UniversalDrawer } from '../utils/universalModal/UniversalModal';
 import AlertDialog from '../utils/alertDialog/alertDialog';
 import * as MuiColors from '@mui/material/colors';
+import { MdOutlineArrowDropDownCircle } from 'react-icons/md';
+import { RiDeleteBin2Fill, RiEdit2Fill } from 'react-icons/ri';
 
 export default function ListsPage({ listCategory, hidden }: ListsPageProps): JSX.Element {
   const [listIds, setListIds] = useState<string[]>([]);
